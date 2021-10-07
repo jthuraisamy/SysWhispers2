@@ -31,7 +31,8 @@ class SysWhispers(object):
         basename_suffix = basename_suffix.capitalize() if os.path.basename(basename).istitle() else basename_suffix
         basename_suffix = f'_{basename_suffix}' if '_' in basename else basename_suffix
         with open(f'{basename}{basename_suffix}.asm', 'wb') as output_asm:
-            output_asm.write(b'.code\n\nEXTERN SW2_GetSyscallNumber: PROC\n\n')
+            output_asm.write(b'IFDEF RAX\n\n.CODE\n\nELSE\n\n.MODEL FLAT, C\n.CODE\n\nASSUME FS:NOTHING\n\nENDIF\n\n'
+                             b'EXTERN SW2_GetSyscallNumber: PROC\n\n')
             for function_name in function_names:
                 output_asm.write((self._get_function_asm_code(function_name) + '\n').encode())
             output_asm.write(b'end')
@@ -137,7 +138,8 @@ class SysWhispers(object):
         function_hash = self._get_function_hash(function_name)
 
         # Generate 64-bit ASM code.
-        code = ''
+        code = 'IFDEF RAX\n\n'
+
         code += f'{function_name} PROC\n'
         code += '\tmov [rsp +8], rcx          ; Save registers.\n'
         code += '\tmov [rsp+16], rdx\n'
@@ -155,6 +157,27 @@ class SysWhispers(object):
         code += '\tsyscall                    ; Invoke system call.\n'
         code += '\tret\n'
         code += f'{function_name} ENDP\n'
+        
+        # Generate 32-bit ASM code
+        code += '\nELSE\n\n'
+
+        code += f'{function_name} PROC\n'
+        code += f'\tpush 0{function_hash:08X}h\n'
+        code += '\tcall SW2_GetSyscallNumber  ; Resolve function hash into syscall number.\n'
+        code += '\tadd esp, 4\n'
+        code += '\tmov ecx, fs:[0c0h]\n'
+        code += '\ttest ecx, ecx\n'
+        code += '\tjne _wow64\n'
+        code += '\tlea edx, [esp+4h]\n'
+        code += '\tINT 02eh\n'
+        code += '\tret\n'
+        code += '\t_wow64:\n'
+        code += '\txor ecx, ecx\n'
+        code += '\tlea edx, [esp+4h]\n'
+        code += '\tcall dword ptr fs:[0c0h]\n'
+        code += '\tret\n'
+        code += f'{function_name} ENDP\n'
+        code += '\nENDIF\n'
 
         return code
 
