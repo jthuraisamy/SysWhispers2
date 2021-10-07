@@ -8,7 +8,9 @@ import struct
 
 
 class SysWhispers(object):
-    def __init__(self):
+    def __init__(self, function_prefix):
+        self.__function_prefix = function_prefix
+
         self.seed = random.randint(2 ** 28, 2 ** 32 - 1)
         self.typedefs: list = json.load(open('./data/typedefs.json'))
         self.prototypes: dict = json.load(open('./data/prototypes.json'))
@@ -18,6 +20,18 @@ class SysWhispers(object):
             function_names = list(self.prototypes.keys())
         elif any([f not in self.prototypes.keys() for f in function_names]):
             raise ValueError('Prototypes are not available for one or more of the requested functions.')
+
+        # Change default function prefix.
+        if self.__function_prefix != 'Nt':
+            new_function_names = []
+            for function_name in function_names:
+                new_function_name = function_name.replace('Nt', self.__function_prefix, 1)
+                if new_function_name != function_name:
+                    self.prototypes[new_function_name] = self.prototypes[function_name]
+                    del self.prototypes[function_name]
+                new_function_names.append(new_function_name)
+
+            function_names = new_function_names
 
         # Write C file.
         with open ('./data/base.c', 'rb') as base_source:
@@ -125,7 +139,7 @@ class SysWhispers(object):
 
     def _get_function_hash(self, function_name: str):
         hash = self.seed
-        name = function_name.replace('Nt', 'Zw', 1) + '\0'
+        name = function_name.replace(self.__function_prefix, 'Zw', 1) + '\0'
         ror8 = lambda v: ((v >> 8) & (2 ** 32 - 1)) | ((v << 24) & (2 ** 32 - 1))
 
         for segment in [s for s in [name[i:i + 2] for i in range(len(name))] if len(s) == 2]:
@@ -198,9 +212,10 @@ if __name__ == '__main__':
     parser.add_argument('-p', '--preset', help='Preset ("all", "common")', required=False)
     parser.add_argument('-f', '--functions', help='Comma-separated functions', required=False)
     parser.add_argument('-o', '--out-file', help='Output basename (w/o extension)', required=True)
+    parser.add_argument('--function-prefix', default='Nt', help='Function prefix', required=False)
     args = parser.parse_args()
 
-    sw = SysWhispers()
+    sw = SysWhispers(args.function_prefix)
 
     if args.preset == 'all':
         print('All functions selected.\n')
