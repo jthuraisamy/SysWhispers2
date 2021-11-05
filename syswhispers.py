@@ -13,7 +13,7 @@ class SysWhispers(object):
         self.typedefs: list = json.load(open('./data/typedefs.json'))
         self.prototypes: dict = json.load(open('./data/prototypes.json'))
 
-    def generate(self, function_names: list = (), basename: str = 'syscalls'):
+    def generate(self, function_names: list = (), basename: str = 'syscalls', arch: str = 'x64'):
         if not function_names:
             function_names = list(self.prototypes.keys())
         elif any([f not in self.prototypes.keys() for f in function_names]):
@@ -31,9 +31,12 @@ class SysWhispers(object):
         basename_suffix = basename_suffix.capitalize() if os.path.basename(basename).istitle() else basename_suffix
         basename_suffix = f'_{basename_suffix}' if '_' in basename else basename_suffix
         with open(f'{basename}{basename_suffix}.asm', 'wb') as output_asm:
-            output_asm.write(b'.code\n\nEXTERN SW2_GetSyscallNumber: PROC\n\n')
+            asm_header = b'.code\n\nEXTERN SW2_GetSyscallNumber: PROC\n\n'
+            if arch == 'x86':
+                asm_header = b'.MODEL flat, c\n' + asm_header
+            output_asm.write(asm_header)
             for function_name in function_names:
-                output_asm.write((self._get_function_asm_code(function_name) + '\n').encode())
+                output_asm.write((self._get_function_asm_code(function_name, arch) + '\n').encode())
             output_asm.write(b'end')
 
         # Write header file.
@@ -133,28 +136,55 @@ class SysWhispers(object):
 
         return hash
 
-    def _get_function_asm_code(self, function_name: str) -> str:
+    def _get_function_asm_code(self, function_name: str, arch: str) -> str:
         function_hash = self._get_function_hash(function_name)
 
-        # Generate 64-bit ASM code.
-        code = ''
-        code += f'{function_name} PROC\n'
-        code += '\tmov [rsp +8], rcx          ; Save registers.\n'
-        code += '\tmov [rsp+16], rdx\n'
-        code += '\tmov [rsp+24], r8\n'
-        code += '\tmov [rsp+32], r9\n'
-        code += '\tsub rsp, 28h\n'
-        code += f'\tmov ecx, 0{function_hash:08X}h        ; Load function hash into ECX.\n'
-        code += '\tcall SW2_GetSyscallNumber  ; Resolve function hash into syscall number.\n'
-        code += '\tadd rsp, 28h\n'
-        code += '\tmov rcx, [rsp +8]          ; Restore registers.\n'
-        code += '\tmov rdx, [rsp+16]\n'
-        code += '\tmov r8, [rsp+24]\n'
-        code += '\tmov r9, [rsp+32]\n'
-        code += '\tmov r10, rcx\n'
-        code += '\tsyscall                    ; Invoke system call.\n'
-        code += '\tret\n'
-        code += f'{function_name} ENDP\n'
+        if arch == 'x64':
+            # Generate 64-bit ASM code.
+            code = ''
+            code += f'{function_name} PROC\n'
+            code += '\tmov [rsp +8], rcx          ; Save registers.\n'
+            code += '\tmov [rsp+16], rdx\n'
+            code += '\tmov [rsp+24], r8\n'
+            code += '\tmov [rsp+32], r9\n'
+            code += '\tsub rsp, 28h\n'
+            code += f'\tmov ecx, 0{function_hash:08X}h        ; Load function hash into ECX.\n'
+            code += '\tcall SW2_GetSyscallNumber  ; Resolve function hash into syscall number.\n'
+            code += '\tadd rsp, 28h\n'
+            code += '\tmov rcx, [rsp +8]          ; Restore registers.\n'
+            code += '\tmov rdx, [rsp+16]\n'
+            code += '\tmov r8, [rsp+24]\n'
+            code += '\tmov r9, [rsp+32]\n'
+            code += '\tmov r10, rcx\n'
+            code += '\tsyscall                    ; Invoke system call.\n'
+            code += '\tret\n'
+            code += f'{function_name} ENDP\n'
+        else:
+            # Generate 32-bit ASM code.
+            code = ''
+            code += f'{function_name} PROC\n'
+            code += '\tpush ebp\n'
+            code += '\tmov ebp, esp\n'
+            code += f'\tpush 0{function_hash:08X}h        ; Push the function hash.\n'
+            code += '\tcall SW2_GetSyscallNumber   ; Resolve function hash into syscall number.\n'
+            code += '\tlea esp, [esp+4]\n'
+            code += f'\tmov ecx, 0{len(self.prototypes[function_name]["params"]):X}h\n'
+            code += 'push_argument:\n'
+            code += '\tdec ecx\n'
+            code += '\tpush [ebp + 08h + ecx * 4]\n'
+            code += '\tjnz push_argument\n'
+            code += '\tpush ret_address_epilog     ; Ret address.\n'
+            code += '\tcall do_sysenter_interupt\n'
+            code += '\tlea esp, [esp+4]\n'
+            code += 'ret_address_epilog:\n'
+            code += '\tmov esp, ebp\n'
+            code += '\tpop ebp\n'
+            code += '\tret\n'
+            code += 'do_sysenter_interupt:\n'
+            code += '\tmov edx, esp\n'
+            code += '\tsysenter\n'
+            code += '\tret\n'
+            code += f'{function_name} ENDP\n'
 
         return code
 
@@ -175,13 +205,14 @@ if __name__ == '__main__':
     parser.add_argument('-p', '--preset', help='Preset ("all", "common")', required=False)
     parser.add_argument('-f', '--functions', help='Comma-separated functions', required=False)
     parser.add_argument('-o', '--out-file', help='Output basename (w/o extension)', required=True)
+    parser.add_argument('-a', '--arch', help='System architecture (x64 by default, WoW64 is not supported)', default='x64', choices=['x64', 'x86'])
     args = parser.parse_args()
 
     sw = SysWhispers()
 
     if args.preset == 'all':
         print('All functions selected.\n')
-        sw.generate(basename=args.out_file)
+        sw.generate(basename=args.out_file, arch=args.arch)
 
     elif args.preset == 'common':
         print('Common functions selected.\n')
@@ -217,7 +248,8 @@ if __name__ == '__main__':
              'NtDeviceIoControlFile',
              'NtQueueApcThread',
              'NtWaitForMultipleObjects'],
-            basename=args.out_file)
+            basename=args.out_file,
+            arch=args.arch)
 
     elif args.preset:
         print('ERROR: Invalid preset provided. Must be "all" or "common".')
@@ -229,4 +261,4 @@ if __name__ == '__main__':
 
     else:
         functions = args.functions.split(',') if args.functions else []
-        sw.generate(functions, args.out_file)
+        sw.generate(functions, args.out_file, args.arch)
