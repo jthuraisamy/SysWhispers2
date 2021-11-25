@@ -145,6 +145,14 @@ Using the `--preset common` switch will create a header/ASM pair with the follow
 4. Go to the properties of the ASM file, and set the *Item Type* to *Microsoft Macro Assembler*.
 5. Ensure that the project platform is set to x64. 32-bit projects are not supported at this time.
 
+## Using with LLVM/Clang
+
+SysWhispers2 outputs a clang compatible `.s` file which contains the ASM stubs. This can be used with llvm to compile your code. For example, using the `CreateRemoteThread` DLL injection example above:
+
+```
+clang -D nullptr=NULL main.c syscall.c syscallstubs.s -o test.exe
+```
+
 ## Caveats and Limitations
 
 - Only 64-bit Windows is supported at this time.
