@@ -10,8 +10,8 @@ import struct
 class SysWhispers(object):
     def __init__(self):
         self.seed = random.randint(2 ** 28, 2 ** 32 - 1)
-        self.typedefs: list = json.load(open('./data/typedefs.json'))
-        self.prototypes: dict = json.load(open('./data/prototypes.json'))
+        self.typedefs: list = json.load(open(os.path.join(os.path.dirname(__file__), "data", "typedefs.json")))
+        self.prototypes: dict = json.load(open(os.path.join(os.path.dirname(__file__), "data", "prototypes.json")))
 
     def generate(self, function_names: list = (), basename: str = 'syscalls'):
         if not function_names:
@@ -20,7 +20,7 @@ class SysWhispers(object):
             raise ValueError('Prototypes are not available for one or more of the requested functions.')
 
         # Write C file.
-        with open ('./data/base.c', 'rb') as base_source:
+        with open (os.path.join(os.path.dirname(__file__), "data", "base.c"), 'rb') as base_source:
             with open(f'{basename}.c', 'wb') as output_source:
                 base_source_contents = base_source.read().decode()
                 base_source_contents = base_source_contents.replace('<BASENAME>', os.path.basename(basename), 1)
@@ -37,7 +37,7 @@ class SysWhispers(object):
             output_asm.write(b'end')
 
         # Write header file.
-        with open('./data/base.h', 'rb') as base_header:
+        with open(os.path.join(os.path.dirname(__file__), "data", "base.h"), 'rb') as base_header:
             with open(f'{basename}.h', 'wb') as output_header:
                 # Replace <SEED_VALUE> with a random seed.
                 base_header_contents = base_header.read().decode()
