@@ -51,6 +51,6 @@ typedef struct _SW2_PEB {
 } SW2_PEB, *PSW2_PEB;
 
 DWORD SW2_HashSyscall(PCSTR FunctionName);
-BOOL SW2_PopulateSyscallList();
+BOOL SW2_PopulateSyscallList(void);
 EXTERN_C DWORD SW2_GetSyscallNumber(DWORD FunctionHash);
 
