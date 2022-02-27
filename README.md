@@ -142,8 +142,34 @@ Using the `--preset common` switch will create a header/ASM pair with the follow
 1. Copy the generated H/C/ASM files into the project folder.
 2. In Visual Studio, go to *Project* → *Build Customizations...* and enable MASM.
 3. In the *Solution Explorer*, add the .h and .c/.asm files to the project as header and source files, respectively.
-4. Go to the properties of the ASM file, and set the *Item Type* to *Microsoft Macro Assembler*.
-5. Ensure that the project platform is set to x64. 32-bit projects are not supported at this time.
+4. Go to the properties of the x86 ASM file.
+5. Select *All Configurations* from the *Configurations* drop-down.
+6. Select *Win32* from the Platform drop-down.
+7. Set the following options:
+    - *Excluded From Build* = *No*
+    - *Content* = *Yes*
+    - *Item Type* = *Microsoft Macro Assembler*
+8. Click *Apply*
+9. Select *x64* from the *Platform* drop-down.
+10. Set the following options:
+    - *Excluded From Build* = *Yes*
+    - *Content* = *Yes*
+    - *Item Type* = *Microsoft Macro Assembler*
+11. Click *Apply*, then *OK*.
+12. Go to the properties of the x64 ASM file.
+13. Select *All Configurations* from the *Configurations* drop-down.
+14. Select *Win32* from the Platform drop-down.
+15. Set the following options:
+    - *Excluded From Build* = *Yes*
+    - *Content* = *Yes*
+    - *Item Type* = *Microsoft Macro Assembler*
+16. Click *Apply*
+17. Select *x64* from the *Platform* drop-down.
+18. Set the following options:
+    - *Excluded From Build* = *No*
+    - *Content* = *Yes*
+    - *Item Type* = *Microsoft Macro Assembler*
+19. Click *Apply*, then *OK*.
 
 ## Caveats and Limitations
 

@@ -12,6 +12,61 @@ class SysWhispers(object):
         self.seed = random.randint(2 ** 28, 2 ** 32 - 1)
         self.typedefs: list = json.load(open(os.path.join(os.path.dirname(__file__), "data", "typedefs.json")))
         self.prototypes: dict = json.load(open(os.path.join(os.path.dirname(__file__), "data", "prototypes.json")))
+        self.x86_stub_common = b'''.686 
+.XMM 
+.MODEL flat, c 
+ASSUME fs:_DATA 
+
+.data
+
+.code
+
+EXTERN SW2_GetSyscallNumber: PROC
+
+WhisperMain PROC
+    pop eax                        ; Remove return address from CALL instruction
+    call SW2_GetSyscallNumber      ; Resolve function hash into syscall number
+    add esp, 4                     ; Restore ESP
+    mov ecx, fs:[0c0h]
+    test ecx, ecx
+    jne _wow64
+    lea edx, [esp+4h]
+    INT 02eh
+    ret
+_wow64:
+    xor ecx, ecx
+    lea edx, [esp+4h]
+    call dword ptr fs:[0c0h]
+    ret
+WhisperMain ENDP
+
+'''
+        self.x64_stub_common = b'''.data
+currentHash DWORD 0
+
+.code
+EXTERN SW2_GetSyscallNumber: PROC
+    
+WhisperMain PROC
+    pop rax
+    mov [rsp+ 8], rcx              ; Save registers.
+    mov [rsp+16], rdx
+    mov [rsp+24], r8
+    mov [rsp+32], r9
+    sub rsp, 28h
+    mov ecx, currentHash
+    call SW2_GetSyscallNumber
+    add rsp, 28h
+    mov rcx, [rsp+ 8]              ; Restore registers.
+    mov rdx, [rsp+16]
+    mov r8, [rsp+24]
+    mov r9, [rsp+32]
+    mov r10, rcx
+    syscall                        ; Issue syscall
+    ret
+WhisperMain ENDP
+
+'''
 
     def generate(self, function_names: list = (), basename: str = 'syscalls'):
         if not function_names:
@@ -26,16 +81,26 @@ class SysWhispers(object):
                 base_source_contents = base_source_contents.replace('<BASENAME>', os.path.basename(basename), 1)
                 output_source.write(base_source_contents.encode())
 
-        # Write ASM file.
-        basename_suffix = 'stubs'
-        basename_suffix = basename_suffix.capitalize() if os.path.basename(basename).istitle() else basename_suffix
-        basename_suffix = f'_{basename_suffix}' if '_' in basename else basename_suffix
-        with open(f'{basename}{basename_suffix}.asm', 'wb') as output_asm:
-            output_asm.write(b'.code\n\nEXTERN SW2_GetSyscallNumber: PROC\n\n')
+        # Write x86 ASM file.
+        basename_x86_suffix = 'x86stubs'
+        basename_x86_suffix = basename_x86_suffix.capitalize() if os.path.basename(basename).istitle() else basename_x86_suffix
+        basename_x86_suffix = f'_{basename_x86_suffix}' if '_' in basename else basename_x86_suffix
+        with open(f'{basename}{basename_x86_suffix}.asm', 'wb') as output_asm:
+            output_asm.write(self.x86_stub_common)
             for function_name in function_names:
-                output_asm.write((self._get_function_asm_code(function_name) + '\n').encode())
+                output_asm.write((self._get_function_x86_asm_code(function_name) + '\n').encode())
             output_asm.write(b'end')
 
+        # Write x64 ASM file.
+        basename_x64_suffix = 'x64stubs'
+        basename_x64_suffix = basename_x64_suffix.capitalize() if os.path.basename(basename).istitle() else basename_x64_suffix
+        basename_x64_suffix = f'_{basename_x64_suffix}' if '_' in basename else basename_x64_suffix
+        with open(f'{basename}{basename_x64_suffix}.asm', 'wb') as output_asm:
+            output_asm.write(self.x64_stub_common)
+            for function_name in function_names:
+                output_asm.write((self._get_function_x64_asm_code(function_name) + '\n').encode())
+            output_asm.write(b'end')
+            
         # Write header file.
         with open(os.path.join(os.path.dirname(__file__), "data", "base.h"), 'rb') as base_header:
             with open(f'{basename}.h', 'wb') as output_header:
@@ -60,7 +125,8 @@ class SysWhispers(object):
         print('Complete! Files written to:')
         print(f'\t{basename}.h')
         print(f'\t{basename}.c')
-        print(f'\t{basename}{basename_suffix}.asm')
+        print(f'\t{basename}{basename_x86_suffix}.asm')
+        print(f'\t{basename}{basename_x64_suffix}.asm')
 
     def _get_typedefs(self, function_names: list) -> list:
         def _names_to_ids(names: list) -> list:
@@ -133,28 +199,27 @@ class SysWhispers(object):
 
         return hash
 
-    def _get_function_asm_code(self, function_name: str) -> str:
+    def _get_function_x86_asm_code(self, function_name: str) -> str:
+        function_hash = self._get_function_hash(function_name)
+
+        # Generate 32-bit ASM code.
+        code = f'''{function_name} PROC
+    push 0{function_hash:08X}h
+    call WhisperMain
+{function_name} ENDP
+'''
+
+        return code
+
+    def _get_function_x64_asm_code(self, function_name: str) -> str:
         function_hash = self._get_function_hash(function_name)
 
         # Generate 64-bit ASM code.
-        code = ''
-        code += f'{function_name} PROC\n'
-        code += '\tmov [rsp +8], rcx          ; Save registers.\n'
-        code += '\tmov [rsp+16], rdx\n'
-        code += '\tmov [rsp+24], r8\n'
-        code += '\tmov [rsp+32], r9\n'
-        code += '\tsub rsp, 28h\n'
-        code += f'\tmov ecx, 0{function_hash:08X}h        ; Load function hash into ECX.\n'
-        code += '\tcall SW2_GetSyscallNumber  ; Resolve function hash into syscall number.\n'
-        code += '\tadd rsp, 28h\n'
-        code += '\tmov rcx, [rsp +8]          ; Restore registers.\n'
-        code += '\tmov rdx, [rsp+16]\n'
-        code += '\tmov r8, [rsp+24]\n'
-        code += '\tmov r9, [rsp+32]\n'
-        code += '\tmov r10, rcx\n'
-        code += '\tsyscall                    ; Invoke system call.\n'
-        code += '\tret\n'
-        code += f'{function_name} ENDP\n'
+        code = f'''{function_name} PROC
+    mov currentHash, 0{function_hash:08X}h    ; Load function hash into ECX.
+    call WhisperMain               ; Resolve function hash into syscall number and make the call
+{function_name} ENDP
+'''
 
         return code
 

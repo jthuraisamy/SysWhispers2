@@ -24,7 +24,11 @@ BOOL SW2_PopulateSyscallList(void)
     // Return early if the list is already populated.
     if (SW2_SyscallList.Count) return TRUE;
 
+#ifdef _WIN64
     PSW2_PEB Peb = (PSW2_PEB)__readgsqword(0x60);
+#else
+    PSW2_PEB Peb = (PSW2_PEB)__readfsdword(0x30);
+#endif
     PSW2_PEB_LDR_DATA Ldr = Peb->Ldr;
     PIMAGE_EXPORT_DIRECTORY ExportDirectory = NULL;
     PVOID DllBase = NULL;

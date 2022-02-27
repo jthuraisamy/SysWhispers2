@@ -19,12 +19,16 @@ DWORD SW2_HashSyscall(PCSTR FunctionName)
     return Hash;
 }
 
-BOOL SW2_PopulateSyscallList()
+BOOL SW2_PopulateSyscallList(void)
 {
     // Return early if the list is already populated.
     if (SW2_SyscallList.Count) return TRUE;
 
+#ifdef _WIN64
     PSW2_PEB Peb = (PSW2_PEB)__readgsqword(0x60);
+#else
+    PSW2_PEB Peb = (PSW2_PEB)__readfsdword(0x30);
+#endif
     PSW2_PEB_LDR_DATA Ldr = Peb->Ldr;
     PIMAGE_EXPORT_DIRECTORY ExportDirectory = NULL;
     PVOID DllBase = NULL;
@@ -79,7 +83,7 @@ BOOL SW2_PopulateSyscallList()
     SW2_SyscallList.Count = i;
 
     // Sort the list by address in ascending order.
-    for (DWORD i = 0; i < SW2_SyscallList.Count - 1; i++)
+    for (i = 0; i < SW2_SyscallList.Count - 1; i++)
     {
         for (DWORD j = 0; j < SW2_SyscallList.Count - i - 1; j++)
         {
