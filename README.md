@@ -173,7 +173,6 @@ Using the `--preset common` switch will create a header/ASM pair with the follow
 
 ## Caveats and Limitations
 
-- Only 64-bit Windows is supported at this time.
 - System calls from the graphical subsystem (`win32k.sys`) are not supported.
 - Tested on Visual Studio 2019 (v142) with Windows 10 SDK.
 
