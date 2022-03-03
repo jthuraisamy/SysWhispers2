@@ -45,13 +45,13 @@ py .\syswhispers.py --functions NtProtectVirtualMemory,NtWriteVirtualMemory -o s
 
 ```
 PS C:\Projects\SysWhispers2> py .\syswhispers.py --preset common --out-file syscalls_common
-
+                                                 
                   .                         ,--. 
 ,-. . . ,-. . , , |-. o ,-. ,-. ,-. ,-. ,-.    / 
 `-. | | `-. |/|/  | | | `-. | | |-' |   `-. ,-'  
 `-' `-| `-' ' '   ' ' ' `-' |-' `-' '   `-' `--- 
-     /|                     |  @Jackson_T                 
-    `-'                     '  @modexpblog, 2021
+     /|                     |  @Jackson_T        
+    `-'                     '  @modexpblog, 2021 
 
 SysWhispers2: Why call the kernel when you can whisper?
 
@@ -60,7 +60,10 @@ Common functions selected.
 Complete! Files written to:
         syscalls_common.h
         syscalls_common.c
-        syscalls_common_stubs.asm
+        syscalls_common_x86stubs.asm
+        syscalls_common_x64stubs.asm
+        syscalls_common_x86stubs.nasm
+        syscalls_common_x64stubs.nasm
 ```
 
 ### Before-and-After Example of Classic `CreateRemoteThread` DLL Injection
