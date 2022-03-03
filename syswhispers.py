@@ -41,6 +41,33 @@ _wow64:
 WhisperMain ENDP
 
 '''
+        self.x86_nasm_stub_common = b'''[SECTION .data] 
+
+{globalFunctions}
+global WhisperMain
+extern SW2_GetSyscallNumber
+
+[SECTION .text]
+
+BITS 32
+
+WhisperMain:
+    pop eax                        ; Remove return address from CALL instruction
+    call SW2_GetSyscallNumber      ; Resolve function hash into syscall number
+    add esp, 4                     ; Restore ESP
+    mov ecx, [fs:0c0h]
+    test ecx, ecx
+    jne _wow64
+    lea edx, [esp+4h]
+    INT 02eh
+    ret
+_wow64:
+    xor ecx, ecx
+    lea edx, [esp+4h]
+    call dword [fs:0c0h]
+    ret
+
+'''
         self.x64_stub_common = b'''.data
 currentHash DWORD 0
 
@@ -67,6 +94,36 @@ WhisperMain PROC
 WhisperMain ENDP
 
 '''
+        self.x64_nasm_stub_common = b'''[SECTION .data]
+currentHash:    dw  0
+
+[SECTION .text]
+
+BITS 64
+
+{globalFunctions}
+global WhisperMain
+extern SW2_GetSyscallNumber
+    
+WhisperMain:
+    pop rax
+    mov [rsp+ 8], rcx              ; Save registers.
+    mov [rsp+16], rdx
+    mov [rsp+24], r8
+    mov [rsp+32], r9
+    sub rsp, 28h
+    mov ecx, dword [currentHash]
+    call SW2_GetSyscallNumber
+    add rsp, 28h
+    mov rcx, [rsp+ 8]              ; Restore registers.
+    mov rdx, [rsp+16]
+    mov r8, [rsp+24]
+    mov r9, [rsp+32]
+    mov r10, rcx
+    syscall                        ; Issue syscall
+    ret
+
+'''
 
     def generate(self, function_names: list = (), basename: str = 'syscalls'):
         if not function_names:
@@ -91,6 +148,18 @@ WhisperMain ENDP
                 output_asm.write((self._get_function_x86_asm_code(function_name) + '\n').encode())
             output_asm.write(b'end')
 
+        # Write x86 NASM ASM file.
+        basename_x86_suffix = 'x86stubs'
+        basename_x86_suffix = basename_x86_suffix.capitalize() if os.path.basename(basename).istitle() else basename_x86_suffix
+        basename_x86_suffix = f'_{basename_x86_suffix}' if '_' in basename else basename_x86_suffix
+        globalFunctions = ''
+        for function_name in function_names:
+            globalFunctions = globalFunctions + 'global {function_name}\n'.format(function_name = function_name)
+        with open(f'{basename}{basename_x86_suffix}.nasm', 'wb') as output_asm:
+            output_asm.write(self.x86_nasm_stub_common.decode().format(globalFunctions = globalFunctions).encode())
+            for function_name in function_names:
+                output_asm.write((self._get_function_x86_nasm_asm_code(function_name) + '\n').encode())
+
         # Write x64 ASM file.
         basename_x64_suffix = 'x64stubs'
         basename_x64_suffix = basename_x64_suffix.capitalize() if os.path.basename(basename).istitle() else basename_x64_suffix
@@ -100,6 +169,18 @@ WhisperMain ENDP
             for function_name in function_names:
                 output_asm.write((self._get_function_x64_asm_code(function_name) + '\n').encode())
             output_asm.write(b'end')
+            
+        # Write x64 NASM ASM file.
+        basename_x64_suffix = 'x64stubs'
+        basename_x64_suffix = basename_x64_suffix.capitalize() if os.path.basename(basename).istitle() else basename_x64_suffix
+        basename_x64_suffix = f'_{basename_x64_suffix}' if '_' in basename else basename_x64_suffix
+        globalFunctions = ''
+        for function_name in function_names:
+            globalFunctions = globalFunctions + 'global {function_name}\n'.format(function_name = function_name)
+        with open(f'{basename}{basename_x64_suffix}.nasm', 'wb') as output_asm:
+            output_asm.write(self.x64_nasm_stub_common.decode().format(globalFunctions = globalFunctions).encode())
+            for function_name in function_names:
+                output_asm.write((self._get_function_x64_nasm_asm_code(function_name) + '\n').encode())
             
         # Write header file.
         with open(os.path.join(os.path.dirname(__file__), "data", "base.h"), 'rb') as base_header:
@@ -127,6 +208,8 @@ WhisperMain ENDP
         print(f'\t{basename}.c')
         print(f'\t{basename}{basename_x86_suffix}.asm')
         print(f'\t{basename}{basename_x64_suffix}.asm')
+        print(f'\t{basename}{basename_x86_suffix}.nasm')
+        print(f'\t{basename}{basename_x64_suffix}.nasm')
 
     def _get_typedefs(self, function_names: list) -> list:
         def _names_to_ids(names: list) -> list:
@@ -211,6 +294,17 @@ WhisperMain ENDP
 
         return code
 
+    def _get_function_x86_nasm_asm_code(self, function_name: str) -> str:
+        function_hash = self._get_function_hash(function_name)
+
+        # Generate 32-bit NASM ASM code.
+        code = f'''{function_name}:
+    push 0{function_hash:08X}h
+    call WhisperMain
+'''
+
+        return code
+
     def _get_function_x64_asm_code(self, function_name: str) -> str:
         function_hash = self._get_function_hash(function_name)
 
@@ -222,6 +316,27 @@ WhisperMain ENDP
 '''
 
         return code
+
+    def _get_function_x64_nasm_asm_code(self, function_name: str) -> str:
+        function_hash = self._get_function_hash(function_name)
+
+        # Generate 64-bit NASM ASM code.
+        code = f'''{function_name}:
+    mov dword [currentHash], 0{function_hash:08X}h    ; Load function hash into ECX.
+    call WhisperMain                       ; Resolve function hash into syscall number and make the call
+'''
+
+        return code
+
+    def _get_global_functions_nasm(self, function_name: str) -> str:
+        function_hash = self._get_function_hash(function_name)
+
+        # Generate 64-bit ASM code.
+        code = f'''global {function_name}
+'''
+
+        return code
+
 
 
 if __name__ == '__main__':
