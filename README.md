@@ -171,6 +171,50 @@ Using the `--preset common` switch will create a header/ASM pair with the follow
     - *Item Type* = *Microsoft Macro Assembler*
 19. Click *Apply*, then *OK*.
 
+## Compiling with MinGW and NASM
+
+The following examples demonstrate how to compile the above example programs as EXE and DLLs using MinGW and the NASM assembler:
+
+### x86 Example EXE
+
+```
+i686-w64-mingw32-gcc -c main.c syscalls.c -Wall -shared
+nasm -f win32 --prefix _ -o syscallsx86stubs.o syscallsx86stubs.nasm
+i686-w64-mingw32-gcc *.o -o temp.exe
+i686-w64-mingw32-gcc-strip -s temp.exe -o example.exe
+rm -rf *.o temp.exe
+```
+
+### x86 Example DLL with Exports
+
+```
+i686-w64-mingw32-gcc -c dllmain.c syscalls.c -Wall -shared
+nasm -f win32 --prefix _ -o syscallsx86stubs.o syscallsx86stubs.nasm
+i686-w64-mingw32-dllwrap --def dllmain.def *.o -o temp.dll
+i686-w64-mingw32-gcc-strip -s temp.dll -o example.dll
+rm -rf *.o temp.dll
+```
+
+### x64 Example EXE
+
+```
+x86_64-w64-mingw32-gcc -m64 -c main.c syscalls.c -Wall -shared
+nasm -f win64 -o syscallsx64stubs.o syscallsx64stubs.nasm
+x86_64-w64-mingw32-gcc *.o -o temp.exe
+x86_64-w64-mingw32-gcc-strip -s temp.exe -o example.exe
+rm -rf *.o temp.exe
+```
+
+### x64 Example DLL with Exports
+
+```
+x86_64-w64-mingw32-gcc -m64 -c dllmain.c syscalls.c -Wall -shared
+nasm -f win64 -o syscallsx64stubs.o syscallsx64stubs.nasm
+x86_64-w64-mingw32-gcc-dllwrap --def dllmain.def *.o -o temp.dll
+x86_64-w64-mingw32-gcc-strip -s temp.dll -o example.dll
+rm -rf *.o temp.dll
+```
+
 ## Caveats and Limitations
 
 - System calls from the graphical subsystem (`win32k.sys`) are not supported.
