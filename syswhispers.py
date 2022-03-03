@@ -310,7 +310,7 @@ WhisperMain:
 
         # Generate 64-bit ASM code.
         code = f'''{function_name} PROC
-    mov currentHash, 0{function_hash:08X}h    ; Load function hash into ECX.
+    mov currentHash, 0{function_hash:08X}h    ; Load function hash into global variable.
     call WhisperMain               ; Resolve function hash into syscall number and make the call
 {function_name} ENDP
 '''
@@ -322,22 +322,11 @@ WhisperMain:
 
         # Generate 64-bit NASM ASM code.
         code = f'''{function_name}:
-    mov dword [currentHash], 0{function_hash:08X}h    ; Load function hash into ECX.
+    mov dword [currentHash], 0{function_hash:08X}h    ; Load function hash into global variable.
     call WhisperMain                       ; Resolve function hash into syscall number and make the call
 '''
 
         return code
-
-    def _get_global_functions_nasm(self, function_name: str) -> str:
-        function_hash = self._get_function_hash(function_name)
-
-        # Generate 64-bit ASM code.
-        code = f'''global {function_name}
-'''
-
-        return code
-
-
 
 if __name__ == '__main__':
     print(
