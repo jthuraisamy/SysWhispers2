@@ -51,6 +51,11 @@ class SysWhispers(object):
                 output_asm.write((self._get_function_asm_code(function_name) + '\n').encode())
             output_asm.write(b'end')
 
+        # Write ASM .s file.
+        with open(f'{basename}{basename_suffix}.s', 'wb') as output_asm:
+            for function_name in function_names:
+                output_asm.write((self._get_function_asm_code_s(function_name) + '\n').encode())
+
         # Write header file.
         with open(os.path.join(os.path.dirname(__file__), "data", "base.h"), 'rb') as base_header:
             with open(f'{basename}.h', 'wb') as output_header:
@@ -76,6 +81,7 @@ class SysWhispers(object):
         print(f'\t{basename}.h')
         print(f'\t{basename}.c')
         print(f'\t{basename}{basename_suffix}.asm')
+        print(f'\t{basename}{basename_suffix}.s')
 
     def _get_typedefs(self, function_names: list) -> list:
         def _names_to_ids(names: list) -> list:
@@ -195,6 +201,32 @@ class SysWhispers(object):
 
         return code
 
+    def _get_function_asm_code_s(self, function_name: str) -> str:
+        function_hash = self._get_function_hash(function_name)
+
+        # Generate 64-bit ASM code.
+        code = '\t.intel_syntax\n'
+        code += f'\t.def {function_name}\n'
+        code += f'\t.global {function_name}\n'
+        code += f'{function_name}:\n'
+        code += '\tmov [rsp +8], rcx  // Save registers.\n'
+        code += '\tmov [rsp+16], rdx\n'
+        code += '\tmov [rsp+24], r8\n'
+        code += '\tmov [rsp+32], r9\n'
+        code += '\tsub rsp, 0x28\n'
+        code += f'\tmov ecx, 0x{function_hash:08X}        // Load function hash into ECX.\n'
+        code += '\tcall SW2_GetSyscallNumber  // Resolve function hash into syscall number.\n'
+        code += '\tadd rsp, 0x28\n'
+        code += '\tmov rcx, [rsp +8]          // Restore registers.\n'
+        code += '\tmov rdx, [rsp+16]\n'
+        code += '\tmov r8, [rsp+24]\n'
+        code += '\tmov r9, [rsp+32]\n'
+        code += '\tmov r10, rcx\n'
+        code += '\tsyscall                    // Invoke system call.\n'
+        code += '\tret\n'
+        code += '\t.endef\n'
+
+        return code
 
 if __name__ == '__main__':
     print(
