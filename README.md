@@ -143,11 +143,9 @@ Using the `--preset common` switch will create a header/ASM pair with the follow
 2. In Visual Studio, go to *Project* → *Build Customizations...* and enable MASM.
 3. In the *Solution Explorer*, add the .h and .c/.asm files to the project as header and source files, respectively.
 4. Go to the properties of the ASM file, and set the *Item Type* to *Microsoft Macro Assembler*.
-5. Ensure that the project platform is set to x64. 32-bit projects are not supported at this time.
 
 ## Caveats and Limitations
 
-- Only 64-bit Windows is supported at this time.
 - System calls from the graphical subsystem (`win32k.sys`) are not supported.
 - Tested on Visual Studio 2019 (v142) with Windows 10 SDK.
 
