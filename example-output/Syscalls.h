@@ -6,9 +6,9 @@
 #ifndef SW2_HEADER_H_
 #define SW2_HEADER_H_
 
-#include <Windows.h>
+#include <windows.h>
 
-#define SW2_SEED 0x874DD416
+#define SW2_SEED 0xA7A0175C
 #define SW2_ROL8(v) (v << 8 | v >> 24)
 #define SW2_ROR8(v) (v >> 8 | v << 24)
 #define SW2_ROX8(v) ((SW2_SEED % 2) ? SW2_ROL8(v) : SW2_ROR8(v))
@@ -51,7 +51,7 @@ typedef struct _SW2_PEB {
 } SW2_PEB, *PSW2_PEB;
 
 DWORD SW2_HashSyscall(PCSTR FunctionName);
-BOOL SW2_PopulateSyscallList();
+BOOL SW2_PopulateSyscallList(void);
 EXTERN_C DWORD SW2_GetSyscallNumber(DWORD FunctionHash);
 
 typedef struct _UNICODE_STRING
@@ -197,11 +197,6 @@ typedef struct _PS_ATTRIBUTE
 	PSIZE_T ReturnLength;
 } PS_ATTRIBUTE, *PPS_ATTRIBUTE;
 
-typedef struct _WNF_STATE_NAME
-{
-	ULONG Data[2];
-} WNF_STATE_NAME, *PWNF_STATE_NAME;
-
 #ifndef InitializeObjectAttributes
 #define InitializeObjectAttributes( p, n, a, r, s ) { \
 	(p)->Length = sizeof( OBJECT_ATTRIBUTES );        \
@@ -212,6 +207,11 @@ typedef struct _WNF_STATE_NAME
 	(p)->SecurityQualityOfService = NULL;             \
 }
 #endif
+
+typedef struct _WNF_STATE_NAME
+{
+	ULONG Data[2];
+} WNF_STATE_NAME, *PWNF_STATE_NAME;
 
 typedef struct _KEY_VALUE_ENTRY
 {
@@ -4045,5 +4045,17 @@ EXTERN_C NTSTATUS NtManageHotPatch(
 EXTERN_C NTSTATUS NtContinueEx(
 	IN PCONTEXT ContextRecord,
 	IN PKCONTINUE_ARGUMENT ContinueArgument);
+
+EXTERN_C NTSTATUS RtlCreateUserThread(
+	IN HANDLE ProcessHandle,
+	IN PSECURITY_DESCRIPTOR SecurityDescriptor OPTIONAL,
+	IN BOOLEAN CreateSuspended,
+	IN ULONG StackZeroBits,
+	IN OUT PULONG StackReserved,
+	IN OUT PULONG StackCommit,
+	IN PVOID StartAddress,
+	IN PVOID StartParameter OPTIONAL,
+	OUT PHANDLE ThreadHandle,
+	OUT PCLIENT_ID ClientID);
 
 #endif
