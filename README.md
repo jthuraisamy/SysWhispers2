@@ -45,22 +45,27 @@ py .\syswhispers.py --functions NtProtectVirtualMemory,NtWriteVirtualMemory -o s
 
 ```
 PS C:\Projects\SysWhispers2> py .\syswhispers.py --preset common --out-file syscalls_common
-
+                                                 
                   .                         ,--. 
 ,-. . . ,-. . , , |-. o ,-. ,-. ,-. ,-. ,-.    / 
 `-. | | `-. |/|/  | | | `-. | | |-' |   `-. ,-'  
 `-' `-| `-' ' '   ' ' ' `-' |-' `-' '   `-' `--- 
-     /|                     |  @Jackson_T                 
-    `-'                     '  @modexpblog, 2021
+     /|                     |  @Jackson_T        
+    `-'                     '  @modexpblog, 2021 
 
 SysWhispers2: Why call the kernel when you can whisper?
 
-Common functions selected.
+All functions selected.
 
 Complete! Files written to:
-        syscalls_common.h
-        syscalls_common.c
-        syscalls_common_stubs.asm
+        Syscalls.h
+        Syscalls.c
+        SyscallsStubs.x86.asm
+        SyscallsStubs.x86.nasm
+        SyscallsStubs.x86.s
+        SyscallsStubs.x64.asm
+        SyscallsStubs.x64.nasm
+        SyscallsStubs.x64.s
 ```
 
 ### Before-and-After Example of Classic `CreateRemoteThread` DLL Injection
@@ -142,7 +147,110 @@ Using the `--preset common` switch will create a header/ASM pair with the follow
 1. Copy the generated H/C/ASM files into the project folder.
 2. In Visual Studio, go to *Project* → *Build Customizations...* and enable MASM.
 3. In the *Solution Explorer*, add the .h and .c/.asm files to the project as header and source files, respectively.
-4. Go to the properties of the ASM file, and set the *Item Type* to *Microsoft Macro Assembler*.
+4. Go to the properties of the x86 ASM file.
+5. Select *All Configurations* from the *Configurations* drop-down.
+6. Select *Win32* from the Platform drop-down.
+7. Set the following options:
+    - *Excluded From Build* = *No*
+    - *Content* = *Yes*
+    - *Item Type* = *Microsoft Macro Assembler*
+8. Click *Apply*
+9. Select *x64* from the *Platform* drop-down.
+10. Set the following options:
+    - *Excluded From Build* = *Yes*
+    - *Content* = *Yes*
+    - *Item Type* = *Microsoft Macro Assembler*
+11. Click *Apply*, then *OK*.
+12. Go to the properties of the x64 ASM file.
+13. Select *All Configurations* from the *Configurations* drop-down.
+14. Select *Win32* from the Platform drop-down.
+15. Set the following options:
+    - *Excluded From Build* = *Yes*
+    - *Content* = *Yes*
+    - *Item Type* = *Microsoft Macro Assembler*
+16. Click *Apply*
+17. Select *x64* from the *Platform* drop-down.
+18. Set the following options:
+    - *Excluded From Build* = *No*
+    - *Content* = *Yes*
+    - *Item Type* = *Microsoft Macro Assembler*
+19. Click *Apply*, then *OK*.
+
+## Compiling with MinGW and NASM
+
+The following examples demonstrate how to compile the above example programs as EXE and DLLs using MinGW and the NASM assembler:
+
+### x86 Example EXE
+
+```
+i686-w64-mingw32-gcc -c main.c syscalls.c -Wall -shared
+nasm -f win32 -o syscallsstubs.x86.o syscallsstubs.x86.nasm
+i686-w64-mingw32-gcc *.o -o temp.exe
+i686-w64-mingw32-gcc-strip -s temp.exe -o example.exe
+rm -rf *.o temp.exe
+```
+
+### x86 Example DLL with Exports
+
+```
+i686-w64-mingw32-gcc -c dllmain.c syscalls.c -Wall -shared
+nasm -f win32 -o syscallsstubs.x86.o syscallsstubs.x86.nasm
+i686-w64-mingw32-dllwrap --def dllmain.def *.o -o temp.dll
+i686-w64-mingw32-gcc-strip -s temp.dll -o example.dll
+rm -rf *.o temp.dll
+```
+
+### x64 Example EXE
+
+```
+x86_64-w64-mingw32-gcc -m64 -c main.c syscalls.c -Wall -shared
+nasm -f win64 -o syscallsstubs.x64.o syscallsstubs.x64.nasm
+x86_64-w64-mingw32-gcc *.o -o temp.exe
+x86_64-w64-mingw32-gcc-strip -s temp.exe -o example.exe
+rm -rf *.o temp.exe
+```
+
+### x64 Example DLL with Exports
+
+```
+x86_64-w64-mingw32-gcc -m64 -c dllmain.c syscalls.c -Wall -shared
+nasm -f win64 -o syscallsstubs.x64.o syscallsstubs.x64.nasm
+x86_64-w64-mingw32-gcc-dllwrap --def dllmain.def *.o -o temp.dll
+x86_64-w64-mingw32-gcc-strip -s temp.dll -o example.dll
+rm -rf *.o temp.dll
+```
+
+## Compiling with MingGW and GNU Assembler (GAS)
+
+### x86 Example EXE
+
+```
+i686-w64-mingw32-gcc -m32 -Wall -c main.c syscalls.c syscallsstubs.x86.s -o temp.exe
+i686-w64-mingw32-gcc-strip -s temp.exe -o example.exe
+```
+
+### x86 Example DLL with Exports
+
+```
+i686-w64-mingw32-gcc -m32 -Wall -c dllmain.c syscalls.c syscallsstubs.x86.s -o temp.dll
+i686-w64-mingw32-dllwrap --def dllmain.def *.o -o temp.dll
+i686-w64-mingw32-gcc-strip -s temp.dll -o example.dll
+```
+
+### x64 Example EXE
+
+```
+x86_64-w64-mingw32-gcc -m64 -Wall -c main.c syscalls.c syscallsstubs.x64.s -o temp.exe
+x86_64-w64-mingw32-strip -s temp.exe -o example.exe
+```
+
+### x64 Example DLL with Exports
+
+```
+x86_64-w64-mingw32-gcc -m64 -Wall -c dllmain.c syscalls.c syscallsstubs.x64.s -o temp.dll
+x86_64-w64-mingw32-dllwrap --def dllmain.def *.o -o temp.dll
+x86_64-w64-mingw32-gcc-strip -s temp.dll -o example.dll
+```
 
 ## Using with LLVM/Clang
 
