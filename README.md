@@ -260,6 +260,12 @@ SysWhispers2 outputs a clang compatible `.s` file which contains the ASM stubs. 
 clang -D nullptr=NULL main.c syscall.c syscallstubs.s -o test.exe
 ```
 
+## Inline Header Only
+The **inlinegas** output option will generate a header only version of Syswhispers2 that can be used with the compilation of BOFs. Simply include the header in your project.
+
+## Position Indipendent Code Mode
+If \_PICMODE is defined, the **SW2\_SyscallList** global variable is removed and it will need to be specified as a local variable. The **SW2\_PopulateSyscallList** and **SW2\_GetSyscallNumber** functions are updated to accept a pointer to a local **SW2\_SyscallList** variable.
+
 ## Caveats and Limitations
 
 - System calls from the graphical subsystem (`win32k.sys`) are not supported.

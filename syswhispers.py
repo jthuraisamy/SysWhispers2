@@ -115,6 +115,37 @@ _wow64:
     push 0x{function_hash:08X}
     call _WhisperMain
 '''
+            },
+            'inlinegas': {
+                'stub': b'''#define WhisperMain
+__asm__(".intel_syntax noprefix \\n\\
+.global _WhisperMain \\n\\
+_WhisperMain: \\n\\
+    pop eax \\n\\
+    call _SW2_GetSyscallNumber \\n\\
+    add esp, 4 \\n\\
+    mov ecx, dword ptr fs:0xc0 \\n\\
+    test ecx, ecx \\n\\
+    jne _wow64 \\n\\
+    lea edx, dword ptr [esp+0x04] \\n\\
+    INT 0x02e \\n\\
+    ret \\n\\
+_wow64: \\n\\
+    xor ecx, ecx \\n\\
+    lea edx, dword ptr [esp+0x04] \\n\\
+    call dword ptr fs:0xc0 \\n\\
+    ret \\n\\
+");
+
+''',
+                'func': b'''#define Zw{function_name} Nt{function_name}
+__asm__(".intel_syntax noprefix \\n\\
+_Nt{function_name}: \\n\\
+    push 0x{function_hash:08X} \\n\\
+    call _WhisperMain \\n\\
+");
+
+'''
             }
         },
         'x64': {
@@ -221,6 +252,39 @@ WhisperMain:
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 '''
+            },
+            'inlinegas': {
+                'stub': b'''#define WhisperMain
+__asm__(".intel_syntax noprefix \\n\\
+.global WhisperMain \\n\\
+WhisperMain: \\n\\
+    pop rax \\n\\
+    mov [rsp+ 8], rcx \\n\\
+    mov [rsp+16], rdx \\n\\
+    mov [rsp+24], r8 \\n\\
+    mov [rsp+32], r9 \\n\\
+    sub rsp, 0x28 \\n\\
+    mov rcx, r10 \\n\\
+    call SW2_GetSyscallNumber \\n\\
+    add rsp, 0x28 \\n\\
+    mov rcx, [rsp+ 8] \\n\\
+    mov rdx, [rsp+16] \\n\\
+    mov r8, [rsp+24] \\n\\
+    mov r9, [rsp+32] \\n\\
+    mov r10, rcx \\n\\
+    syscall \\n\\
+    ret \\n\\
+");
+
+''',
+                'func': b'''#define Zw{function_name} Nt{function_name}
+__asm__(".intel_syntax noprefix \\n\\
+Nt{function_name}: \\n\\
+    mov r10, 0x0{function_hash:08X} \\n\\
+    call WhisperMain \\n\\
+");
+
+'''
             }
         }
     }
@@ -257,17 +321,18 @@ WhisperMain:
                 # Replace <SEED_VALUE> with a random seed.
                 base_header_contents = base_header.read().decode()
                 base_header_contents = base_header_contents.replace('<SEED_VALUE>', f'0x{self.seed:08X}', 1)
+                base_header_contents = base_header_contents.replace('\r','')
 
                 # Write the base header.
                 output_header.write(base_header_contents.encode())
 
                 # Write the typedefs.
                 for typedef in self._get_typedefs(function_names):
-                    output_header.write(typedef.encode() + b'\n\n')
+                    output_header.write(typedef.replace('\r','').encode() + b'\n\n')
 
                 # Write the function prototypes.
                 for function_name in function_names:
-                    output_header.write((self._get_function_prototype(function_name) + '\n\n').encode())
+                    output_header.write((self._get_function_prototype(function_name).replace('\r','') + '\n\n').encode())
 
                 # Write the endif line.
                 output_header.write('#endif\n'.encode())
@@ -288,14 +353,29 @@ WhisperMain:
             file_ext = 'nasm'
         elif lang == 'gas':
             file_ext = 's'
+        elif lang == 'inlinegas':
+            file_ext = 'h'
             
         # Write ASM file.
-        basename_suffix = 'stubs'
+        if lang == 'inlinegas':
+            basename_suffix = 'inline'
+        else:
+            basename_suffix = 'stubs'
         basename_suffix = basename_suffix.capitalize() if os.path.basename(basename).istitle() else basename_suffix
         basename_suffix = f'_{basename_suffix}' if '_' in basename else basename_suffix
         with open(f'{basename}{basename_suffix}.{arch}.{file_ext}', 'wb') as output_asm:
             # Add the stub
             if lang == 'masm':
+                output_asm.write(self.asm_code[arch][lang]['stub'])
+            elif lang == 'inlinegas':
+                with open(f'{basename}.h', 'rb') as tempFile:
+                    output_asm.write(tempFile.read())
+                    output_asm.write(b'\n\n')
+                with open(f'{basename}.c', 'rb') as tempFile:
+                    cBase = tempFile.read()
+                    cBase = cBase.decode().replace(f'#include "{basename}.h"','').encode()
+                    output_asm.write(cBase)
+                    output_asm.write(b'\n\n')
                 output_asm.write(self.asm_code[arch][lang]['stub'])
             else:
                 globalFunctions = ''
@@ -393,7 +473,10 @@ WhisperMain:
     def _get_function_asm_code(self, arch, lang, function_name: str) -> str:
         function_hash = self._get_function_hash(function_name)
         
-        return self.asm_code[arch][lang]['func'].decode().format(function_name = function_name, function_hash = function_hash)
+        if lang == 'inlinegas':
+            return self.asm_code[arch][lang]['func'].decode().format(function_name = function_name[2:], function_hash = function_hash)
+        else:
+            return self.asm_code[arch][lang]['func'].decode().format(function_name = function_name, function_hash = function_hash)
     
     def _parse_arch(self):
         arch_list = []
@@ -428,6 +511,8 @@ WhisperMain:
                         asm_list.append('nasm')
                     if (lang.strip().lower() == 'gas') or (lang.strip().lower() == 'all'):
                         asm_list.append('gas')
+                    if (lang.strip().lower() == 'inlinegas') or (lang.strip().lower() == 'all'):
+                        asm_list.append('inlinegas')
             else:
                 if (args.asm_lang.strip().lower() == 'masm') or (args.asm_lang.strip().lower() == 'all'):
                     asm_list.append('masm')
@@ -435,11 +520,14 @@ WhisperMain:
                     asm_list.append('nasm')
                 if (args.asm_lang.strip().lower() == 'gas') or (args.asm_lang.strip().lower() == 'all'):
                     asm_list.append('gas')
+                if (args.asm_lang.strip().lower() == 'inlinegas') or (args.asm_lang.strip().lower() == 'all'):
+                    asm_list.append('inlinegas')
         else:
             # Assume all
             asm_list.append('masm')
             asm_list.append('nasm')
             asm_list.append('gas')
+            asm_list.append('inlinegas')
         return list(dict.fromkeys(asm_list))
 
 if __name__ == '__main__':
@@ -459,7 +547,7 @@ if __name__ == '__main__':
     parser.add_argument('-f', '--functions', help='Comma-separated functions', required=False)
     parser.add_argument('-o', '--out-file', help='Output basename (w/o extension)', required=True)
     parser.add_argument('-a', '--arch', help='CPU architecture ("all", "x86", "x64")', required=False)
-    parser.add_argument('-l', '--asm-lang', help='Assembler output format ("all", "masm", "nasm")', required=False)
+    parser.add_argument('-l', '--asm-lang', help='Assembler output format ("all", "masm", "nasm", "gas", "inlinegas")', required=False)
     parser.add_argument('--function-prefix', default='Nt', help='Function prefix', required=False)
     args = parser.parse_args()
 

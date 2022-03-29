@@ -4068,3 +4068,4027 @@ EXTERN_C NTSTATUS RtlCreateUserThread(
 	OUT PCLIENT_ID ClientID);
 
 #endif
+
+
+
+
+// Code below is adapted from @modexpblog. Read linked article for more details.
+// https://www.mdsec.co.uk/2020/12/bypassing-user-mode-hooks-and-direct-invocation-of-system-calls-for-red-teams
+
+#ifndef _PICMODE
+SW2_SYSCALL_LIST SW2_SyscallList = { 0, 1 };
+#endif
+
+DWORD SW2_HashSyscall(PCSTR FunctionName)
+{
+    DWORD i = 0;
+    DWORD Hash = SW2_SEED;
+
+    while (FunctionName[i])
+    {
+        WORD PartialName = *(WORD*)((ULONG64)FunctionName + i++);
+        Hash ^= PartialName + SW2_ROR8(Hash);
+    }
+
+    return Hash;
+}
+
+#ifdef _PICMODE
+BOOL SW2_PopulateSyscallList(PSW2_SYSCALL_LIST SW2_SyscallList)
+#else
+BOOL SW2_PopulateSyscallList(void)
+#endif
+{
+    // Return early if the list is already populated.
+    if (SW2_SyscallList.Count) return TRUE;
+
+#if defined(_WIN64)
+    PSW2_PEB Peb = (PSW2_PEB)__readgsqword(0x60);
+#else
+    PSW2_PEB Peb = (PSW2_PEB)__readfsdword(0x30);
+#endif
+    PSW2_PEB_LDR_DATA Ldr = Peb->Ldr;
+    PIMAGE_EXPORT_DIRECTORY ExportDirectory = NULL;
+    PVOID DllBase = NULL;
+
+    // Get the DllBase address of NTDLL.dll. NTDLL is not guaranteed to be the second
+    // in the list, so it's safer to loop through the full list and find it.
+    PSW2_LDR_DATA_TABLE_ENTRY LdrEntry;
+    for (LdrEntry = (PSW2_LDR_DATA_TABLE_ENTRY)Ldr->Reserved2[1]; LdrEntry->DllBase != NULL; LdrEntry = (PSW2_LDR_DATA_TABLE_ENTRY)LdrEntry->Reserved1[0])
+    {
+        DllBase = LdrEntry->DllBase;
+        PIMAGE_DOS_HEADER DosHeader = (PIMAGE_DOS_HEADER)DllBase;
+        PIMAGE_NT_HEADERS NtHeaders = SW2_RVA2VA(PIMAGE_NT_HEADERS, DllBase, DosHeader->e_lfanew);
+        PIMAGE_DATA_DIRECTORY DataDirectory = (PIMAGE_DATA_DIRECTORY)NtHeaders->OptionalHeader.DataDirectory;
+        DWORD VirtualAddress = DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress;
+        if (VirtualAddress == 0) continue;
+
+        ExportDirectory = (PIMAGE_EXPORT_DIRECTORY)SW2_RVA2VA(ULONG_PTR, DllBase, VirtualAddress);
+
+        // If this is NTDLL.dll, exit loop.
+        PCHAR DllName = SW2_RVA2VA(PCHAR, DllBase, ExportDirectory->Name);
+
+        if ((*(ULONG*)DllName | 0x20202020) != 'ldtn') continue;
+        if ((*(ULONG*)(DllName + 4) | 0x20202020) == 'ld.l') break;
+    }
+
+    if (!ExportDirectory) return FALSE;
+
+    DWORD NumberOfNames = ExportDirectory->NumberOfNames;
+    PDWORD Functions = SW2_RVA2VA(PDWORD, DllBase, ExportDirectory->AddressOfFunctions);
+    PDWORD Names = SW2_RVA2VA(PDWORD, DllBase, ExportDirectory->AddressOfNames);
+    PWORD Ordinals = SW2_RVA2VA(PWORD, DllBase, ExportDirectory->AddressOfNameOrdinals);
+
+    // Populate SW2_SyscallList with unsorted Zw* entries.
+    DWORD i = 0;
+    PSW2_SYSCALL_ENTRY Entries = SW2_SyscallList.Entries;
+    do
+    {
+        PCHAR FunctionName = SW2_RVA2VA(PCHAR, DllBase, Names[NumberOfNames - 1]);
+
+        // Is this a system call?
+        if (*(USHORT*)FunctionName == 'wZ')
+        {
+            Entries[i].Hash = SW2_HashSyscall(FunctionName);
+            Entries[i].Address = Functions[Ordinals[NumberOfNames - 1]];
+
+            i++;
+            if (i == SW2_MAX_ENTRIES) break;
+        }
+    } while (--NumberOfNames);
+
+    // Save total number of system calls found.
+    SW2_SyscallList.Count = i;
+
+    // Sort the list by address in ascending order.
+    for (i = 0; i < SW2_SyscallList.Count - 1; i++)
+    {
+        for (DWORD j = 0; j < SW2_SyscallList.Count - i - 1; j++)
+        {
+            if (Entries[j].Address > Entries[j + 1].Address)
+            {
+                // Swap entries.
+                SW2_SYSCALL_ENTRY TempEntry;
+
+                TempEntry.Hash = Entries[j].Hash;
+                TempEntry.Address = Entries[j].Address;
+
+                Entries[j].Hash = Entries[j + 1].Hash;
+                Entries[j].Address = Entries[j + 1].Address;
+
+                Entries[j + 1].Hash = TempEntry.Hash;
+                Entries[j + 1].Address = TempEntry.Address;
+            }
+        }
+    }
+
+    return TRUE;
+}
+
+#ifdef _PICMODE
+EXTERN_C DWORD SW2_GetSyscallNumber(PSW2_SYSCALL_LIST SW2_SyscallList, DWORD FunctionHash)
+#else
+EXTERN_C DWORD SW2_GetSyscallNumber(DWORD FunctionHash)
+#endif
+{
+    // Ensure SW2_SyscallList is populated.
+    if (!SW2_PopulateSyscallList()) return -1;
+
+    for (DWORD i = 0; i < SW2_SyscallList.Count; i++)
+    {
+        if (FunctionHash == SW2_SyscallList.Entries[i].Hash)
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+
+#define WhisperMain
+__asm__(".intel_syntax noprefix \n\
+.global WhisperMain \n\
+WhisperMain: \n\
+    pop rax \n\
+    mov [rsp+ 8], rcx \n\
+    mov [rsp+16], rdx \n\
+    mov [rsp+24], r8 \n\
+    mov [rsp+32], r9 \n\
+    sub rsp, 0x28 \n\
+    mov rcx, r10 \n\
+    call SW2_GetSyscallNumber \n\
+    add rsp, 0x28 \n\
+    mov rcx, [rsp+ 8] \n\
+    mov rdx, [rsp+16] \n\
+    mov r8, [rsp+24] \n\
+    mov r9, [rsp+32] \n\
+    mov r10, rcx \n\
+    syscall \n\
+    ret \n\
+");
+
+#define ZwAccessCheck NtAccessCheck
+__asm__(".intel_syntax noprefix \n\
+NtAccessCheck: \n\
+    mov r10, 0x0B6D641BB \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwWorkerFactoryWorkerReady NtWorkerFactoryWorkerReady
+__asm__(".intel_syntax noprefix \n\
+NtWorkerFactoryWorkerReady: \n\
+    mov r10, 0x0163E3285 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAcceptConnectPort NtAcceptConnectPort
+__asm__(".intel_syntax noprefix \n\
+NtAcceptConnectPort: \n\
+    mov r10, 0x02EB72D38 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwMapUserPhysicalPagesScatter NtMapUserPhysicalPagesScatter
+__asm__(".intel_syntax noprefix \n\
+NtMapUserPhysicalPagesScatter: \n\
+    mov r10, 0x0D19E1AC6 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwWaitForSingleObject NtWaitForSingleObject
+__asm__(".intel_syntax noprefix \n\
+NtWaitForSingleObject: \n\
+    mov r10, 0x018A02BEF \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCallbackReturn NtCallbackReturn
+__asm__(".intel_syntax noprefix \n\
+NtCallbackReturn: \n\
+    mov r10, 0x0829013BE \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwReadFile NtReadFile
+__asm__(".intel_syntax noprefix \n\
+NtReadFile: \n\
+    mov r10, 0x028C05C56 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwDeviceIoControlFile NtDeviceIoControlFile
+__asm__(".intel_syntax noprefix \n\
+NtDeviceIoControlFile: \n\
+    mov r10, 0x0D841A2A6 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwWriteFile NtWriteFile
+__asm__(".intel_syntax noprefix \n\
+NtWriteFile: \n\
+    mov r10, 0x0C9719FCB \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwRemoveIoCompletion NtRemoveIoCompletion
+__asm__(".intel_syntax noprefix \n\
+NtRemoveIoCompletion: \n\
+    mov r10, 0x016801617 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwReleaseSemaphore NtReleaseSemaphore
+__asm__(".intel_syntax noprefix \n\
+NtReleaseSemaphore: \n\
+    mov r10, 0x01457341A \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwReplyWaitReceivePort NtReplyWaitReceivePort
+__asm__(".intel_syntax noprefix \n\
+NtReplyWaitReceivePort: \n\
+    mov r10, 0x07AB26F32 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwReplyPort NtReplyPort
+__asm__(".intel_syntax noprefix \n\
+NtReplyPort: \n\
+    mov r10, 0x0DA342B5A \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetInformationThread NtSetInformationThread
+__asm__(".intel_syntax noprefix \n\
+NtSetInformationThread: \n\
+    mov r10, 0x02A8E6857 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetEvent NtSetEvent
+__asm__(".intel_syntax noprefix \n\
+NtSetEvent: \n\
+    mov r10, 0x0CB020C49 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwClose NtClose
+__asm__(".intel_syntax noprefix \n\
+NtClose: \n\
+    mov r10, 0x046D16D51 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryObject NtQueryObject
+__asm__(".intel_syntax noprefix \n\
+NtQueryObject: \n\
+    mov r10, 0x01F3075CE \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryInformationFile NtQueryInformationFile
+__asm__(".intel_syntax noprefix \n\
+NtQueryInformationFile: \n\
+    mov r10, 0x085115D55 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwOpenKey NtOpenKey
+__asm__(".intel_syntax noprefix \n\
+NtOpenKey: \n\
+    mov r10, 0x02490F9CA \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwEnumerateValueKey NtEnumerateValueKey
+__asm__(".intel_syntax noprefix \n\
+NtEnumerateValueKey: \n\
+    mov r10, 0x019CD7426 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwFindAtom NtFindAtom
+__asm__(".intel_syntax noprefix \n\
+NtFindAtom: \n\
+    mov r10, 0x038AD2144 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryDefaultLocale NtQueryDefaultLocale
+__asm__(".intel_syntax noprefix \n\
+NtQueryDefaultLocale: \n\
+    mov r10, 0x0C221CCB2 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryKey NtQueryKey
+__asm__(".intel_syntax noprefix \n\
+NtQueryKey: \n\
+    mov r10, 0x03BE15A1A \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryValueKey NtQueryValueKey
+__asm__(".intel_syntax noprefix \n\
+NtQueryValueKey: \n\
+    mov r10, 0x01C1D1F87 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAllocateVirtualMemory NtAllocateVirtualMemory
+__asm__(".intel_syntax noprefix \n\
+NtAllocateVirtualMemory: \n\
+    mov r10, 0x03191457D \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryInformationProcess NtQueryInformationProcess
+__asm__(".intel_syntax noprefix \n\
+NtQueryInformationProcess: \n\
+    mov r10, 0x0832D80A2 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwWaitForMultipleObjects32 NtWaitForMultipleObjects32
+__asm__(".intel_syntax noprefix \n\
+NtWaitForMultipleObjects32: \n\
+    mov r10, 0x0C85C2D8B \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwWriteFileGather NtWriteFileGather
+__asm__(".intel_syntax noprefix \n\
+NtWriteFileGather: \n\
+    mov r10, 0x0379E6D37 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateKey NtCreateKey
+__asm__(".intel_syntax noprefix \n\
+NtCreateKey: \n\
+    mov r10, 0x039002E90 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwFreeVirtualMemory NtFreeVirtualMemory
+__asm__(".intel_syntax noprefix \n\
+NtFreeVirtualMemory: \n\
+    mov r10, 0x001990F0F \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwImpersonateClientOfPort NtImpersonateClientOfPort
+__asm__(".intel_syntax noprefix \n\
+NtImpersonateClientOfPort: \n\
+    mov r10, 0x058F16D58 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwReleaseMutant NtReleaseMutant
+__asm__(".intel_syntax noprefix \n\
+NtReleaseMutant: \n\
+    mov r10, 0x0BF1C984F \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryInformationToken NtQueryInformationToken
+__asm__(".intel_syntax noprefix \n\
+NtQueryInformationToken: \n\
+    mov r10, 0x0939DD948 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwRequestWaitReplyPort NtRequestWaitReplyPort
+__asm__(".intel_syntax noprefix \n\
+NtRequestWaitReplyPort: \n\
+    mov r10, 0x038B1235E \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryVirtualMemory NtQueryVirtualMemory
+__asm__(".intel_syntax noprefix \n\
+NtQueryVirtualMemory: \n\
+    mov r10, 0x033AE1F39 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwOpenThreadToken NtOpenThreadToken
+__asm__(".intel_syntax noprefix \n\
+NtOpenThreadToken: \n\
+    mov r10, 0x01DA027EC \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryInformationThread NtQueryInformationThread
+__asm__(".intel_syntax noprefix \n\
+NtQueryInformationThread: \n\
+    mov r10, 0x0B207F4A5 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwOpenProcess NtOpenProcess
+__asm__(".intel_syntax noprefix \n\
+NtOpenProcess: \n\
+    mov r10, 0x0EAA8F120 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetInformationFile NtSetInformationFile
+__asm__(".intel_syntax noprefix \n\
+NtSetInformationFile: \n\
+    mov r10, 0x0725AB909 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwMapViewOfSection NtMapViewOfSection
+__asm__(".intel_syntax noprefix \n\
+NtMapViewOfSection: \n\
+    mov r10, 0x022CC205D \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAccessCheckAndAuditAlarm NtAccessCheckAndAuditAlarm
+__asm__(".intel_syntax noprefix \n\
+NtAccessCheckAndAuditAlarm: \n\
+    mov r10, 0x0DABDE4F0 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwUnmapViewOfSection NtUnmapViewOfSection
+__asm__(".intel_syntax noprefix \n\
+NtUnmapViewOfSection: \n\
+    mov r10, 0x0D28DF657 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwReplyWaitReceivePortEx NtReplyWaitReceivePortEx
+__asm__(".intel_syntax noprefix \n\
+NtReplyWaitReceivePortEx: \n\
+    mov r10, 0x0AF8072D4 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwTerminateProcess NtTerminateProcess
+__asm__(".intel_syntax noprefix \n\
+NtTerminateProcess: \n\
+    mov r10, 0x077BF5E26 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetEventBoostPriority NtSetEventBoostPriority
+__asm__(".intel_syntax noprefix \n\
+NtSetEventBoostPriority: \n\
+    mov r10, 0x022B3ADB4 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwReadFileScatter NtReadFileScatter
+__asm__(".intel_syntax noprefix \n\
+NtReadFileScatter: \n\
+    mov r10, 0x0058C0D17 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwOpenThreadTokenEx NtOpenThreadTokenEx
+__asm__(".intel_syntax noprefix \n\
+NtOpenThreadTokenEx: \n\
+    mov r10, 0x0BA4FC4B9 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwOpenProcessTokenEx NtOpenProcessTokenEx
+__asm__(".intel_syntax noprefix \n\
+NtOpenProcessTokenEx: \n\
+    mov r10, 0x038AA7A50 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryPerformanceCounter NtQueryPerformanceCounter
+__asm__(".intel_syntax noprefix \n\
+NtQueryPerformanceCounter: \n\
+    mov r10, 0x02B89C793 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwEnumerateKey NtEnumerateKey
+__asm__(".intel_syntax noprefix \n\
+NtEnumerateKey: \n\
+    mov r10, 0x07ECF5E94 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwOpenFile NtOpenFile
+__asm__(".intel_syntax noprefix \n\
+NtOpenFile: \n\
+    mov r10, 0x0E77EEFEB \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwDelayExecution NtDelayExecution
+__asm__(".intel_syntax noprefix \n\
+NtDelayExecution: \n\
+    mov r10, 0x0C20DE25F \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryDirectoryFile NtQueryDirectoryFile
+__asm__(".intel_syntax noprefix \n\
+NtQueryDirectoryFile: \n\
+    mov r10, 0x03F38BD21 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQuerySystemInformation NtQuerySystemInformation
+__asm__(".intel_syntax noprefix \n\
+NtQuerySystemInformation: \n\
+    mov r10, 0x0EFB51AD7 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwOpenSection NtOpenSection
+__asm__(".intel_syntax noprefix \n\
+NtOpenSection: \n\
+    mov r10, 0x0DFB2FB39 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryTimer NtQueryTimer
+__asm__(".intel_syntax noprefix \n\
+NtQueryTimer: \n\
+    mov r10, 0x03C16F04C \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwFsControlFile NtFsControlFile
+__asm__(".intel_syntax noprefix \n\
+NtFsControlFile: \n\
+    mov r10, 0x0C94297F7 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwWriteVirtualMemory NtWriteVirtualMemory
+__asm__(".intel_syntax noprefix \n\
+NtWriteVirtualMemory: \n\
+    mov r10, 0x00B970317 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCloseObjectAuditAlarm NtCloseObjectAuditAlarm
+__asm__(".intel_syntax noprefix \n\
+NtCloseObjectAuditAlarm: \n\
+    mov r10, 0x010BFECF0 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwDuplicateObject NtDuplicateObject
+__asm__(".intel_syntax noprefix \n\
+NtDuplicateObject: \n\
+    mov r10, 0x008B62A2B \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryAttributesFile NtQueryAttributesFile
+__asm__(".intel_syntax noprefix \n\
+NtQueryAttributesFile: \n\
+    mov r10, 0x09DDBBC81 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwClearEvent NtClearEvent
+__asm__(".intel_syntax noprefix \n\
+NtClearEvent: \n\
+    mov r10, 0x0704ABB1C \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwReadVirtualMemory NtReadVirtualMemory
+__asm__(".intel_syntax noprefix \n\
+NtReadVirtualMemory: \n\
+    mov r10, 0x001910F07 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwOpenEvent NtOpenEvent
+__asm__(".intel_syntax noprefix \n\
+NtOpenEvent: \n\
+    mov r10, 0x0004D07C6 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAdjustPrivilegesToken NtAdjustPrivilegesToken
+__asm__(".intel_syntax noprefix \n\
+NtAdjustPrivilegesToken: \n\
+    mov r10, 0x09449F4DB \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwDuplicateToken NtDuplicateToken
+__asm__(".intel_syntax noprefix \n\
+NtDuplicateToken: \n\
+    mov r10, 0x00B9EFF06 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwContinue NtContinue
+__asm__(".intel_syntax noprefix \n\
+NtContinue: \n\
+    mov r10, 0x0D55BEACF \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryDefaultUILanguage NtQueryDefaultUILanguage
+__asm__(".intel_syntax noprefix \n\
+NtQueryDefaultUILanguage: \n\
+    mov r10, 0x09233B5AF \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueueApcThread NtQueueApcThread
+__asm__(".intel_syntax noprefix \n\
+NtQueueApcThread: \n\
+    mov r10, 0x036822C3B \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwYieldExecution NtYieldExecution
+__asm__(".intel_syntax noprefix \n\
+NtYieldExecution: \n\
+    mov r10, 0x060CA061F \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAddAtom NtAddAtom
+__asm__(".intel_syntax noprefix \n\
+NtAddAtom: \n\
+    mov r10, 0x0964EF75C \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateEvent NtCreateEvent
+__asm__(".intel_syntax noprefix \n\
+NtCreateEvent: \n\
+    mov r10, 0x000BD7B4A \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryVolumeInformationFile NtQueryVolumeInformationFile
+__asm__(".intel_syntax noprefix \n\
+NtQueryVolumeInformationFile: \n\
+    mov r10, 0x064C05C66 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateSection NtCreateSection
+__asm__(".intel_syntax noprefix \n\
+NtCreateSection: \n\
+    mov r10, 0x03E911CDD \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwFlushBuffersFile NtFlushBuffersFile
+__asm__(".intel_syntax noprefix \n\
+NtFlushBuffersFile: \n\
+    mov r10, 0x07CAB2E9E \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwApphelpCacheControl NtApphelpCacheControl
+__asm__(".intel_syntax noprefix \n\
+NtApphelpCacheControl: \n\
+    mov r10, 0x00FD80B43 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateProcessEx NtCreateProcessEx
+__asm__(".intel_syntax noprefix \n\
+NtCreateProcessEx: \n\
+    mov r10, 0x08F8FCD34 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateThread NtCreateThread
+__asm__(".intel_syntax noprefix \n\
+NtCreateThread: \n\
+    mov r10, 0x076D96C6F \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwIsProcessInJob NtIsProcessInJob
+__asm__(".intel_syntax noprefix \n\
+NtIsProcessInJob: \n\
+    mov r10, 0x029933921 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwProtectVirtualMemory NtProtectVirtualMemory
+__asm__(".intel_syntax noprefix \n\
+NtProtectVirtualMemory: \n\
+    mov r10, 0x099F38567 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQuerySection NtQuerySection
+__asm__(".intel_syntax noprefix \n\
+NtQuerySection: \n\
+    mov r10, 0x0E04BE6DF \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwResumeThread NtResumeThread
+__asm__(".intel_syntax noprefix \n\
+NtResumeThread: \n\
+    mov r10, 0x094AD1E8B \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwTerminateThread NtTerminateThread
+__asm__(".intel_syntax noprefix \n\
+NtTerminateThread: \n\
+    mov r10, 0x050800A31 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwReadRequestData NtReadRequestData
+__asm__(".intel_syntax noprefix \n\
+NtReadRequestData: \n\
+    mov r10, 0x0C608DEB2 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateFile NtCreateFile
+__asm__(".intel_syntax noprefix \n\
+NtCreateFile: \n\
+    mov r10, 0x0D87CA29C \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryEvent NtQueryEvent
+__asm__(".intel_syntax noprefix \n\
+NtQueryEvent: \n\
+    mov r10, 0x031746CDC \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwWriteRequestData NtWriteRequestData
+__asm__(".intel_syntax noprefix \n\
+NtWriteRequestData: \n\
+    mov r10, 0x036BA0E24 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwOpenDirectoryObject NtOpenDirectoryObject
+__asm__(".intel_syntax noprefix \n\
+NtOpenDirectoryObject: \n\
+    mov r10, 0x00BAB657A \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAccessCheckByTypeAndAuditAlarm NtAccessCheckByTypeAndAuditAlarm
+__asm__(".intel_syntax noprefix \n\
+NtAccessCheckByTypeAndAuditAlarm: \n\
+    mov r10, 0x05B357D66 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwWaitForMultipleObjects NtWaitForMultipleObjects
+__asm__(".intel_syntax noprefix \n\
+NtWaitForMultipleObjects: \n\
+    mov r10, 0x0F75ADF07 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetInformationObject NtSetInformationObject
+__asm__(".intel_syntax noprefix \n\
+NtSetInformationObject: \n\
+    mov r10, 0x004985645 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCancelIoFile NtCancelIoFile
+__asm__(".intel_syntax noprefix \n\
+NtCancelIoFile: \n\
+    mov r10, 0x0B8BB5EBF \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwTraceEvent NtTraceEvent
+__asm__(".intel_syntax noprefix \n\
+NtTraceEvent: \n\
+    mov r10, 0x042864312 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwPowerInformation NtPowerInformation
+__asm__(".intel_syntax noprefix \n\
+NtPowerInformation: \n\
+    mov r10, 0x0ED4BEBD8 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetValueKey NtSetValueKey
+__asm__(".intel_syntax noprefix \n\
+NtSetValueKey: \n\
+    mov r10, 0x02AFC0D63 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCancelTimer NtCancelTimer
+__asm__(".intel_syntax noprefix \n\
+NtCancelTimer: \n\
+    mov r10, 0x08B9FFB1D \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetTimer NtSetTimer
+__asm__(".intel_syntax noprefix \n\
+NtSetTimer: \n\
+    mov r10, 0x09CA9F453 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAccessCheckByType NtAccessCheckByType
+__asm__(".intel_syntax noprefix \n\
+NtAccessCheckByType: \n\
+    mov r10, 0x0B72E5D20 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAccessCheckByTypeResultList NtAccessCheckByTypeResultList
+__asm__(".intel_syntax noprefix \n\
+NtAccessCheckByTypeResultList: \n\
+    mov r10, 0x050C2100F \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAccessCheckByTypeResultListAndAuditAlarm NtAccessCheckByTypeResultListAndAuditAlarm
+__asm__(".intel_syntax noprefix \n\
+NtAccessCheckByTypeResultListAndAuditAlarm: \n\
+    mov r10, 0x01ABC1024 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAccessCheckByTypeResultListAndAuditAlarmByHandle NtAccessCheckByTypeResultListAndAuditAlarmByHandle
+__asm__(".intel_syntax noprefix \n\
+NtAccessCheckByTypeResultListAndAuditAlarmByHandle: \n\
+    mov r10, 0x0C04DF8DE \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAcquireProcessActivityReference NtAcquireProcessActivityReference
+__asm__(".intel_syntax noprefix \n\
+NtAcquireProcessActivityReference: \n\
+    mov r10, 0x07ACB6B7E \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAddAtomEx NtAddAtomEx
+__asm__(".intel_syntax noprefix \n\
+NtAddAtomEx: \n\
+    mov r10, 0x0E1132F46 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAddBootEntry NtAddBootEntry
+__asm__(".intel_syntax noprefix \n\
+NtAddBootEntry: \n\
+    mov r10, 0x049947D28 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAddDriverEntry NtAddDriverEntry
+__asm__(".intel_syntax noprefix \n\
+NtAddDriverEntry: \n\
+    mov r10, 0x047D2736E \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAdjustGroupsToken NtAdjustGroupsToken
+__asm__(".intel_syntax noprefix \n\
+NtAdjustGroupsToken: \n\
+    mov r10, 0x01F988590 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAdjustTokenClaimsAndDeviceGroups NtAdjustTokenClaimsAndDeviceGroups
+__asm__(".intel_syntax noprefix \n\
+NtAdjustTokenClaimsAndDeviceGroups: \n\
+    mov r10, 0x03D973D01 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAlertResumeThread NtAlertResumeThread
+__asm__(".intel_syntax noprefix \n\
+NtAlertResumeThread: \n\
+    mov r10, 0x05CCEDEEF \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAlertThread NtAlertThread
+__asm__(".intel_syntax noprefix \n\
+NtAlertThread: \n\
+    mov r10, 0x020985A45 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAlertThreadByThreadId NtAlertThreadByThreadId
+__asm__(".intel_syntax noprefix \n\
+NtAlertThreadByThreadId: \n\
+    mov r10, 0x09CA377E5 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAllocateLocallyUniqueId NtAllocateLocallyUniqueId
+__asm__(".intel_syntax noprefix \n\
+NtAllocateLocallyUniqueId: \n\
+    mov r10, 0x0378A9940 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAllocateReserveObject NtAllocateReserveObject
+__asm__(".intel_syntax noprefix \n\
+NtAllocateReserveObject: \n\
+    mov r10, 0x0391729BB \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAllocateUserPhysicalPages NtAllocateUserPhysicalPages
+__asm__(".intel_syntax noprefix \n\
+NtAllocateUserPhysicalPages: \n\
+    mov r10, 0x05FBE7024 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAllocateUuids NtAllocateUuids
+__asm__(".intel_syntax noprefix \n\
+NtAllocateUuids: \n\
+    mov r10, 0x04E575ECB \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAllocateVirtualMemoryEx NtAllocateVirtualMemoryEx
+__asm__(".intel_syntax noprefix \n\
+NtAllocateVirtualMemoryEx: \n\
+    mov r10, 0x076EFA8B9 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAlpcAcceptConnectPort NtAlpcAcceptConnectPort
+__asm__(".intel_syntax noprefix \n\
+NtAlpcAcceptConnectPort: \n\
+    mov r10, 0x0ACF19342 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAlpcCancelMessage NtAlpcCancelMessage
+__asm__(".intel_syntax noprefix \n\
+NtAlpcCancelMessage: \n\
+    mov r10, 0x08DDE9967 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAlpcConnectPort NtAlpcConnectPort
+__asm__(".intel_syntax noprefix \n\
+NtAlpcConnectPort: \n\
+    mov r10, 0x0A0BE1DB0 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAlpcConnectPortEx NtAlpcConnectPortEx
+__asm__(".intel_syntax noprefix \n\
+NtAlpcConnectPortEx: \n\
+    mov r10, 0x03D0F71CB \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAlpcCreatePort NtAlpcCreatePort
+__asm__(".intel_syntax noprefix \n\
+NtAlpcCreatePort: \n\
+    mov r10, 0x022B33D38 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAlpcCreatePortSection NtAlpcCreatePortSection
+__asm__(".intel_syntax noprefix \n\
+NtAlpcCreatePortSection: \n\
+    mov r10, 0x006AA263F \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAlpcCreateResourceReserve NtAlpcCreateResourceReserve
+__asm__(".intel_syntax noprefix \n\
+NtAlpcCreateResourceReserve: \n\
+    mov r10, 0x01A9E1E7F \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAlpcCreateSectionView NtAlpcCreateSectionView
+__asm__(".intel_syntax noprefix \n\
+NtAlpcCreateSectionView: \n\
+    mov r10, 0x0D048B9D7 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAlpcCreateSecurityContext NtAlpcCreateSecurityContext
+__asm__(".intel_syntax noprefix \n\
+NtAlpcCreateSecurityContext: \n\
+    mov r10, 0x056C94B58 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAlpcDeletePortSection NtAlpcDeletePortSection
+__asm__(".intel_syntax noprefix \n\
+NtAlpcDeletePortSection: \n\
+    mov r10, 0x036AD10F9 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAlpcDeleteResourceReserve NtAlpcDeleteResourceReserve
+__asm__(".intel_syntax noprefix \n\
+NtAlpcDeleteResourceReserve: \n\
+    mov r10, 0x0F761E7CA \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAlpcDeleteSectionView NtAlpcDeleteSectionView
+__asm__(".intel_syntax noprefix \n\
+NtAlpcDeleteSectionView: \n\
+    mov r10, 0x0049C293B \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAlpcDeleteSecurityContext NtAlpcDeleteSecurityContext
+__asm__(".intel_syntax noprefix \n\
+NtAlpcDeleteSecurityContext: \n\
+    mov r10, 0x09CC79146 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAlpcDisconnectPort NtAlpcDisconnectPort
+__asm__(".intel_syntax noprefix \n\
+NtAlpcDisconnectPort: \n\
+    mov r10, 0x0593058BE \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAlpcImpersonateClientContainerOfPort NtAlpcImpersonateClientContainerOfPort
+__asm__(".intel_syntax noprefix \n\
+NtAlpcImpersonateClientContainerOfPort: \n\
+    mov r10, 0x0FE760D38 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAlpcImpersonateClientOfPort NtAlpcImpersonateClientOfPort
+__asm__(".intel_syntax noprefix \n\
+NtAlpcImpersonateClientOfPort: \n\
+    mov r10, 0x0A93184AF \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAlpcOpenSenderProcess NtAlpcOpenSenderProcess
+__asm__(".intel_syntax noprefix \n\
+NtAlpcOpenSenderProcess: \n\
+    mov r10, 0x0C557C6C8 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAlpcOpenSenderThread NtAlpcOpenSenderThread
+__asm__(".intel_syntax noprefix \n\
+NtAlpcOpenSenderThread: \n\
+    mov r10, 0x09427D601 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAlpcQueryInformation NtAlpcQueryInformation
+__asm__(".intel_syntax noprefix \n\
+NtAlpcQueryInformation: \n\
+    mov r10, 0x03CAE4643 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAlpcQueryInformationMessage NtAlpcQueryInformationMessage
+__asm__(".intel_syntax noprefix \n\
+NtAlpcQueryInformationMessage: \n\
+    mov r10, 0x093B15C90 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAlpcRevokeSecurityContext NtAlpcRevokeSecurityContext
+__asm__(".intel_syntax noprefix \n\
+NtAlpcRevokeSecurityContext: \n\
+    mov r10, 0x0772A826B \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAlpcSendWaitReceivePort NtAlpcSendWaitReceivePort
+__asm__(".intel_syntax noprefix \n\
+NtAlpcSendWaitReceivePort: \n\
+    mov r10, 0x0E1720463 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAlpcSetInformation NtAlpcSetInformation
+__asm__(".intel_syntax noprefix \n\
+NtAlpcSetInformation: \n\
+    mov r10, 0x000A80239 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAreMappedFilesTheSame NtAreMappedFilesTheSame
+__asm__(".intel_syntax noprefix \n\
+NtAreMappedFilesTheSame: \n\
+    mov r10, 0x09734447C \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAssignProcessToJobObject NtAssignProcessToJobObject
+__asm__(".intel_syntax noprefix \n\
+NtAssignProcessToJobObject: \n\
+    mov r10, 0x01C800A1D \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAssociateWaitCompletionPacket NtAssociateWaitCompletionPacket
+__asm__(".intel_syntax noprefix \n\
+NtAssociateWaitCompletionPacket: \n\
+    mov r10, 0x0098D2332 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCallEnclave NtCallEnclave
+__asm__(".intel_syntax noprefix \n\
+NtCallEnclave: \n\
+    mov r10, 0x01AAC6E46 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCancelIoFileEx NtCancelIoFileEx
+__asm__(".intel_syntax noprefix \n\
+NtCancelIoFileEx: \n\
+    mov r10, 0x0D8052A7F \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCancelSynchronousIoFile NtCancelSynchronousIoFile
+__asm__(".intel_syntax noprefix \n\
+NtCancelSynchronousIoFile: \n\
+    mov r10, 0x038AFEC1C \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCancelTimer2 NtCancelTimer2
+__asm__(".intel_syntax noprefix \n\
+NtCancelTimer2: \n\
+    mov r10, 0x096143ACA \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCancelWaitCompletionPacket NtCancelWaitCompletionPacket
+__asm__(".intel_syntax noprefix \n\
+NtCancelWaitCompletionPacket: \n\
+    mov r10, 0x0BB9CC350 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCommitComplete NtCommitComplete
+__asm__(".intel_syntax noprefix \n\
+NtCommitComplete: \n\
+    mov r10, 0x0AA35FCFE \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCommitEnlistment NtCommitEnlistment
+__asm__(".intel_syntax noprefix \n\
+NtCommitEnlistment: \n\
+    mov r10, 0x0D76AECDD \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCommitRegistryTransaction NtCommitRegistryTransaction
+__asm__(".intel_syntax noprefix \n\
+NtCommitRegistryTransaction: \n\
+    mov r10, 0x00F980302 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCommitTransaction NtCommitTransaction
+__asm__(".intel_syntax noprefix \n\
+NtCommitTransaction: \n\
+    mov r10, 0x0B329F1F8 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCompactKeys NtCompactKeys
+__asm__(".intel_syntax noprefix \n\
+NtCompactKeys: \n\
+    mov r10, 0x0C3A5FE0B \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCompareObjects NtCompareObjects
+__asm__(".intel_syntax noprefix \n\
+NtCompareObjects: \n\
+    mov r10, 0x0039D0313 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCompareSigningLevels NtCompareSigningLevels
+__asm__(".intel_syntax noprefix \n\
+NtCompareSigningLevels: \n\
+    mov r10, 0x0D043D6D8 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCompareTokens NtCompareTokens
+__asm__(".intel_syntax noprefix \n\
+NtCompareTokens: \n\
+    mov r10, 0x043C3495B \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCompleteConnectPort NtCompleteConnectPort
+__asm__(".intel_syntax noprefix \n\
+NtCompleteConnectPort: \n\
+    mov r10, 0x020B52F36 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCompressKey NtCompressKey
+__asm__(".intel_syntax noprefix \n\
+NtCompressKey: \n\
+    mov r10, 0x098CAA368 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwConnectPort NtConnectPort
+__asm__(".intel_syntax noprefix \n\
+NtConnectPort: \n\
+    mov r10, 0x066BF195C \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwConvertBetweenAuxiliaryCounterAndPerformanceCounter NtConvertBetweenAuxiliaryCounterAndPerformanceCounter
+__asm__(".intel_syntax noprefix \n\
+NtConvertBetweenAuxiliaryCounterAndPerformanceCounter: \n\
+    mov r10, 0x02B97BF95 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateDebugObject NtCreateDebugObject
+__asm__(".intel_syntax noprefix \n\
+NtCreateDebugObject: \n\
+    mov r10, 0x00CA1645D \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateDirectoryObject NtCreateDirectoryObject
+__asm__(".intel_syntax noprefix \n\
+NtCreateDirectoryObject: \n\
+    mov r10, 0x009A1FFDB \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateDirectoryObjectEx NtCreateDirectoryObjectEx
+__asm__(".intel_syntax noprefix \n\
+NtCreateDirectoryObjectEx: \n\
+    mov r10, 0x0F6790F3F \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateEnclave NtCreateEnclave
+__asm__(".intel_syntax noprefix \n\
+NtCreateEnclave: \n\
+    mov r10, 0x016300A8A \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateEnlistment NtCreateEnlistment
+__asm__(".intel_syntax noprefix \n\
+NtCreateEnlistment: \n\
+    mov r10, 0x06BA72A6D \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateEventPair NtCreateEventPair
+__asm__(".intel_syntax noprefix \n\
+NtCreateEventPair: \n\
+    mov r10, 0x00757F637 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateIRTimer NtCreateIRTimer
+__asm__(".intel_syntax noprefix \n\
+NtCreateIRTimer: \n\
+    mov r10, 0x07B996D02 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateIoCompletion NtCreateIoCompletion
+__asm__(".intel_syntax noprefix \n\
+NtCreateIoCompletion: \n\
+    mov r10, 0x052C8725F \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateJobObject NtCreateJobObject
+__asm__(".intel_syntax noprefix \n\
+NtCreateJobObject: \n\
+    mov r10, 0x096BDAE11 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateJobSet NtCreateJobSet
+__asm__(".intel_syntax noprefix \n\
+NtCreateJobSet: \n\
+    mov r10, 0x082C28450 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateKeyTransacted NtCreateKeyTransacted
+__asm__(".intel_syntax noprefix \n\
+NtCreateKeyTransacted: \n\
+    mov r10, 0x0ECA3351E \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateKeyedEvent NtCreateKeyedEvent
+__asm__(".intel_syntax noprefix \n\
+NtCreateKeyedEvent: \n\
+    mov r10, 0x0E05DDBFA \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateLowBoxToken NtCreateLowBoxToken
+__asm__(".intel_syntax noprefix \n\
+NtCreateLowBoxToken: \n\
+    mov r10, 0x015349407 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateMailslotFile NtCreateMailslotFile
+__asm__(".intel_syntax noprefix \n\
+NtCreateMailslotFile: \n\
+    mov r10, 0x0E97ED3D9 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateMutant NtCreateMutant
+__asm__(".intel_syntax noprefix \n\
+NtCreateMutant: \n\
+    mov r10, 0x07E9E1C88 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateNamedPipeFile NtCreateNamedPipeFile
+__asm__(".intel_syntax noprefix \n\
+NtCreateNamedPipeFile: \n\
+    mov r10, 0x085031D03 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreatePagingFile NtCreatePagingFile
+__asm__(".intel_syntax noprefix \n\
+NtCreatePagingFile: \n\
+    mov r10, 0x06AFA5BAE \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreatePartition NtCreatePartition
+__asm__(".intel_syntax noprefix \n\
+NtCreatePartition: \n\
+    mov r10, 0x036AC163B \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreatePort NtCreatePort
+__asm__(".intel_syntax noprefix \n\
+NtCreatePort: \n\
+    mov r10, 0x0DC4EBFD0 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreatePrivateNamespace NtCreatePrivateNamespace
+__asm__(".intel_syntax noprefix \n\
+NtCreatePrivateNamespace: \n\
+    mov r10, 0x096B2AD2D \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateProcess NtCreateProcess
+__asm__(".intel_syntax noprefix \n\
+NtCreateProcess: \n\
+    mov r10, 0x0272D24A2 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateProfile NtCreateProfile
+__asm__(".intel_syntax noprefix \n\
+NtCreateProfile: \n\
+    mov r10, 0x0F4DDEB67 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateProfileEx NtCreateProfileEx
+__asm__(".intel_syntax noprefix \n\
+NtCreateProfileEx: \n\
+    mov r10, 0x005BBD0E7 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateRegistryTransaction NtCreateRegistryTransaction
+__asm__(".intel_syntax noprefix \n\
+NtCreateRegistryTransaction: \n\
+    mov r10, 0x09F87DF55 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateResourceManager NtCreateResourceManager
+__asm__(".intel_syntax noprefix \n\
+NtCreateResourceManager: \n\
+    mov r10, 0x0BB62C3A8 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateSemaphore NtCreateSemaphore
+__asm__(".intel_syntax noprefix \n\
+NtCreateSemaphore: \n\
+    mov r10, 0x0109BF8D6 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateSymbolicLinkObject NtCreateSymbolicLinkObject
+__asm__(".intel_syntax noprefix \n\
+NtCreateSymbolicLinkObject: \n\
+    mov r10, 0x00B24F92A \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateThreadEx NtCreateThreadEx
+__asm__(".intel_syntax noprefix \n\
+NtCreateThreadEx: \n\
+    mov r10, 0x098B757F1 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateTimer NtCreateTimer
+__asm__(".intel_syntax noprefix \n\
+NtCreateTimer: \n\
+    mov r10, 0x09CB7962C \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateTimer2 NtCreateTimer2
+__asm__(".intel_syntax noprefix \n\
+NtCreateTimer2: \n\
+    mov r10, 0x0B02BEFA6 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateToken NtCreateToken
+__asm__(".intel_syntax noprefix \n\
+NtCreateToken: \n\
+    mov r10, 0x084AD920E \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateTokenEx NtCreateTokenEx
+__asm__(".intel_syntax noprefix \n\
+NtCreateTokenEx: \n\
+    mov r10, 0x020A25258 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateTransaction NtCreateTransaction
+__asm__(".intel_syntax noprefix \n\
+NtCreateTransaction: \n\
+    mov r10, 0x0E237DA9D \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateTransactionManager NtCreateTransactionManager
+__asm__(".intel_syntax noprefix \n\
+NtCreateTransactionManager: \n\
+    mov r10, 0x019A136F0 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateUserProcess NtCreateUserProcess
+__asm__(".intel_syntax noprefix \n\
+NtCreateUserProcess: \n\
+    mov r10, 0x0EDA3CE3F \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateWaitCompletionPacket NtCreateWaitCompletionPacket
+__asm__(".intel_syntax noprefix \n\
+NtCreateWaitCompletionPacket: \n\
+    mov r10, 0x0073D77C1 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateWaitablePort NtCreateWaitablePort
+__asm__(".intel_syntax noprefix \n\
+NtCreateWaitablePort: \n\
+    mov r10, 0x02871CA1F \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateWnfStateName NtCreateWnfStateName
+__asm__(".intel_syntax noprefix \n\
+NtCreateWnfStateName: \n\
+    mov r10, 0x0B4BA5BB1 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateWorkerFactory NtCreateWorkerFactory
+__asm__(".intel_syntax noprefix \n\
+NtCreateWorkerFactory: \n\
+    mov r10, 0x0DCCDF265 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwDebugActiveProcess NtDebugActiveProcess
+__asm__(".intel_syntax noprefix \n\
+NtDebugActiveProcess: \n\
+    mov r10, 0x07E3197AD \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwDebugContinue NtDebugContinue
+__asm__(".intel_syntax noprefix \n\
+NtDebugContinue: \n\
+    mov r10, 0x058D98B96 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwDeleteAtom NtDeleteAtom
+__asm__(".intel_syntax noprefix \n\
+NtDeleteAtom: \n\
+    mov r10, 0x0AD5F2C4D \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwDeleteBootEntry NtDeleteBootEntry
+__asm__(".intel_syntax noprefix \n\
+NtDeleteBootEntry: \n\
+    mov r10, 0x00D951502 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwDeleteDriverEntry NtDeleteDriverEntry
+__asm__(".intel_syntax noprefix \n\
+NtDeleteDriverEntry: \n\
+    mov r10, 0x0CA96DE0B \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwDeleteFile NtDeleteFile
+__asm__(".intel_syntax noprefix \n\
+NtDeleteFile: \n\
+    mov r10, 0x014B3DE16 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwDeleteKey NtDeleteKey
+__asm__(".intel_syntax noprefix \n\
+NtDeleteKey: \n\
+    mov r10, 0x069D34464 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwDeleteObjectAuditAlarm NtDeleteObjectAuditAlarm
+__asm__(".intel_syntax noprefix \n\
+NtDeleteObjectAuditAlarm: \n\
+    mov r10, 0x074DA8FD6 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwDeletePrivateNamespace NtDeletePrivateNamespace
+__asm__(".intel_syntax noprefix \n\
+NtDeletePrivateNamespace: \n\
+    mov r10, 0x01CAD3F35 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwDeleteValueKey NtDeleteValueKey
+__asm__(".intel_syntax noprefix \n\
+NtDeleteValueKey: \n\
+    mov r10, 0x0C51D1046 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwDeleteWnfStateData NtDeleteWnfStateData
+__asm__(".intel_syntax noprefix \n\
+NtDeleteWnfStateData: \n\
+    mov r10, 0x0134B3F87 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwDeleteWnfStateName NtDeleteWnfStateName
+__asm__(".intel_syntax noprefix \n\
+NtDeleteWnfStateName: \n\
+    mov r10, 0x08A8D871D \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwDisableLastKnownGood NtDisableLastKnownGood
+__asm__(".intel_syntax noprefix \n\
+NtDisableLastKnownGood: \n\
+    mov r10, 0x015CB8BF0 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwDisplayString NtDisplayString
+__asm__(".intel_syntax noprefix \n\
+NtDisplayString: \n\
+    mov r10, 0x068909F00 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwDrawText NtDrawText
+__asm__(".intel_syntax noprefix \n\
+NtDrawText: \n\
+    mov r10, 0x0D34AD0DD \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwEnableLastKnownGood NtEnableLastKnownGood
+__asm__(".intel_syntax noprefix \n\
+NtEnableLastKnownGood: \n\
+    mov r10, 0x06BF90732 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwEnumerateBootEntries NtEnumerateBootEntries
+__asm__(".intel_syntax noprefix \n\
+NtEnumerateBootEntries: \n\
+    mov r10, 0x00E963B09 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwEnumerateDriverEntries NtEnumerateDriverEntries
+__asm__(".intel_syntax noprefix \n\
+NtEnumerateDriverEntries: \n\
+    mov r10, 0x02C96B699 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwEnumerateSystemEnvironmentValuesEx NtEnumerateSystemEnvironmentValuesEx
+__asm__(".intel_syntax noprefix \n\
+NtEnumerateSystemEnvironmentValuesEx: \n\
+    mov r10, 0x0D19DE521 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwEnumerateTransactionObject NtEnumerateTransactionObject
+__asm__(".intel_syntax noprefix \n\
+NtEnumerateTransactionObject: \n\
+    mov r10, 0x00C90361D \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwExtendSection NtExtendSection
+__asm__(".intel_syntax noprefix \n\
+NtExtendSection: \n\
+    mov r10, 0x0128A3019 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwFilterBootOption NtFilterBootOption
+__asm__(".intel_syntax noprefix \n\
+NtFilterBootOption: \n\
+    mov r10, 0x00EA60E33 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwFilterToken NtFilterToken
+__asm__(".intel_syntax noprefix \n\
+NtFilterToken: \n\
+    mov r10, 0x0C355ADCA \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwFilterTokenEx NtFilterTokenEx
+__asm__(".intel_syntax noprefix \n\
+NtFilterTokenEx: \n\
+    mov r10, 0x0769F2A4A \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwFlushBuffersFileEx NtFlushBuffersFileEx
+__asm__(".intel_syntax noprefix \n\
+NtFlushBuffersFileEx: \n\
+    mov r10, 0x0A634616A \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwFlushInstallUILanguage NtFlushInstallUILanguage
+__asm__(".intel_syntax noprefix \n\
+NtFlushInstallUILanguage: \n\
+    mov r10, 0x00FD14672 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwFlushInstructionCache NtFlushInstructionCache
+__asm__(".intel_syntax noprefix \n\
+NtFlushInstructionCache: \n\
+    mov r10, 0x04D9BB1DB \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwFlushKey NtFlushKey
+__asm__(".intel_syntax noprefix \n\
+NtFlushKey: \n\
+    mov r10, 0x019CEE8B6 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwFlushProcessWriteBuffers NtFlushProcessWriteBuffers
+__asm__(".intel_syntax noprefix \n\
+NtFlushProcessWriteBuffers: \n\
+    mov r10, 0x079399F6A \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwFlushVirtualMemory NtFlushVirtualMemory
+__asm__(".intel_syntax noprefix \n\
+NtFlushVirtualMemory: \n\
+    mov r10, 0x03FA90907 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwFlushWriteBuffer NtFlushWriteBuffer
+__asm__(".intel_syntax noprefix \n\
+NtFlushWriteBuffer: \n\
+    mov r10, 0x0802BDAE2 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwFreeUserPhysicalPages NtFreeUserPhysicalPages
+__asm__(".intel_syntax noprefix \n\
+NtFreeUserPhysicalPages: \n\
+    mov r10, 0x07BE16462 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwFreezeRegistry NtFreezeRegistry
+__asm__(".intel_syntax noprefix \n\
+NtFreezeRegistry: \n\
+    mov r10, 0x00E6A100F \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwFreezeTransactions NtFreezeTransactions
+__asm__(".intel_syntax noprefix \n\
+NtFreezeTransactions: \n\
+    mov r10, 0x00F4A05DD \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwGetCachedSigningLevel NtGetCachedSigningLevel
+__asm__(".intel_syntax noprefix \n\
+NtGetCachedSigningLevel: \n\
+    mov r10, 0x0969A1DA4 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwGetCompleteWnfStateSubscription NtGetCompleteWnfStateSubscription
+__asm__(".intel_syntax noprefix \n\
+NtGetCompleteWnfStateSubscription: \n\
+    mov r10, 0x04C922453 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwGetContextThread NtGetContextThread
+__asm__(".intel_syntax noprefix \n\
+NtGetContextThread: \n\
+    mov r10, 0x054D01671 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwGetCurrentProcessorNumber NtGetCurrentProcessorNumber
+__asm__(".intel_syntax noprefix \n\
+NtGetCurrentProcessorNumber: \n\
+    mov r10, 0x09A3B8A99 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwGetCurrentProcessorNumberEx NtGetCurrentProcessorNumberEx
+__asm__(".intel_syntax noprefix \n\
+NtGetCurrentProcessorNumberEx: \n\
+    mov r10, 0x086A2C25E \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwGetDevicePowerState NtGetDevicePowerState
+__asm__(".intel_syntax noprefix \n\
+NtGetDevicePowerState: \n\
+    mov r10, 0x036893E26 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwGetMUIRegistryInfo NtGetMUIRegistryInfo
+__asm__(".intel_syntax noprefix \n\
+NtGetMUIRegistryInfo: \n\
+    mov r10, 0x0FC74C8F1 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwGetNextProcess NtGetNextProcess
+__asm__(".intel_syntax noprefix \n\
+NtGetNextProcess: \n\
+    mov r10, 0x0863B9757 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwGetNextThread NtGetNextThread
+__asm__(".intel_syntax noprefix \n\
+NtGetNextThread: \n\
+    mov r10, 0x08A895136 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwGetNlsSectionPtr NtGetNlsSectionPtr
+__asm__(".intel_syntax noprefix \n\
+NtGetNlsSectionPtr: \n\
+    mov r10, 0x02292AB8D \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwGetNotificationResourceManager NtGetNotificationResourceManager
+__asm__(".intel_syntax noprefix \n\
+NtGetNotificationResourceManager: \n\
+    mov r10, 0x00F3F1194 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwGetWriteWatch NtGetWriteWatch
+__asm__(".intel_syntax noprefix \n\
+NtGetWriteWatch: \n\
+    mov r10, 0x0B779F9CF \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwImpersonateAnonymousToken NtImpersonateAnonymousToken
+__asm__(".intel_syntax noprefix \n\
+NtImpersonateAnonymousToken: \n\
+    mov r10, 0x00794898C \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwImpersonateThread NtImpersonateThread
+__asm__(".intel_syntax noprefix \n\
+NtImpersonateThread: \n\
+    mov r10, 0x081A8C174 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwInitializeEnclave NtInitializeEnclave
+__asm__(".intel_syntax noprefix \n\
+NtInitializeEnclave: \n\
+    mov r10, 0x0883AB77E \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwInitializeNlsFiles NtInitializeNlsFiles
+__asm__(".intel_syntax noprefix \n\
+NtInitializeNlsFiles: \n\
+    mov r10, 0x0FEDEC97A \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwInitializeRegistry NtInitializeRegistry
+__asm__(".intel_syntax noprefix \n\
+NtInitializeRegistry: \n\
+    mov r10, 0x0198AF1DA \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwInitiatePowerAction NtInitiatePowerAction
+__asm__(".intel_syntax noprefix \n\
+NtInitiatePowerAction: \n\
+    mov r10, 0x008922A07 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwIsSystemResumeAutomatic NtIsSystemResumeAutomatic
+__asm__(".intel_syntax noprefix \n\
+NtIsSystemResumeAutomatic: \n\
+    mov r10, 0x022BA5568 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwIsUILanguageComitted NtIsUILanguageComitted
+__asm__(".intel_syntax noprefix \n\
+NtIsUILanguageComitted: \n\
+    mov r10, 0x07BA27317 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwListenPort NtListenPort
+__asm__(".intel_syntax noprefix \n\
+NtListenPort: \n\
+    mov r10, 0x020B3CF28 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwLoadDriver NtLoadDriver
+__asm__(".intel_syntax noprefix \n\
+NtLoadDriver: \n\
+    mov r10, 0x0945DFE86 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwLoadEnclaveData NtLoadEnclaveData
+__asm__(".intel_syntax noprefix \n\
+NtLoadEnclaveData: \n\
+    mov r10, 0x06342B777 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwLoadHotPatch NtLoadHotPatch
+__asm__(".intel_syntax noprefix \n\
+NtLoadHotPatch: \n\
+    mov r10, 0x090AEA036 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwLoadKey NtLoadKey
+__asm__(".intel_syntax noprefix \n\
+NtLoadKey: \n\
+    mov r10, 0x069209848 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwLoadKey2 NtLoadKey2
+__asm__(".intel_syntax noprefix \n\
+NtLoadKey2: \n\
+    mov r10, 0x02149CB54 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwLoadKeyEx NtLoadKeyEx
+__asm__(".intel_syntax noprefix \n\
+NtLoadKeyEx: \n\
+    mov r10, 0x063681596 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwLockFile NtLockFile
+__asm__(".intel_syntax noprefix \n\
+NtLockFile: \n\
+    mov r10, 0x02D74AB69 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwLockProductActivationKeys NtLockProductActivationKeys
+__asm__(".intel_syntax noprefix \n\
+NtLockProductActivationKeys: \n\
+    mov r10, 0x022C03565 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwLockRegistryKey NtLockRegistryKey
+__asm__(".intel_syntax noprefix \n\
+NtLockRegistryKey: \n\
+    mov r10, 0x07621558E \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwLockVirtualMemory NtLockVirtualMemory
+__asm__(".intel_syntax noprefix \n\
+NtLockVirtualMemory: \n\
+    mov r10, 0x019916919 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwMakePermanentObject NtMakePermanentObject
+__asm__(".intel_syntax noprefix \n\
+NtMakePermanentObject: \n\
+    mov r10, 0x022BC2C21 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwMakeTemporaryObject NtMakeTemporaryObject
+__asm__(".intel_syntax noprefix \n\
+NtMakeTemporaryObject: \n\
+    mov r10, 0x006984055 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwManagePartition NtManagePartition
+__asm__(".intel_syntax noprefix \n\
+NtManagePartition: \n\
+    mov r10, 0x019743BA5 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwMapCMFModule NtMapCMFModule
+__asm__(".intel_syntax noprefix \n\
+NtMapCMFModule: \n\
+    mov r10, 0x03EF510A6 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwMapUserPhysicalPages NtMapUserPhysicalPages
+__asm__(".intel_syntax noprefix \n\
+NtMapUserPhysicalPages: \n\
+    mov r10, 0x02F9E5E62 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwMapViewOfSectionEx NtMapViewOfSectionEx
+__asm__(".intel_syntax noprefix \n\
+NtMapViewOfSectionEx: \n\
+    mov r10, 0x002917268 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwModifyBootEntry NtModifyBootEntry
+__asm__(".intel_syntax noprefix \n\
+NtModifyBootEntry: \n\
+    mov r10, 0x0B9F575A0 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwModifyDriverEntry NtModifyDriverEntry
+__asm__(".intel_syntax noprefix \n\
+NtModifyDriverEntry: \n\
+    mov r10, 0x019820116 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwNotifyChangeDirectoryFile NtNotifyChangeDirectoryFile
+__asm__(".intel_syntax noprefix \n\
+NtNotifyChangeDirectoryFile: \n\
+    mov r10, 0x0EED4AFF2 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwNotifyChangeDirectoryFileEx NtNotifyChangeDirectoryFileEx
+__asm__(".intel_syntax noprefix \n\
+NtNotifyChangeDirectoryFileEx: \n\
+    mov r10, 0x0C92793F2 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwNotifyChangeKey NtNotifyChangeKey
+__asm__(".intel_syntax noprefix \n\
+NtNotifyChangeKey: \n\
+    mov r10, 0x028142F8B \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwNotifyChangeMultipleKeys NtNotifyChangeMultipleKeys
+__asm__(".intel_syntax noprefix \n\
+NtNotifyChangeMultipleKeys: \n\
+    mov r10, 0x023B92826 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwNotifyChangeSession NtNotifyChangeSession
+__asm__(".intel_syntax noprefix \n\
+NtNotifyChangeSession: \n\
+    mov r10, 0x0018EEF92 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwOpenEnlistment NtOpenEnlistment
+__asm__(".intel_syntax noprefix \n\
+NtOpenEnlistment: \n\
+    mov r10, 0x089D34C85 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwOpenEventPair NtOpenEventPair
+__asm__(".intel_syntax noprefix \n\
+NtOpenEventPair: \n\
+    mov r10, 0x010B3DCED \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwOpenIoCompletion NtOpenIoCompletion
+__asm__(".intel_syntax noprefix \n\
+NtOpenIoCompletion: \n\
+    mov r10, 0x036A9163B \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwOpenJobObject NtOpenJobObject
+__asm__(".intel_syntax noprefix \n\
+NtOpenJobObject: \n\
+    mov r10, 0x008B4D919 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwOpenKeyEx NtOpenKeyEx
+__asm__(".intel_syntax noprefix \n\
+NtOpenKeyEx: \n\
+    mov r10, 0x04D5A9906 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwOpenKeyTransacted NtOpenKeyTransacted
+__asm__(".intel_syntax noprefix \n\
+NtOpenKeyTransacted: \n\
+    mov r10, 0x0B55EF5E3 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwOpenKeyTransactedEx NtOpenKeyTransactedEx
+__asm__(".intel_syntax noprefix \n\
+NtOpenKeyTransactedEx: \n\
+    mov r10, 0x026BD7460 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwOpenKeyedEvent NtOpenKeyedEvent
+__asm__(".intel_syntax noprefix \n\
+NtOpenKeyedEvent: \n\
+    mov r10, 0x046CC615E \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwOpenMutant NtOpenMutant
+__asm__(".intel_syntax noprefix \n\
+NtOpenMutant: \n\
+    mov r10, 0x0E8B7F13A \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwOpenObjectAuditAlarm NtOpenObjectAuditAlarm
+__asm__(".intel_syntax noprefix \n\
+NtOpenObjectAuditAlarm: \n\
+    mov r10, 0x0DB5ADFCD \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwOpenPartition NtOpenPartition
+__asm__(".intel_syntax noprefix \n\
+NtOpenPartition: \n\
+    mov r10, 0x0CE912CC5 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwOpenPrivateNamespace NtOpenPrivateNamespace
+__asm__(".intel_syntax noprefix \n\
+NtOpenPrivateNamespace: \n\
+    mov r10, 0x0AA8EB728 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwOpenProcessToken NtOpenProcessToken
+__asm__(".intel_syntax noprefix \n\
+NtOpenProcessToken: \n\
+    mov r10, 0x0B3ED8D40 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwOpenRegistryTransaction NtOpenRegistryTransaction
+__asm__(".intel_syntax noprefix \n\
+NtOpenRegistryTransaction: \n\
+    mov r10, 0x01572C81D \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwOpenResourceManager NtOpenResourceManager
+__asm__(".intel_syntax noprefix \n\
+NtOpenResourceManager: \n\
+    mov r10, 0x0C71FEFA6 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwOpenSemaphore NtOpenSemaphore
+__asm__(".intel_syntax noprefix \n\
+NtOpenSemaphore: \n\
+    mov r10, 0x0709E5A5E \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwOpenSession NtOpenSession
+__asm__(".intel_syntax noprefix \n\
+NtOpenSession: \n\
+    mov r10, 0x0DA909A42 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwOpenSymbolicLinkObject NtOpenSymbolicLinkObject
+__asm__(".intel_syntax noprefix \n\
+NtOpenSymbolicLinkObject: \n\
+    mov r10, 0x00C91040D \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwOpenThread NtOpenThread
+__asm__(".intel_syntax noprefix \n\
+NtOpenThread: \n\
+    mov r10, 0x0EECCF26F \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwOpenTimer NtOpenTimer
+__asm__(".intel_syntax noprefix \n\
+NtOpenTimer: \n\
+    mov r10, 0x08D249BC0 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwOpenTransaction NtOpenTransaction
+__asm__(".intel_syntax noprefix \n\
+NtOpenTransaction: \n\
+    mov r10, 0x0CEC5EA57 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwOpenTransactionManager NtOpenTransactionManager
+__asm__(".intel_syntax noprefix \n\
+NtOpenTransactionManager: \n\
+    mov r10, 0x0C415D4B7 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwPlugPlayControl NtPlugPlayControl
+__asm__(".intel_syntax noprefix \n\
+NtPlugPlayControl: \n\
+    mov r10, 0x08E108A88 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwPrePrepareComplete NtPrePrepareComplete
+__asm__(".intel_syntax noprefix \n\
+NtPrePrepareComplete: \n\
+    mov r10, 0x0054071AC \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwPrePrepareEnlistment NtPrePrepareEnlistment
+__asm__(".intel_syntax noprefix \n\
+NtPrePrepareEnlistment: \n\
+    mov r10, 0x0CB55CEC3 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwPrepareComplete NtPrepareComplete
+__asm__(".intel_syntax noprefix \n\
+NtPrepareComplete: \n\
+    mov r10, 0x038B6D025 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwPrepareEnlistment NtPrepareEnlistment
+__asm__(".intel_syntax noprefix \n\
+NtPrepareEnlistment: \n\
+    mov r10, 0x030274DD5 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwPrivilegeCheck NtPrivilegeCheck
+__asm__(".intel_syntax noprefix \n\
+NtPrivilegeCheck: \n\
+    mov r10, 0x0C25DF1C1 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwPrivilegeObjectAuditAlarm NtPrivilegeObjectAuditAlarm
+__asm__(".intel_syntax noprefix \n\
+NtPrivilegeObjectAuditAlarm: \n\
+    mov r10, 0x09334726B \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwPrivilegedServiceAuditAlarm NtPrivilegedServiceAuditAlarm
+__asm__(".intel_syntax noprefix \n\
+NtPrivilegedServiceAuditAlarm: \n\
+    mov r10, 0x01AA5F2FA \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwPropagationComplete NtPropagationComplete
+__asm__(".intel_syntax noprefix \n\
+NtPropagationComplete: \n\
+    mov r10, 0x015343DF4 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwPropagationFailed NtPropagationFailed
+__asm__(".intel_syntax noprefix \n\
+NtPropagationFailed: \n\
+    mov r10, 0x019B69D96 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwPulseEvent NtPulseEvent
+__asm__(".intel_syntax noprefix \n\
+NtPulseEvent: \n\
+    mov r10, 0x030AC153C \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryAuxiliaryCounterFrequency NtQueryAuxiliaryCounterFrequency
+__asm__(".intel_syntax noprefix \n\
+NtQueryAuxiliaryCounterFrequency: \n\
+    mov r10, 0x078CC82CD \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryBootEntryOrder NtQueryBootEntryOrder
+__asm__(".intel_syntax noprefix \n\
+NtQueryBootEntryOrder: \n\
+    mov r10, 0x06C3178D0 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryBootOptions NtQueryBootOptions
+__asm__(".intel_syntax noprefix \n\
+NtQueryBootOptions: \n\
+    mov r10, 0x04C1B6285 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryDebugFilterState NtQueryDebugFilterState
+__asm__(".intel_syntax noprefix \n\
+NtQueryDebugFilterState: \n\
+    mov r10, 0x076CF1C40 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryDirectoryFileEx NtQueryDirectoryFileEx
+__asm__(".intel_syntax noprefix \n\
+NtQueryDirectoryFileEx: \n\
+    mov r10, 0x00A1946AD \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryDirectoryObject NtQueryDirectoryObject
+__asm__(".intel_syntax noprefix \n\
+NtQueryDirectoryObject: \n\
+    mov r10, 0x0EC48C0F3 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryDriverEntryOrder NtQueryDriverEntryOrder
+__asm__(".intel_syntax noprefix \n\
+NtQueryDriverEntryOrder: \n\
+    mov r10, 0x00B2E75C3 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryEaFile NtQueryEaFile
+__asm__(".intel_syntax noprefix \n\
+NtQueryEaFile: \n\
+    mov r10, 0x038987C42 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryFullAttributesFile NtQueryFullAttributesFile
+__asm__(".intel_syntax noprefix \n\
+NtQueryFullAttributesFile: \n\
+    mov r10, 0x0B0BA5EB2 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryInformationAtom NtQueryInformationAtom
+__asm__(".intel_syntax noprefix \n\
+NtQueryInformationAtom: \n\
+    mov r10, 0x051C3B257 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryInformationByName NtQueryInformationByName
+__asm__(".intel_syntax noprefix \n\
+NtQueryInformationByName: \n\
+    mov r10, 0x0FADDD389 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryInformationEnlistment NtQueryInformationEnlistment
+__asm__(".intel_syntax noprefix \n\
+NtQueryInformationEnlistment: \n\
+    mov r10, 0x00395320F \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryInformationJobObject NtQueryInformationJobObject
+__asm__(".intel_syntax noprefix \n\
+NtQueryInformationJobObject: \n\
+    mov r10, 0x004B82DE5 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryInformationPort NtQueryInformationPort
+__asm__(".intel_syntax noprefix \n\
+NtQueryInformationPort: \n\
+    mov r10, 0x09932B2AD \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryInformationResourceManager NtQueryInformationResourceManager
+__asm__(".intel_syntax noprefix \n\
+NtQueryInformationResourceManager: \n\
+    mov r10, 0x0EBD3B9F3 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryInformationTransaction NtQueryInformationTransaction
+__asm__(".intel_syntax noprefix \n\
+NtQueryInformationTransaction: \n\
+    mov r10, 0x01ED41C79 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryInformationTransactionManager NtQueryInformationTransactionManager
+__asm__(".intel_syntax noprefix \n\
+NtQueryInformationTransactionManager: \n\
+    mov r10, 0x035B76176 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryInformationWorkerFactory NtQueryInformationWorkerFactory
+__asm__(".intel_syntax noprefix \n\
+NtQueryInformationWorkerFactory: \n\
+    mov r10, 0x0254E0FEC \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryInstallUILanguage NtQueryInstallUILanguage
+__asm__(".intel_syntax noprefix \n\
+NtQueryInstallUILanguage: \n\
+    mov r10, 0x0CF5CF80C \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryIntervalProfile NtQueryIntervalProfile
+__asm__(".intel_syntax noprefix \n\
+NtQueryIntervalProfile: \n\
+    mov r10, 0x0A061F6DC \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryIoCompletion NtQueryIoCompletion
+__asm__(".intel_syntax noprefix \n\
+NtQueryIoCompletion: \n\
+    mov r10, 0x01BB51EDE \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryLicenseValue NtQueryLicenseValue
+__asm__(".intel_syntax noprefix \n\
+NtQueryLicenseValue: \n\
+    mov r10, 0x03A3F29B4 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryMultipleValueKey NtQueryMultipleValueKey
+__asm__(".intel_syntax noprefix \n\
+NtQueryMultipleValueKey: \n\
+    mov r10, 0x0ED24D096 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryMutant NtQueryMutant
+__asm__(".intel_syntax noprefix \n\
+NtQueryMutant: \n\
+    mov r10, 0x07E965F42 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryOpenSubKeys NtQueryOpenSubKeys
+__asm__(".intel_syntax noprefix \n\
+NtQueryOpenSubKeys: \n\
+    mov r10, 0x08294ED4E \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryOpenSubKeysEx NtQueryOpenSubKeysEx
+__asm__(".intel_syntax noprefix \n\
+NtQueryOpenSubKeysEx: \n\
+    mov r10, 0x077DBA48F \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryPortInformationProcess NtQueryPortInformationProcess
+__asm__(".intel_syntax noprefix \n\
+NtQueryPortInformationProcess: \n\
+    mov r10, 0x019B4241C \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryQuotaInformationFile NtQueryQuotaInformationFile
+__asm__(".intel_syntax noprefix \n\
+NtQueryQuotaInformationFile: \n\
+    mov r10, 0x0BCBBB61F \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQuerySecurityAttributesToken NtQuerySecurityAttributesToken
+__asm__(".intel_syntax noprefix \n\
+NtQuerySecurityAttributesToken: \n\
+    mov r10, 0x0FC66E4CD \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQuerySecurityObject NtQuerySecurityObject
+__asm__(".intel_syntax noprefix \n\
+NtQuerySecurityObject: \n\
+    mov r10, 0x0EFBD8563 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQuerySecurityPolicy NtQuerySecurityPolicy
+__asm__(".intel_syntax noprefix \n\
+NtQuerySecurityPolicy: \n\
+    mov r10, 0x0045FF92B \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQuerySemaphore NtQuerySemaphore
+__asm__(".intel_syntax noprefix \n\
+NtQuerySemaphore: \n\
+    mov r10, 0x0CD5F32C5 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQuerySymbolicLinkObject NtQuerySymbolicLinkObject
+__asm__(".intel_syntax noprefix \n\
+NtQuerySymbolicLinkObject: \n\
+    mov r10, 0x0132B3377 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQuerySystemEnvironmentValue NtQuerySystemEnvironmentValue
+__asm__(".intel_syntax noprefix \n\
+NtQuerySystemEnvironmentValue: \n\
+    mov r10, 0x04CBB7764 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQuerySystemEnvironmentValueEx NtQuerySystemEnvironmentValueEx
+__asm__(".intel_syntax noprefix \n\
+NtQuerySystemEnvironmentValueEx: \n\
+    mov r10, 0x023DEEF9A \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQuerySystemInformationEx NtQuerySystemInformationEx
+__asm__(".intel_syntax noprefix \n\
+NtQuerySystemInformationEx: \n\
+    mov r10, 0x0697D29B5 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryTimerResolution NtQueryTimerResolution
+__asm__(".intel_syntax noprefix \n\
+NtQueryTimerResolution: \n\
+    mov r10, 0x01E816402 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryWnfStateData NtQueryWnfStateData
+__asm__(".intel_syntax noprefix \n\
+NtQueryWnfStateData: \n\
+    mov r10, 0x0AC0E8282 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueryWnfStateNameInformation NtQueryWnfStateNameInformation
+__asm__(".intel_syntax noprefix \n\
+NtQueryWnfStateNameInformation: \n\
+    mov r10, 0x09A4BFC9F \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQueueApcThreadEx NtQueueApcThreadEx
+__asm__(".intel_syntax noprefix \n\
+NtQueueApcThreadEx: \n\
+    mov r10, 0x098B9269E \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwRaiseException NtRaiseException
+__asm__(".intel_syntax noprefix \n\
+NtRaiseException: \n\
+    mov r10, 0x001A8217A \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwRaiseHardError NtRaiseHardError
+__asm__(".intel_syntax noprefix \n\
+NtRaiseHardError: \n\
+    mov r10, 0x009978393 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwReadOnlyEnlistment NtReadOnlyEnlistment
+__asm__(".intel_syntax noprefix \n\
+NtReadOnlyEnlistment: \n\
+    mov r10, 0x0EEA1CF33 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwRecoverEnlistment NtRecoverEnlistment
+__asm__(".intel_syntax noprefix \n\
+NtRecoverEnlistment: \n\
+    mov r10, 0x011933405 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwRecoverResourceManager NtRecoverResourceManager
+__asm__(".intel_syntax noprefix \n\
+NtRecoverResourceManager: \n\
+    mov r10, 0x04D905F0C \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwRecoverTransactionManager NtRecoverTransactionManager
+__asm__(".intel_syntax noprefix \n\
+NtRecoverTransactionManager: \n\
+    mov r10, 0x082B5B60F \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwRegisterProtocolAddressInformation NtRegisterProtocolAddressInformation
+__asm__(".intel_syntax noprefix \n\
+NtRegisterProtocolAddressInformation: \n\
+    mov r10, 0x0D54EF51C \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwRegisterThreadTerminatePort NtRegisterThreadTerminatePort
+__asm__(".intel_syntax noprefix \n\
+NtRegisterThreadTerminatePort: \n\
+    mov r10, 0x066F67F62 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwReleaseKeyedEvent NtReleaseKeyedEvent
+__asm__(".intel_syntax noprefix \n\
+NtReleaseKeyedEvent: \n\
+    mov r10, 0x008890F12 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwReleaseWorkerFactoryWorker NtReleaseWorkerFactoryWorker
+__asm__(".intel_syntax noprefix \n\
+NtReleaseWorkerFactoryWorker: \n\
+    mov r10, 0x0BC8D8A29 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwRemoveIoCompletionEx NtRemoveIoCompletionEx
+__asm__(".intel_syntax noprefix \n\
+NtRemoveIoCompletionEx: \n\
+    mov r10, 0x0B49732A8 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwRemoveProcessDebug NtRemoveProcessDebug
+__asm__(".intel_syntax noprefix \n\
+NtRemoveProcessDebug: \n\
+    mov r10, 0x01050FE46 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwRenameKey NtRenameKey
+__asm__(".intel_syntax noprefix \n\
+NtRenameKey: \n\
+    mov r10, 0x01B0C46D8 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwRenameTransactionManager NtRenameTransactionManager
+__asm__(".intel_syntax noprefix \n\
+NtRenameTransactionManager: \n\
+    mov r10, 0x02FA9E7F0 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwReplaceKey NtReplaceKey
+__asm__(".intel_syntax noprefix \n\
+NtReplaceKey: \n\
+    mov r10, 0x066CE7554 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwReplacePartitionUnit NtReplacePartitionUnit
+__asm__(".intel_syntax noprefix \n\
+NtReplacePartitionUnit: \n\
+    mov r10, 0x022BE3E1E \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwReplyWaitReplyPort NtReplyWaitReplyPort
+__asm__(".intel_syntax noprefix \n\
+NtReplyWaitReplyPort: \n\
+    mov r10, 0x024B42B2E \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwRequestPort NtRequestPort
+__asm__(".intel_syntax noprefix \n\
+NtRequestPort: \n\
+    mov r10, 0x0A0374F24 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwResetEvent NtResetEvent
+__asm__(".intel_syntax noprefix \n\
+NtResetEvent: \n\
+    mov r10, 0x044CE8F88 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwResetWriteWatch NtResetWriteWatch
+__asm__(".intel_syntax noprefix \n\
+NtResetWriteWatch: \n\
+    mov r10, 0x0FCE9375A \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwRestoreKey NtRestoreKey
+__asm__(".intel_syntax noprefix \n\
+NtRestoreKey: \n\
+    mov r10, 0x0FB3EE7A5 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwResumeProcess NtResumeProcess
+__asm__(".intel_syntax noprefix \n\
+NtResumeProcess: \n\
+    mov r10, 0x011A90C20 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwRevertContainerImpersonation NtRevertContainerImpersonation
+__asm__(".intel_syntax noprefix \n\
+NtRevertContainerImpersonation: \n\
+    mov r10, 0x0C629C4C5 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwRollbackComplete NtRollbackComplete
+__asm__(".intel_syntax noprefix \n\
+NtRollbackComplete: \n\
+    mov r10, 0x059204DCC \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwRollbackEnlistment NtRollbackEnlistment
+__asm__(".intel_syntax noprefix \n\
+NtRollbackEnlistment: \n\
+    mov r10, 0x031872C15 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwRollbackRegistryTransaction NtRollbackRegistryTransaction
+__asm__(".intel_syntax noprefix \n\
+NtRollbackRegistryTransaction: \n\
+    mov r10, 0x0CA51CAC3 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwRollbackTransaction NtRollbackTransaction
+__asm__(".intel_syntax noprefix \n\
+NtRollbackTransaction: \n\
+    mov r10, 0x09CBDDA69 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwRollforwardTransactionManager NtRollforwardTransactionManager
+__asm__(".intel_syntax noprefix \n\
+NtRollforwardTransactionManager: \n\
+    mov r10, 0x003AF9F82 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSaveKey NtSaveKey
+__asm__(".intel_syntax noprefix \n\
+NtSaveKey: \n\
+    mov r10, 0x03BAF2A30 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSaveKeyEx NtSaveKeyEx
+__asm__(".intel_syntax noprefix \n\
+NtSaveKeyEx: \n\
+    mov r10, 0x09798D324 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSaveMergedKeys NtSaveMergedKeys
+__asm__(".intel_syntax noprefix \n\
+NtSaveMergedKeys: \n\
+    mov r10, 0x067827A6C \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSecureConnectPort NtSecureConnectPort
+__asm__(".intel_syntax noprefix \n\
+NtSecureConnectPort: \n\
+    mov r10, 0x0983281BC \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSerializeBoot NtSerializeBoot
+__asm__(".intel_syntax noprefix \n\
+NtSerializeBoot: \n\
+    mov r10, 0x0CBD8D946 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetBootEntryOrder NtSetBootEntryOrder
+__asm__(".intel_syntax noprefix \n\
+NtSetBootEntryOrder: \n\
+    mov r10, 0x0960E8E84 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetBootOptions NtSetBootOptions
+__asm__(".intel_syntax noprefix \n\
+NtSetBootOptions: \n\
+    mov r10, 0x0779C2F4B \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetCachedSigningLevel NtSetCachedSigningLevel
+__asm__(".intel_syntax noprefix \n\
+NtSetCachedSigningLevel: \n\
+    mov r10, 0x0AABA3194 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetCachedSigningLevel2 NtSetCachedSigningLevel2
+__asm__(".intel_syntax noprefix \n\
+NtSetCachedSigningLevel2: \n\
+    mov r10, 0x03E10D901 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetContextThread NtSetContextThread
+__asm__(".intel_syntax noprefix \n\
+NtSetContextThread: \n\
+    mov r10, 0x0AB9BA70B \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetDebugFilterState NtSetDebugFilterState
+__asm__(".intel_syntax noprefix \n\
+NtSetDebugFilterState: \n\
+    mov r10, 0x0B3316903 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetDefaultHardErrorPort NtSetDefaultHardErrorPort
+__asm__(".intel_syntax noprefix \n\
+NtSetDefaultHardErrorPort: \n\
+    mov r10, 0x0A734A0BF \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetDefaultLocale NtSetDefaultLocale
+__asm__(".intel_syntax noprefix \n\
+NtSetDefaultLocale: \n\
+    mov r10, 0x0452D7FEB \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetDefaultUILanguage NtSetDefaultUILanguage
+__asm__(".intel_syntax noprefix \n\
+NtSetDefaultUILanguage: \n\
+    mov r10, 0x0299B6E3A \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetDriverEntryOrder NtSetDriverEntryOrder
+__asm__(".intel_syntax noprefix \n\
+NtSetDriverEntryOrder: \n\
+    mov r10, 0x013A51131 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetEaFile NtSetEaFile
+__asm__(".intel_syntax noprefix \n\
+NtSetEaFile: \n\
+    mov r10, 0x0C0FA48C8 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetHighEventPair NtSetHighEventPair
+__asm__(".intel_syntax noprefix \n\
+NtSetHighEventPair: \n\
+    mov r10, 0x0D753F5CC \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetHighWaitLowEventPair NtSetHighWaitLowEventPair
+__asm__(".intel_syntax noprefix \n\
+NtSetHighWaitLowEventPair: \n\
+    mov r10, 0x03F6ECE0D \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetIRTimer NtSetIRTimer
+__asm__(".intel_syntax noprefix \n\
+NtSetIRTimer: \n\
+    mov r10, 0x00850DB12 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetInformationDebugObject NtSetInformationDebugObject
+__asm__(".intel_syntax noprefix \n\
+NtSetInformationDebugObject: \n\
+    mov r10, 0x08837B8BB \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetInformationEnlistment NtSetInformationEnlistment
+__asm__(".intel_syntax noprefix \n\
+NtSetInformationEnlistment: \n\
+    mov r10, 0x0479B3A4D \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetInformationJobObject NtSetInformationJobObject
+__asm__(".intel_syntax noprefix \n\
+NtSetInformationJobObject: \n\
+    mov r10, 0x08ED07ACF \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetInformationKey NtSetInformationKey
+__asm__(".intel_syntax noprefix \n\
+NtSetInformationKey: \n\
+    mov r10, 0x0C2785060 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetInformationResourceManager NtSetInformationResourceManager
+__asm__(".intel_syntax noprefix \n\
+NtSetInformationResourceManager: \n\
+    mov r10, 0x0C41FD0BD \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetInformationSymbolicLink NtSetInformationSymbolicLink
+__asm__(".intel_syntax noprefix \n\
+NtSetInformationSymbolicLink: \n\
+    mov r10, 0x0A8A67607 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetInformationToken NtSetInformationToken
+__asm__(".intel_syntax noprefix \n\
+NtSetInformationToken: \n\
+    mov r10, 0x063D6755E \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetInformationTransaction NtSetInformationTransaction
+__asm__(".intel_syntax noprefix \n\
+NtSetInformationTransaction: \n\
+    mov r10, 0x01681381D \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetInformationTransactionManager NtSetInformationTransactionManager
+__asm__(".intel_syntax noprefix \n\
+NtSetInformationTransactionManager: \n\
+    mov r10, 0x005349715 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetInformationVirtualMemory NtSetInformationVirtualMemory
+__asm__(".intel_syntax noprefix \n\
+NtSetInformationVirtualMemory: \n\
+    mov r10, 0x09B028F9F \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetInformationWorkerFactory NtSetInformationWorkerFactory
+__asm__(".intel_syntax noprefix \n\
+NtSetInformationWorkerFactory: \n\
+    mov r10, 0x0786D108F \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetIntervalProfile NtSetIntervalProfile
+__asm__(".intel_syntax noprefix \n\
+NtSetIntervalProfile: \n\
+    mov r10, 0x076A1B0F8 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetIoCompletion NtSetIoCompletion
+__asm__(".intel_syntax noprefix \n\
+NtSetIoCompletion: \n\
+    mov r10, 0x002D843F7 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetIoCompletionEx NtSetIoCompletionEx
+__asm__(".intel_syntax noprefix \n\
+NtSetIoCompletionEx: \n\
+    mov r10, 0x0C92F0C73 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetLdtEntries NtSetLdtEntries
+__asm__(".intel_syntax noprefix \n\
+NtSetLdtEntries: \n\
+    mov r10, 0x05B6A2499 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetLowEventPair NtSetLowEventPair
+__asm__(".intel_syntax noprefix \n\
+NtSetLowEventPair: \n\
+    mov r10, 0x040D27C5B \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetLowWaitHighEventPair NtSetLowWaitHighEventPair
+__asm__(".intel_syntax noprefix \n\
+NtSetLowWaitHighEventPair: \n\
+    mov r10, 0x0A43DA4A3 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetQuotaInformationFile NtSetQuotaInformationFile
+__asm__(".intel_syntax noprefix \n\
+NtSetQuotaInformationFile: \n\
+    mov r10, 0x0A23B5420 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetSecurityObject NtSetSecurityObject
+__asm__(".intel_syntax noprefix \n\
+NtSetSecurityObject: \n\
+    mov r10, 0x0FAD676B9 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetSystemEnvironmentValue NtSetSystemEnvironmentValue
+__asm__(".intel_syntax noprefix \n\
+NtSetSystemEnvironmentValue: \n\
+    mov r10, 0x01C9F0B0C \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetSystemEnvironmentValueEx NtSetSystemEnvironmentValueEx
+__asm__(".intel_syntax noprefix \n\
+NtSetSystemEnvironmentValueEx: \n\
+    mov r10, 0x00F935D4E \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetSystemInformation NtSetSystemInformation
+__asm__(".intel_syntax noprefix \n\
+NtSetSystemInformation: \n\
+    mov r10, 0x0072F4385 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetSystemPowerState NtSetSystemPowerState
+__asm__(".intel_syntax noprefix \n\
+NtSetSystemPowerState: \n\
+    mov r10, 0x010892602 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetSystemTime NtSetSystemTime
+__asm__(".intel_syntax noprefix \n\
+NtSetSystemTime: \n\
+    mov r10, 0x03EAD353D \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetThreadExecutionState NtSetThreadExecutionState
+__asm__(".intel_syntax noprefix \n\
+NtSetThreadExecutionState: \n\
+    mov r10, 0x012B3ECA8 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetTimer2 NtSetTimer2
+__asm__(".intel_syntax noprefix \n\
+NtSetTimer2: \n\
+    mov r10, 0x0CF356FAB \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetTimerEx NtSetTimerEx
+__asm__(".intel_syntax noprefix \n\
+NtSetTimerEx: \n\
+    mov r10, 0x01CFA2E40 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetTimerResolution NtSetTimerResolution
+__asm__(".intel_syntax noprefix \n\
+NtSetTimerResolution: \n\
+    mov r10, 0x054CE745D \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetUuidSeed NtSetUuidSeed
+__asm__(".intel_syntax noprefix \n\
+NtSetUuidSeed: \n\
+    mov r10, 0x01DCF5F12 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetVolumeInformationFile NtSetVolumeInformationFile
+__asm__(".intel_syntax noprefix \n\
+NtSetVolumeInformationFile: \n\
+    mov r10, 0x03402BB21 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetWnfProcessNotificationEvent NtSetWnfProcessNotificationEvent
+__asm__(".intel_syntax noprefix \n\
+NtSetWnfProcessNotificationEvent: \n\
+    mov r10, 0x016CB77DE \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwShutdownSystem NtShutdownSystem
+__asm__(".intel_syntax noprefix \n\
+NtShutdownSystem: \n\
+    mov r10, 0x0C0ECECB7 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwShutdownWorkerFactory NtShutdownWorkerFactory
+__asm__(".intel_syntax noprefix \n\
+NtShutdownWorkerFactory: \n\
+    mov r10, 0x0189320D4 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSignalAndWaitForSingleObject NtSignalAndWaitForSingleObject
+__asm__(".intel_syntax noprefix \n\
+NtSignalAndWaitForSingleObject: \n\
+    mov r10, 0x029111FA8 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSinglePhaseReject NtSinglePhaseReject
+__asm__(".intel_syntax noprefix \n\
+NtSinglePhaseReject: \n\
+    mov r10, 0x0249E3611 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwStartProfile NtStartProfile
+__asm__(".intel_syntax noprefix \n\
+NtStartProfile: \n\
+    mov r10, 0x060356B93 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwStopProfile NtStopProfile
+__asm__(".intel_syntax noprefix \n\
+NtStopProfile: \n\
+    mov r10, 0x0E5B21DE6 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSubscribeWnfStateChange NtSubscribeWnfStateChange
+__asm__(".intel_syntax noprefix \n\
+NtSubscribeWnfStateChange: \n\
+    mov r10, 0x006A77F3A \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSuspendProcess NtSuspendProcess
+__asm__(".intel_syntax noprefix \n\
+NtSuspendProcess: \n\
+    mov r10, 0x077AB5232 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSuspendThread NtSuspendThread
+__asm__(".intel_syntax noprefix \n\
+NtSuspendThread: \n\
+    mov r10, 0x01CBD5E1B \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSystemDebugControl NtSystemDebugControl
+__asm__(".intel_syntax noprefix \n\
+NtSystemDebugControl: \n\
+    mov r10, 0x0BDAC5CBA \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwTerminateEnclave NtTerminateEnclave
+__asm__(".intel_syntax noprefix \n\
+NtTerminateEnclave: \n\
+    mov r10, 0x0613E59E2 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwTerminateJobObject NtTerminateJobObject
+__asm__(".intel_syntax noprefix \n\
+NtTerminateJobObject: \n\
+    mov r10, 0x01EA037FD \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwTestAlert NtTestAlert
+__asm__(".intel_syntax noprefix \n\
+NtTestAlert: \n\
+    mov r10, 0x08CAFE33C \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwThawRegistry NtThawRegistry
+__asm__(".intel_syntax noprefix \n\
+NtThawRegistry: \n\
+    mov r10, 0x03EAC3439 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwThawTransactions NtThawTransactions
+__asm__(".intel_syntax noprefix \n\
+NtThawTransactions: \n\
+    mov r10, 0x0900AF0DE \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwTraceControl NtTraceControl
+__asm__(".intel_syntax noprefix \n\
+NtTraceControl: \n\
+    mov r10, 0x0B865DEF4 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwTranslateFilePath NtTranslateFilePath
+__asm__(".intel_syntax noprefix \n\
+NtTranslateFilePath: \n\
+    mov r10, 0x0F2B2CFE7 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwUmsThreadYield NtUmsThreadYield
+__asm__(".intel_syntax noprefix \n\
+NtUmsThreadYield: \n\
+    mov r10, 0x009B78290 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwUnloadDriver NtUnloadDriver
+__asm__(".intel_syntax noprefix \n\
+NtUnloadDriver: \n\
+    mov r10, 0x09CD7A65B \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwUnloadKey NtUnloadKey
+__asm__(".intel_syntax noprefix \n\
+NtUnloadKey: \n\
+    mov r10, 0x05B2C58B5 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwUnloadKey2 NtUnloadKey2
+__asm__(".intel_syntax noprefix \n\
+NtUnloadKey2: \n\
+    mov r10, 0x0EE7706E9 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwUnloadKeyEx NtUnloadKeyEx
+__asm__(".intel_syntax noprefix \n\
+NtUnloadKeyEx: \n\
+    mov r10, 0x03F99C3E2 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwUnlockFile NtUnlockFile
+__asm__(".intel_syntax noprefix \n\
+NtUnlockFile: \n\
+    mov r10, 0x0E1781BFF \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwUnlockVirtualMemory NtUnlockVirtualMemory
+__asm__(".intel_syntax noprefix \n\
+NtUnlockVirtualMemory: \n\
+    mov r10, 0x00F98213F \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwUnmapViewOfSectionEx NtUnmapViewOfSectionEx
+__asm__(".intel_syntax noprefix \n\
+NtUnmapViewOfSectionEx: \n\
+    mov r10, 0x040DA1604 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwUnsubscribeWnfStateChange NtUnsubscribeWnfStateChange
+__asm__(".intel_syntax noprefix \n\
+NtUnsubscribeWnfStateChange: \n\
+    mov r10, 0x0209C6524 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwUpdateWnfStateData NtUpdateWnfStateData
+__asm__(".intel_syntax noprefix \n\
+NtUpdateWnfStateData: \n\
+    mov r10, 0x00C851638 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwVdmControl NtVdmControl
+__asm__(".intel_syntax noprefix \n\
+NtVdmControl: \n\
+    mov r10, 0x01BC3E185 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwWaitForAlertByThreadId NtWaitForAlertByThreadId
+__asm__(".intel_syntax noprefix \n\
+NtWaitForAlertByThreadId: \n\
+    mov r10, 0x06CABA912 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwWaitForDebugEvent NtWaitForDebugEvent
+__asm__(".intel_syntax noprefix \n\
+NtWaitForDebugEvent: \n\
+    mov r10, 0x0968A759C \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwWaitForKeyedEvent NtWaitForKeyedEvent
+__asm__(".intel_syntax noprefix \n\
+NtWaitForKeyedEvent: \n\
+    mov r10, 0x0F918FC89 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwWaitForWorkViaWorkerFactory NtWaitForWorkViaWorkerFactory
+__asm__(".intel_syntax noprefix \n\
+NtWaitForWorkViaWorkerFactory: \n\
+    mov r10, 0x0489E7A52 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwWaitHighEventPair NtWaitHighEventPair
+__asm__(".intel_syntax noprefix \n\
+NtWaitHighEventPair: \n\
+    mov r10, 0x023332BA4 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwWaitLowEventPair NtWaitLowEventPair
+__asm__(".intel_syntax noprefix \n\
+NtWaitLowEventPair: \n\
+    mov r10, 0x072DF924D \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwAcquireCMFViewOwnership NtAcquireCMFViewOwnership
+__asm__(".intel_syntax noprefix \n\
+NtAcquireCMFViewOwnership: \n\
+    mov r10, 0x00B4D01D4 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCancelDeviceWakeupRequest NtCancelDeviceWakeupRequest
+__asm__(".intel_syntax noprefix \n\
+NtCancelDeviceWakeupRequest: \n\
+    mov r10, 0x0D421DCA5 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwClearAllSavepointsTransaction NtClearAllSavepointsTransaction
+__asm__(".intel_syntax noprefix \n\
+NtClearAllSavepointsTransaction: \n\
+    mov r10, 0x09E05BE8B \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwClearSavepointTransaction NtClearSavepointTransaction
+__asm__(".intel_syntax noprefix \n\
+NtClearSavepointTransaction: \n\
+    mov r10, 0x0FD69C1A2 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwRollbackSavepointTransaction NtRollbackSavepointTransaction
+__asm__(".intel_syntax noprefix \n\
+NtRollbackSavepointTransaction: \n\
+    mov r10, 0x01C47DE17 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSavepointTransaction NtSavepointTransaction
+__asm__(".intel_syntax noprefix \n\
+NtSavepointTransaction: \n\
+    mov r10, 0x01C844249 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSavepointComplete NtSavepointComplete
+__asm__(".intel_syntax noprefix \n\
+NtSavepointComplete: \n\
+    mov r10, 0x01A90361A \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateSectionEx NtCreateSectionEx
+__asm__(".intel_syntax noprefix \n\
+NtCreateSectionEx: \n\
+    mov r10, 0x0984DC69B \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwCreateCrossVmEvent NtCreateCrossVmEvent
+__asm__(".intel_syntax noprefix \n\
+NtCreateCrossVmEvent: \n\
+    mov r10, 0x0C951D0DF \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwGetPlugPlayEvent NtGetPlugPlayEvent
+__asm__(".intel_syntax noprefix \n\
+NtGetPlugPlayEvent: \n\
+    mov r10, 0x0E0452617 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwListTransactions NtListTransactions
+__asm__(".intel_syntax noprefix \n\
+NtListTransactions: \n\
+    mov r10, 0x0ECB6E62C \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwMarshallTransaction NtMarshallTransaction
+__asm__(".intel_syntax noprefix \n\
+NtMarshallTransaction: \n\
+    mov r10, 0x07ADD647D \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwPullTransaction NtPullTransaction
+__asm__(".intel_syntax noprefix \n\
+NtPullTransaction: \n\
+    mov r10, 0x07D557FF9 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwReleaseCMFViewOwnership NtReleaseCMFViewOwnership
+__asm__(".intel_syntax noprefix \n\
+NtReleaseCMFViewOwnership: \n\
+    mov r10, 0x05A6F42F8 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwWaitForWnfNotifications NtWaitForWnfNotifications
+__asm__(".intel_syntax noprefix \n\
+NtWaitForWnfNotifications: \n\
+    mov r10, 0x00D992ACB \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwStartTm NtStartTm
+__asm__(".intel_syntax noprefix \n\
+NtStartTm: \n\
+    mov r10, 0x0C38E50AF \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwSetInformationProcess NtSetInformationProcess
+__asm__(".intel_syntax noprefix \n\
+NtSetInformationProcess: \n\
+    mov r10, 0x06DAF4A7C \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwRequestDeviceWakeup NtRequestDeviceWakeup
+__asm__(".intel_syntax noprefix \n\
+NtRequestDeviceWakeup: \n\
+    mov r10, 0x05517B042 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwRequestWakeupLatency NtRequestWakeupLatency
+__asm__(".intel_syntax noprefix \n\
+NtRequestWakeupLatency: \n\
+    mov r10, 0x0043EE142 \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwQuerySystemTime NtQuerySystemTime
+__asm__(".intel_syntax noprefix \n\
+NtQuerySystemTime: \n\
+    mov r10, 0x0EAAEF31B \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwManageHotPatch NtManageHotPatch
+__asm__(".intel_syntax noprefix \n\
+NtManageHotPatch: \n\
+    mov r10, 0x0F0D1E66E \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwContinueEx NtContinueEx
+__asm__(".intel_syntax noprefix \n\
+NtContinueEx: \n\
+    mov r10, 0x02794F0CB \n\
+    call WhisperMain \n\
+");
+
+
+#define ZwlCreateUserThread NtlCreateUserThread
+__asm__(".intel_syntax noprefix \n\
+NtlCreateUserThread: \n\
+    mov r10, 0x016AE441F \n\
+    call WhisperMain \n\
+");
+
+
