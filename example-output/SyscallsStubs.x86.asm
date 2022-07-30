@@ -27,2417 +27,2417 @@ _wow64:
 WhisperMain ENDP
 
 NtAccessCheck PROC
-    push 0B6D641BBh
+    push 006A6516Bh
     call WhisperMain
 NtAccessCheck ENDP
 
 NtWorkerFactoryWorkerReady PROC
-    push 0163E3285h
+    push 087BBED55h
     call WhisperMain
 NtWorkerFactoryWorkerReady ENDP
 
 NtAcceptConnectPort PROC
-    push 02EB72D38h
+    push 060EF5F4Ch
     call WhisperMain
 NtAcceptConnectPort ENDP
 
 NtMapUserPhysicalPagesScatter PROC
-    push 0D19E1AC6h
+    push 0FFEE60E6h
     call WhisperMain
 NtMapUserPhysicalPagesScatter ENDP
 
 NtWaitForSingleObject PROC
-    push 018A02BEFh
+    push 09A47BA1Bh
     call WhisperMain
 NtWaitForSingleObject ENDP
 
 NtCallbackReturn PROC
-    push 0829013BEh
+    push 00A992D4Ch
     call WhisperMain
 NtCallbackReturn ENDP
 
 NtReadFile PROC
-    push 028C05C56h
+    push 065238A66h
     call WhisperMain
 NtReadFile ENDP
 
 NtDeviceIoControlFile PROC
-    push 0D841A2A6h
+    push 022A4B696h
     call WhisperMain
 NtDeviceIoControlFile ENDP
 
 NtWriteFile PROC
-    push 0C9719FCBh
+    push 0CC9A9AA9h
     call WhisperMain
 NtWriteFile ENDP
 
 NtRemoveIoCompletion PROC
-    push 016801617h
+    push 08854EAC5h
     call WhisperMain
 NtRemoveIoCompletion ENDP
 
 NtReleaseSemaphore PROC
-    push 01457341Ah
+    push 000920877h
     call WhisperMain
 NtReleaseSemaphore ENDP
 
 NtReplyWaitReceivePort PROC
-    push 07AB26F32h
+    push 02EB30928h
     call WhisperMain
 NtReplyWaitReceivePort ENDP
 
 NtReplyPort PROC
-    push 0DA342B5Ah
+    push 06EF04328h
     call WhisperMain
 NtReplyPort ENDP
 
 NtSetInformationThread PROC
-    push 02A8E6857h
+    push 02505ED21h
     call WhisperMain
 NtSetInformationThread ENDP
 
 NtSetEvent PROC
-    push 0CB020C49h
+    push 00A900D0Ah
     call WhisperMain
 NtSetEvent ENDP
 
 NtClose PROC
-    push 046D16D51h
+    push 008904F4Bh
     call WhisperMain
 NtClose ENDP
 
 NtQueryObject PROC
-    push 01F3075CEh
+    push 0CA991A35h
     call WhisperMain
 NtQueryObject ENDP
 
 NtQueryInformationFile PROC
-    push 085115D55h
+    push 0BB104907h
     call WhisperMain
 NtQueryInformationFile ENDP
 
 NtOpenKey PROC
-    push 02490F9CAh
+    push 001146E81h
     call WhisperMain
 NtOpenKey ENDP
 
 NtEnumerateValueKey PROC
-    push 019CD7426h
+    push 0219E447Ch
     call WhisperMain
 NtEnumerateValueKey ENDP
 
 NtFindAtom PROC
-    push 038AD2144h
+    push 0CD41322Bh
     call WhisperMain
 NtFindAtom ENDP
 
 NtQueryDefaultLocale PROC
-    push 0C221CCB2h
+    push 033AB4571h
     call WhisperMain
 NtQueryDefaultLocale ENDP
 
 NtQueryKey PROC
-    push 03BE15A1Ah
+    push 0859CB626h
     call WhisperMain
 NtQueryKey ENDP
 
 NtQueryValueKey PROC
-    push 01C1D1F87h
+    push 0C21CF5A7h
     call WhisperMain
 NtQueryValueKey ENDP
 
 NtAllocateVirtualMemory PROC
-    push 03191457Dh
+    push 07DDF6933h
     call WhisperMain
 NtAllocateVirtualMemory ENDP
 
 NtQueryInformationProcess PROC
-    push 0832D80A2h
+    push 08210927Dh
     call WhisperMain
 NtQueryInformationProcess ENDP
 
 NtWaitForMultipleObjects32 PROC
-    push 0C85C2D8Bh
+    push 0848A0545h
     call WhisperMain
 NtWaitForMultipleObjects32 ENDP
 
 NtWriteFileGather PROC
-    push 0379E6D37h
+    push 073D33167h
     call WhisperMain
 NtWriteFileGather ENDP
 
 NtCreateKey PROC
-    push 039002E90h
+    push 03DFC5C06h
     call WhisperMain
 NtCreateKey ENDP
 
 NtFreeVirtualMemory PROC
-    push 001990F0Fh
+    push 08510978Bh
     call WhisperMain
 NtFreeVirtualMemory ENDP
 
 NtImpersonateClientOfPort PROC
-    push 058F16D58h
+    push 03CEC0962h
     call WhisperMain
 NtImpersonateClientOfPort ENDP
 
 NtReleaseMutant PROC
-    push 0BF1C984Fh
+    push 03CBE796Eh
     call WhisperMain
 NtReleaseMutant ENDP
 
 NtQueryInformationToken PROC
-    push 0939DD948h
+    push 0AF9E77B4h
     call WhisperMain
 NtQueryInformationToken ENDP
 
 NtRequestWaitReplyPort PROC
-    push 038B1235Eh
+    push 02CB73522h
     call WhisperMain
 NtRequestWaitReplyPort ENDP
 
 NtQueryVirtualMemory PROC
-    push 033AE1F39h
+    push 0CF52C3D7h
     call WhisperMain
 NtQueryVirtualMemory ENDP
 
 NtOpenThreadToken PROC
-    push 01DA027ECh
+    push 03FEA3572h
     call WhisperMain
 NtOpenThreadToken ENDP
 
 NtQueryInformationThread PROC
-    push 0B207F4A5h
+    push 07A402283h
     call WhisperMain
 NtQueryInformationThread ENDP
 
 NtOpenProcess PROC
-    push 0EAA8F120h
+    push 0EDBFCA2Fh
     call WhisperMain
 NtOpenProcess ENDP
 
 NtSetInformationFile PROC
-    push 0725AB909h
+    push 02968D802h
     call WhisperMain
 NtSetInformationFile ENDP
 
 NtMapViewOfSection PROC
-    push 022CC205Dh
+    push 0FCDC0BB8h
     call WhisperMain
 NtMapViewOfSection ENDP
 
 NtAccessCheckAndAuditAlarm PROC
-    push 0DABDE4F0h
+    push 0D9BFE5FEh
     call WhisperMain
 NtAccessCheckAndAuditAlarm ENDP
 
 NtUnmapViewOfSection PROC
-    push 0D28DF657h
+    push 088918E05h
     call WhisperMain
 NtUnmapViewOfSection ENDP
 
 NtReplyWaitReceivePortEx PROC
-    push 0AF8072D4h
+    push 0B99AE54Eh
     call WhisperMain
 NtReplyWaitReceivePortEx ENDP
 
 NtTerminateProcess PROC
-    push 077BF5E26h
+    push 05B9F378Eh
     call WhisperMain
 NtTerminateProcess ENDP
 
 NtSetEventBoostPriority PROC
-    push 022B3ADB4h
+    push 0D747C3CAh
     call WhisperMain
 NtSetEventBoostPriority ENDP
 
 NtReadFileScatter PROC
-    push 0058C0D17h
+    push 029881721h
     call WhisperMain
 NtReadFileScatter ENDP
 
 NtOpenThreadTokenEx PROC
-    push 0BA4FC4B9h
+    push 07CE73624h
     call WhisperMain
 NtOpenThreadTokenEx ENDP
 
 NtOpenProcessTokenEx PROC
-    push 038AA7A50h
+    push 05AAA87EFh
     call WhisperMain
 NtOpenProcessTokenEx ENDP
 
 NtQueryPerformanceCounter PROC
-    push 02B89C793h
+    push 0338E10D3h
     call WhisperMain
 NtQueryPerformanceCounter ENDP
 
 NtEnumerateKey PROC
-    push 07ECF5E94h
+    push 069FE4628h
     call WhisperMain
 NtEnumerateKey ENDP
 
 NtOpenFile PROC
-    push 0E77EEFEBh
+    push 0F919DDC5h
     call WhisperMain
 NtOpenFile ENDP
 
 NtDelayExecution PROC
-    push 0C20DE25Fh
+    push 036AC767Fh
     call WhisperMain
 NtDelayExecution ENDP
 
 NtQueryDirectoryFile PROC
-    push 03F38BD21h
+    push 0459DB5C9h
     call WhisperMain
 NtQueryDirectoryFile ENDP
 
 NtQuerySystemInformation PROC
-    push 0EFB51AD7h
+    push 03B6317B9h
     call WhisperMain
 NtQuerySystemInformation ENDP
 
 NtOpenSection PROC
-    push 0DFB2FB39h
+    push 0970A9398h
     call WhisperMain
 NtOpenSection ENDP
 
 NtQueryTimer PROC
-    push 03C16F04Ch
+    push 075DE5F42h
     call WhisperMain
 NtQueryTimer ENDP
 
 NtFsControlFile PROC
-    push 0C94297F7h
+    push 068F9527Eh
     call WhisperMain
 NtFsControlFile ENDP
 
 NtWriteVirtualMemory PROC
-    push 00B970317h
+    push 006951810h
     call WhisperMain
 NtWriteVirtualMemory ENDP
 
 NtCloseObjectAuditAlarm PROC
-    push 010BFECF0h
+    push 02A972E00h
     call WhisperMain
 NtCloseObjectAuditAlarm ENDP
 
 NtDuplicateObject PROC
-    push 008B62A2Bh
+    push 01EDC7801h
     call WhisperMain
 NtDuplicateObject ENDP
 
 NtQueryAttributesFile PROC
-    push 09DDBBC81h
+    push 0A87B324Eh
     call WhisperMain
 NtQueryAttributesFile ENDP
 
 NtClearEvent PROC
-    push 0704ABB1Ch
+    push 072AF92FAh
     call WhisperMain
 NtClearEvent ENDP
 
 NtReadVirtualMemory PROC
-    push 001910F07h
+    push 047D37B57h
     call WhisperMain
 NtReadVirtualMemory ENDP
 
 NtOpenEvent PROC
-    push 0004D07C6h
+    push 008810914h
     call WhisperMain
 NtOpenEvent ENDP
 
 NtAdjustPrivilegesToken PROC
-    push 09449F4DBh
+    push 00547F3C3h
     call WhisperMain
 NtAdjustPrivilegesToken ENDP
 
 NtDuplicateToken PROC
-    push 00B9EFF06h
+    push 0251115B0h
     call WhisperMain
 NtDuplicateToken ENDP
 
 NtContinue PROC
-    push 0D55BEACFh
+    push 0A029D3E6h
     call WhisperMain
 NtContinue ENDP
 
 NtQueryDefaultUILanguage PROC
-    push 09233B5AFh
+    push 093B1138Dh
     call WhisperMain
 NtQueryDefaultUILanguage ENDP
 
 NtQueueApcThread PROC
-    push 036822C3Bh
+    push 036AC3035h
     call WhisperMain
 NtQueueApcThread ENDP
 
 NtYieldExecution PROC
-    push 060CA061Fh
+    push 00C540AC5h
     call WhisperMain
 NtYieldExecution ENDP
 
 NtAddAtom PROC
-    push 0964EF75Ch
+    push 028BC2D2Ah
     call WhisperMain
 NtAddAtom ENDP
 
 NtCreateEvent PROC
-    push 000BD7B4Ah
+    push 028A7051Eh
     call WhisperMain
 NtCreateEvent ENDP
 
 NtQueryVolumeInformationFile PROC
-    push 064C05C66h
+    push 04EDF38CCh
     call WhisperMain
 NtQueryVolumeInformationFile ENDP
 
 NtCreateSection PROC
-    push 03E911CDDh
+    push 008A00A0Dh
     call WhisperMain
 NtCreateSection ENDP
 
 NtFlushBuffersFile PROC
-    push 07CAB2E9Eh
+    push 05CFABF7Ch
     call WhisperMain
 NtFlushBuffersFile ENDP
 
 NtApphelpCacheControl PROC
-    push 00FD80B43h
+    push 0FFB0192Ah
     call WhisperMain
 NtApphelpCacheControl ENDP
 
 NtCreateProcessEx PROC
-    push 08F8FCD34h
+    push 0E18CD336h
     call WhisperMain
 NtCreateProcessEx ENDP
 
 NtCreateThread PROC
-    push 076D96C6Fh
+    push 00A90D729h
     call WhisperMain
 NtCreateThread ENDP
 
 NtIsProcessInJob PROC
-    push 029933921h
+    push 06F9698C3h
     call WhisperMain
 NtIsProcessInJob ENDP
 
 NtProtectVirtualMemory PROC
-    push 099F38567h
+    push 0CB903DDFh
     call WhisperMain
 NtProtectVirtualMemory ENDP
 
 NtQuerySection PROC
-    push 0E04BE6DFh
+    push 04A96004Fh
     call WhisperMain
 NtQuerySection ENDP
 
 NtResumeThread PROC
-    push 094AD1E8Bh
+    push 020B86211h
     call WhisperMain
 NtResumeThread ENDP
 
 NtTerminateThread PROC
-    push 050800A31h
+    push 0ECCEE86Eh
     call WhisperMain
 NtTerminateThread ENDP
 
 NtReadRequestData PROC
-    push 0C608DEB2h
+    push 05D2B67B6h
     call WhisperMain
 NtReadRequestData ENDP
 
 NtCreateFile PROC
-    push 0D87CA29Ch
+    push 078B82A0Ch
     call WhisperMain
 NtCreateFile ENDP
 
 NtQueryEvent PROC
-    push 031746CDCh
+    push 0C88ACF00h
     call WhisperMain
 NtQueryEvent ENDP
 
 NtWriteRequestData PROC
-    push 036BA0E24h
+    push 00E80D2BEh
     call WhisperMain
 NtWriteRequestData ENDP
 
 NtOpenDirectoryObject PROC
-    push 00BAB657Ah
+    push 08837E8EBh
     call WhisperMain
 NtOpenDirectoryObject ENDP
 
 NtAccessCheckByTypeAndAuditAlarm PROC
-    push 05B357D66h
+    push 0D254D4C4h
     call WhisperMain
 NtAccessCheckByTypeAndAuditAlarm ENDP
 
 NtWaitForMultipleObjects PROC
-    push 0F75ADF07h
+    push 0019B0111h
     call WhisperMain
 NtWaitForMultipleObjects ENDP
 
 NtSetInformationObject PROC
-    push 004985645h
+    push 009353989h
     call WhisperMain
 NtSetInformationObject ENDP
 
 NtCancelIoFile PROC
-    push 0B8BB5EBFh
+    push 018DC005Eh
     call WhisperMain
 NtCancelIoFile ENDP
 
 NtTraceEvent PROC
-    push 042864312h
+    push 00B4B4490h
     call WhisperMain
 NtTraceEvent ENDP
 
 NtPowerInformation PROC
-    push 0ED4BEBD8h
+    push 00A9B0877h
     call WhisperMain
 NtPowerInformation ENDP
 
 NtSetValueKey PROC
-    push 02AFC0D63h
+    push 08703B4BAh
     call WhisperMain
 NtSetValueKey ENDP
 
 NtCancelTimer PROC
-    push 08B9FFB1Dh
+    push 039A23F32h
     call WhisperMain
 NtCancelTimer ENDP
 
 NtSetTimer PROC
-    push 09CA9F453h
+    push 0C78529DEh
     call WhisperMain
 NtSetTimer ENDP
 
 NtAccessCheckByType PROC
-    push 0B72E5D20h
+    push 0B0292511h
     call WhisperMain
 NtAccessCheckByType ENDP
 
 NtAccessCheckByTypeResultList PROC
-    push 050C2100Fh
+    push 006822A55h
     call WhisperMain
 NtAccessCheckByTypeResultList ENDP
 
 NtAccessCheckByTypeResultListAndAuditAlarm PROC
-    push 01ABC1024h
+    push 034DA304Ch
     call WhisperMain
 NtAccessCheckByTypeResultListAndAuditAlarm ENDP
 
 NtAccessCheckByTypeResultListAndAuditAlarmByHandle PROC
-    push 0C04DF8DEh
+    push 08BA71195h
     call WhisperMain
 NtAccessCheckByTypeResultListAndAuditAlarmByHandle ENDP
 
 NtAcquireProcessActivityReference PROC
-    push 07ACB6B7Eh
+    push 038AC7100h
     call WhisperMain
 NtAcquireProcessActivityReference ENDP
 
 NtAddAtomEx PROC
-    push 0E1132F46h
+    push 0BD97F163h
     call WhisperMain
 NtAddAtomEx ENDP
 
 NtAddBootEntry PROC
-    push 049947D28h
+    push 01D8C071Eh
     call WhisperMain
 NtAddBootEntry ENDP
 
 NtAddDriverEntry PROC
-    push 047D2736Eh
+    push 047927D50h
     call WhisperMain
 NtAddDriverEntry ENDP
 
 NtAdjustGroupsToken PROC
-    push 01F988590h
+    push 00C996202h
     call WhisperMain
 NtAdjustGroupsToken ENDP
 
 NtAdjustTokenClaimsAndDeviceGroups PROC
-    push 03D973D01h
+    push 03BA57B73h
     call WhisperMain
 NtAdjustTokenClaimsAndDeviceGroups ENDP
 
 NtAlertResumeThread PROC
-    push 05CCEDEEFh
+    push 008A8F586h
     call WhisperMain
 NtAlertResumeThread ENDP
 
 NtAlertThread PROC
-    push 020985A45h
+    push 022826A21h
     call WhisperMain
 NtAlertThread ENDP
 
 NtAlertThreadByThreadId PROC
-    push 09CA377E5h
+    push 07521B787h
     call WhisperMain
 NtAlertThreadByThreadId ENDP
 
 NtAllocateLocallyUniqueId PROC
-    push 0378A9940h
+    push 0A5BEB609h
     call WhisperMain
 NtAllocateLocallyUniqueId ENDP
 
 NtAllocateReserveObject PROC
-    push 0391729BBh
+    push 036AF3633h
     call WhisperMain
 NtAllocateReserveObject ENDP
 
 NtAllocateUserPhysicalPages PROC
-    push 05FBE7024h
+    push 0A1A048DAh
     call WhisperMain
 NtAllocateUserPhysicalPages ENDP
 
 NtAllocateUuids PROC
-    push 04E575ECBh
+    push 0EC573205h
     call WhisperMain
 NtAllocateUuids ENDP
 
 NtAllocateVirtualMemoryEx PROC
-    push 076EFA8B9h
+    push 00EEFD8B1h
     call WhisperMain
 NtAllocateVirtualMemoryEx ENDP
 
 NtAlpcAcceptConnectPort PROC
-    push 0ACF19342h
+    push 064F25D58h
     call WhisperMain
 NtAlpcAcceptConnectPort ENDP
 
 NtAlpcCancelMessage PROC
-    push 08DDE9967h
+    push 0D588D416h
     call WhisperMain
 NtAlpcCancelMessage ENDP
 
 NtAlpcConnectPort PROC
-    push 0A0BE1DB0h
+    push 026F15D1Eh
     call WhisperMain
 NtAlpcConnectPort ENDP
 
 NtAlpcConnectPortEx PROC
-    push 03D0F71CBh
+    push 063EEBFBAh
     call WhisperMain
 NtAlpcConnectPortEx ENDP
 
 NtAlpcCreatePort PROC
-    push 022B33D38h
+    push 050305BAEh
     call WhisperMain
 NtAlpcCreatePort ENDP
 
 NtAlpcCreatePortSection PROC
-    push 006AA263Fh
+    push 036D27407h
     call WhisperMain
 NtAlpcCreatePortSection ENDP
 
 NtAlpcCreateResourceReserve PROC
-    push 01A9E1E7Fh
+    push 00CA8E4FBh
     call WhisperMain
 NtAlpcCreateResourceReserve ENDP
 
 NtAlpcCreateSectionView PROC
-    push 0D048B9D7h
+    push 032AB4151h
     call WhisperMain
 NtAlpcCreateSectionView ENDP
 
 NtAlpcCreateSecurityContext PROC
-    push 056C94B58h
+    push 0F78AE40Dh
     call WhisperMain
 NtAlpcCreateSecurityContext ENDP
 
 NtAlpcDeletePortSection PROC
-    push 036AD10F9h
+    push 0FAA01B33h
     call WhisperMain
 NtAlpcDeletePortSection ENDP
 
 NtAlpcDeleteResourceReserve PROC
-    push 0F761E7CAh
+    push 0850687A8h
     call WhisperMain
 NtAlpcDeleteResourceReserve ENDP
 
 NtAlpcDeleteSectionView PROC
-    push 0049C293Bh
+    push 034E4557Fh
     call WhisperMain
 NtAlpcDeleteSectionView ENDP
 
 NtAlpcDeleteSecurityContext PROC
-    push 09CC79146h
+    push 036CE2D46h
     call WhisperMain
 NtAlpcDeleteSecurityContext ENDP
 
 NtAlpcDisconnectPort PROC
-    push 0593058BEh
+    push 065B1E3ABh
     call WhisperMain
 NtAlpcDisconnectPort ENDP
 
 NtAlpcImpersonateClientContainerOfPort PROC
-    push 0FE760D38h
+    push 020B21AFCh
     call WhisperMain
 NtAlpcImpersonateClientContainerOfPort ENDP
 
 NtAlpcImpersonateClientOfPort PROC
-    push 0A93184AFh
+    push 064F4617Eh
     call WhisperMain
 NtAlpcImpersonateClientOfPort ENDP
 
 NtAlpcOpenSenderProcess PROC
-    push 0C557C6C8h
+    push 04DE3063Ch
     call WhisperMain
 NtAlpcOpenSenderProcess ENDP
 
 NtAlpcOpenSenderThread PROC
-    push 09427D601h
+    push 01E8A443Fh
     call WhisperMain
 NtAlpcOpenSenderThread ENDP
 
 NtAlpcQueryInformation PROC
-    push 03CAE4643h
+    push 04A5C2941h
     call WhisperMain
 NtAlpcQueryInformation ENDP
 
 NtAlpcQueryInformationMessage PROC
-    push 093B15C90h
+    push 0118B1414h
     call WhisperMain
 NtAlpcQueryInformationMessage ENDP
 
 NtAlpcRevokeSecurityContext PROC
-    push 0772A826Bh
+    push 0F68FDB2Eh
     call WhisperMain
 NtAlpcRevokeSecurityContext ENDP
 
 NtAlpcSendWaitReceivePort PROC
-    push 0E1720463h
+    push 020B14762h
     call WhisperMain
 NtAlpcSendWaitReceivePort ENDP
 
 NtAlpcSetInformation PROC
-    push 000A80239h
+    push 01197F084h
     call WhisperMain
 NtAlpcSetInformation ENDP
 
 NtAreMappedFilesTheSame PROC
-    push 09734447Ch
+    push 027A82032h
     call WhisperMain
 NtAreMappedFilesTheSame ENDP
 
 NtAssignProcessToJobObject PROC
-    push 01C800A1Dh
+    push 07CC0458Dh
     call WhisperMain
 NtAssignProcessToJobObject ENDP
 
 NtAssociateWaitCompletionPacket PROC
-    push 0098D2332h
+    push 01B8F30D0h
     call WhisperMain
 NtAssociateWaitCompletionPacket ENDP
 
 NtCallEnclave PROC
-    push 01AAC6E46h
+    push 006BA3FE8h
     call WhisperMain
 NtCallEnclave ENDP
 
 NtCancelIoFileEx PROC
-    push 0D8052A7Fh
+    push 01882283Bh
     call WhisperMain
 NtCancelIoFileEx ENDP
 
 NtCancelSynchronousIoFile PROC
-    push 038AFEC1Ch
+    push 06ABB720Ch
     call WhisperMain
 NtCancelSynchronousIoFile ENDP
 
 NtCancelTimer2 PROC
-    push 096143ACAh
+    push 00B9BEF4Dh
     call WhisperMain
 NtCancelTimer2 ENDP
 
 NtCancelWaitCompletionPacket PROC
-    push 0BB9CC350h
+    push 029AC4170h
     call WhisperMain
 NtCancelWaitCompletionPacket ENDP
 
 NtCommitComplete PROC
-    push 0AA35FCFEh
+    push 0FEB58C6Ah
     call WhisperMain
 NtCommitComplete ENDP
 
 NtCommitEnlistment PROC
-    push 0D76AECDDh
+    push 04F157E93h
     call WhisperMain
 NtCommitEnlistment ENDP
 
 NtCommitRegistryTransaction PROC
-    push 00F980302h
+    push 0CE48E0D5h
     call WhisperMain
 NtCommitRegistryTransaction ENDP
 
 NtCommitTransaction PROC
-    push 0B329F1F8h
+    push 0D0FA53CEh
     call WhisperMain
 NtCommitTransaction ENDP
 
 NtCompactKeys PROC
-    push 0C3A5FE0Bh
+    push 079C07442h
     call WhisperMain
 NtCompactKeys ENDP
 
 NtCompareObjects PROC
-    push 0039D0313h
+    push 0219C1131h
     call WhisperMain
 NtCompareObjects ENDP
 
 NtCompareSigningLevels PROC
-    push 0D043D6D8h
+    push 0E35C1219h
     call WhisperMain
 NtCompareSigningLevels ENDP
 
 NtCompareTokens PROC
-    push 043C3495Bh
+    push 0C5A6D90Dh
     call WhisperMain
 NtCompareTokens ENDP
 
 NtCompleteConnectPort PROC
-    push 020B52F36h
+    push 0EE71FDFEh
     call WhisperMain
 NtCompleteConnectPort ENDP
 
 NtCompressKey PROC
-    push 098CAA368h
+    push 0C80F266Fh
     call WhisperMain
 NtCompressKey ENDP
 
 NtConnectPort PROC
-    push 066BF195Ch
+    push 064F07D5Eh
     call WhisperMain
 NtConnectPort ENDP
 
 NtConvertBetweenAuxiliaryCounterAndPerformanceCounter PROC
-    push 02B97BF95h
+    push 009A0774Dh
     call WhisperMain
 NtConvertBetweenAuxiliaryCounterAndPerformanceCounter ENDP
 
 NtCreateDebugObject PROC
-    push 00CA1645Dh
+    push 0AC3FACA3h
     call WhisperMain
 NtCreateDebugObject ENDP
 
 NtCreateDirectoryObject PROC
-    push 009A1FFDBh
+    push 00CA42619h
     call WhisperMain
 NtCreateDirectoryObject ENDP
 
 NtCreateDirectoryObjectEx PROC
-    push 0F6790F3Fh
+    push 0ACBCEE06h
     call WhisperMain
 NtCreateDirectoryObjectEx ENDP
 
 NtCreateEnclave PROC
-    push 016300A8Ah
+    push 008C62584h
     call WhisperMain
 NtCreateEnclave ENDP
 
 NtCreateEnlistment PROC
-    push 06BA72A6Dh
+    push 018811F0Ah
     call WhisperMain
 NtCreateEnlistment ENDP
 
 NtCreateEventPair PROC
-    push 00757F637h
+    push 000BDF8CBh
     call WhisperMain
 NtCreateEventPair ENDP
 
 NtCreateIRTimer PROC
-    push 07B996D02h
+    push 043EF6178h
     call WhisperMain
 NtCreateIRTimer ENDP
 
 NtCreateIoCompletion PROC
-    push 052C8725Fh
+    push 08A10AA8Fh
     call WhisperMain
 NtCreateIoCompletion ENDP
 
 NtCreateJobObject PROC
-    push 096BDAE11h
+    push 0F8C7D448h
     call WhisperMain
 NtCreateJobObject ENDP
 
 NtCreateJobSet PROC
-    push 082C28450h
+    push 00EA21C3Dh
     call WhisperMain
 NtCreateJobSet ENDP
 
 NtCreateKeyTransacted PROC
-    push 0ECA3351Eh
+    push 0924E0272h
     call WhisperMain
 NtCreateKeyTransacted ENDP
 
 NtCreateKeyedEvent PROC
-    push 0E05DDBFAh
+    push 0F06AD23Ch
     call WhisperMain
 NtCreateKeyedEvent ENDP
 
 NtCreateLowBoxToken PROC
-    push 015349407h
+    push 0145112E2h
     call WhisperMain
 NtCreateLowBoxToken ENDP
 
 NtCreateMailslotFile PROC
-    push 0E97ED3D9h
+    push 026B9F48Eh
     call WhisperMain
 NtCreateMailslotFile ENDP
 
 NtCreateMutant PROC
-    push 07E9E1C88h
+    push 0C2442229h
     call WhisperMain
 NtCreateMutant ENDP
 
 NtCreateNamedPipeFile PROC
-    push 085031D03h
+    push 022997A2Eh
     call WhisperMain
 NtCreateNamedPipeFile ENDP
 
 NtCreatePagingFile PROC
-    push 06AFA5BAEh
+    push 05EB82864h
     call WhisperMain
 NtCreatePagingFile ENDP
 
 NtCreatePartition PROC
-    push 036AC163Bh
+    push 0FEA7DCF3h
     call WhisperMain
 NtCreatePartition ENDP
 
 NtCreatePort PROC
-    push 0DC4EBFD0h
+    push 02EBD1DF2h
     call WhisperMain
 NtCreatePort ENDP
 
 NtCreatePrivateNamespace PROC
-    push 096B2AD2Dh
+    push 026885D0Fh
     call WhisperMain
 NtCreatePrivateNamespace ENDP
 
 NtCreateProcess PROC
-    push 0272D24A2h
+    push 0E23BFBB7h
     call WhisperMain
 NtCreateProcess ENDP
 
 NtCreateProfile PROC
-    push 0F4DDEB67h
+    push 0369BFCCAh
     call WhisperMain
 NtCreateProfile ENDP
 
 NtCreateProfileEx PROC
-    push 005BBD0E7h
+    push 0CA50092Ah
     call WhisperMain
 NtCreateProfileEx ENDP
 
 NtCreateRegistryTransaction PROC
-    push 09F87DF55h
+    push 003B03F1Ah
     call WhisperMain
 NtCreateRegistryTransaction ENDP
 
 NtCreateResourceManager PROC
-    push 0BB62C3A8h
+    push 015813F3Ah
     call WhisperMain
 NtCreateResourceManager ENDP
 
 NtCreateSemaphore PROC
-    push 0109BF8D6h
+    push 076985058h
     call WhisperMain
 NtCreateSemaphore ENDP
 
 NtCreateSymbolicLinkObject PROC
-    push 00B24F92Ah
+    push 00AB6200Bh
     call WhisperMain
 NtCreateSymbolicLinkObject ENDP
 
 NtCreateThreadEx PROC
-    push 098B757F1h
+    push 057BB8BFFh
     call WhisperMain
 NtCreateThreadEx ENDP
 
 NtCreateTimer PROC
-    push 09CB7962Ch
+    push 019DE6356h
     call WhisperMain
 NtCreateTimer ENDP
 
 NtCreateTimer2 PROC
-    push 0B02BEFA6h
+    push 04FC7CB11h
     call WhisperMain
 NtCreateTimer2 ENDP
 
 NtCreateToken PROC
-    push 084AD920Eh
+    push 03D990530h
     call WhisperMain
 NtCreateToken ENDP
 
 NtCreateTokenEx PROC
-    push 020A25258h
+    push 0B8AAF67Ch
     call WhisperMain
 NtCreateTokenEx ENDP
 
 NtCreateTransaction PROC
-    push 0E237DA9Dh
+    push 00413C643h
     call WhisperMain
 NtCreateTransaction ENDP
 
 NtCreateTransactionManager PROC
-    push 019A136F0h
+    push 005B29396h
     call WhisperMain
 NtCreateTransactionManager ENDP
 
 NtCreateUserProcess PROC
-    push 0EDA3CE3Fh
+    push 0772F97B2h
     call WhisperMain
 NtCreateUserProcess ENDP
 
 NtCreateWaitCompletionPacket PROC
-    push 0073D77C1h
+    push 03D181D4Ch
     call WhisperMain
 NtCreateWaitCompletionPacket ENDP
 
 NtCreateWaitablePort PROC
-    push 02871CA1Fh
+    push 01C77DE29h
     call WhisperMain
 NtCreateWaitablePort ENDP
 
 NtCreateWnfStateName PROC
-    push 0B4BA5BB1h
+    push 0A514230Eh
     call WhisperMain
 NtCreateWnfStateName ENDP
 
 NtCreateWorkerFactory PROC
-    push 0DCCDF265h
+    push 0C899F62Ch
     call WhisperMain
 NtCreateWorkerFactory ENDP
 
 NtDebugActiveProcess PROC
-    push 07E3197ADh
+    push 001DF6230h
     call WhisperMain
 NtDebugActiveProcess ENDP
 
 NtDebugContinue PROC
-    push 058D98B96h
+    push 0315E22B6h
     call WhisperMain
 NtDebugContinue ENDP
 
 NtDeleteAtom PROC
-    push 0AD5F2C4Dh
+    push 0F22FADE4h
     call WhisperMain
 NtDeleteAtom ENDP
 
 NtDeleteBootEntry PROC
-    push 00D951502h
+    push 0EBB616C1h
     call WhisperMain
 NtDeleteBootEntry ENDP
 
 NtDeleteDriverEntry PROC
-    push 0CA96DE0Bh
+    push 0C98135F6h
     call WhisperMain
 NtDeleteDriverEntry ENDP
 
 NtDeleteFile PROC
-    push 014B3DE16h
+    push 09244C08Ch
     call WhisperMain
 NtDeleteFile ENDP
 
 NtDeleteKey PROC
-    push 069D34464h
+    push 0EB5F0535h
     call WhisperMain
 NtDeleteKey ENDP
 
 NtDeleteObjectAuditAlarm PROC
-    push 074DA8FD6h
+    push 036B73E2Ah
     call WhisperMain
 NtDeleteObjectAuditAlarm ENDP
 
 NtDeletePrivateNamespace PROC
-    push 01CAD3F35h
+    push 014B0D41Dh
     call WhisperMain
 NtDeletePrivateNamespace ENDP
 
 NtDeleteValueKey PROC
-    push 0C51D1046h
+    push 086BBF741h
     call WhisperMain
 NtDeleteValueKey ENDP
 
 NtDeleteWnfStateData PROC
-    push 0134B3F87h
+    push 0D28DF8C6h
     call WhisperMain
 NtDeleteWnfStateData ENDP
 
 NtDeleteWnfStateName PROC
-    push 08A8D871Dh
+    push 00CB7D3F7h
     call WhisperMain
 NtDeleteWnfStateName ENDP
 
 NtDisableLastKnownGood PROC
-    push 015CB8BF0h
+    push 0584904F1h
     call WhisperMain
 NtDisableLastKnownGood ENDP
 
 NtDisplayString PROC
-    push 068909F00h
+    push 0068E6E0Ah
     call WhisperMain
 NtDisplayString ENDP
 
 NtDrawText PROC
-    push 0D34AD0DDh
+    push 0FF03C0C9h
     call WhisperMain
 NtDrawText ENDP
 
 NtEnableLastKnownGood PROC
-    push 06BF90732h
+    push 035A5C8FCh
     call WhisperMain
 NtEnableLastKnownGood ENDP
 
 NtEnumerateBootEntries PROC
-    push 00E963B09h
+    push 0F0A400D8h
     call WhisperMain
 NtEnumerateBootEntries ENDP
 
 NtEnumerateDriverEntries PROC
-    push 02C96B699h
+    push 0278FA994h
     call WhisperMain
 NtEnumerateDriverEntries ENDP
 
 NtEnumerateSystemEnvironmentValuesEx PROC
-    push 0D19DE521h
+    push 0B14C0C69h
     call WhisperMain
 NtEnumerateSystemEnvironmentValuesEx ENDP
 
 NtEnumerateTransactionObject PROC
-    push 00C90361Dh
+    push 016C72875h
     call WhisperMain
 NtEnumerateTransactionObject ENDP
 
 NtExtendSection PROC
-    push 0128A3019h
+    push 0F2EF9477h
     call WhisperMain
 NtExtendSection ENDP
 
 NtFilterBootOption PROC
-    push 00EA60E33h
+    push 00CA40831h
     call WhisperMain
 NtFilterBootOption ENDP
 
 NtFilterToken PROC
-    push 0C355ADCAh
+    push 09BA0F53Ch
     call WhisperMain
 NtFilterToken ENDP
 
 NtFilterTokenEx PROC
-    push 0769F2A4Ah
+    push 0169A6C78h
     call WhisperMain
 NtFilterTokenEx ENDP
 
 NtFlushBuffersFileEx PROC
-    push 0A634616Ah
+    push 0698724B2h
     call WhisperMain
 NtFlushBuffersFileEx ENDP
 
 NtFlushInstallUILanguage PROC
-    push 00FD14672h
+    push 003D5720Eh
     call WhisperMain
 NtFlushInstallUILanguage ENDP
 
 NtFlushInstructionCache PROC
-    push 04D9BB1DBh
+    push 0BF9B3985h
     call WhisperMain
 NtFlushInstructionCache ENDP
 
 NtFlushKey PROC
-    push 019CEE8B6h
+    push 0FB2180C1h
     call WhisperMain
 NtFlushKey ENDP
 
 NtFlushProcessWriteBuffers PROC
-    push 079399F6Ah
+    push 03EBC7A6Ch
     call WhisperMain
 NtFlushProcessWriteBuffers ENDP
 
 NtFlushVirtualMemory PROC
-    push 03FA90907h
+    push 081188797h
     call WhisperMain
 NtFlushVirtualMemory ENDP
 
 NtFlushWriteBuffer PROC
-    push 0802BDAE2h
+    push 0CD983AFCh
     call WhisperMain
 NtFlushWriteBuffer ENDP
 
 NtFreeUserPhysicalPages PROC
-    push 07BE16462h
+    push 009BE2C2Eh
     call WhisperMain
 NtFreeUserPhysicalPages ENDP
 
 NtFreezeRegistry PROC
-    push 00E6A100Fh
+    push 03F5329FDh
     call WhisperMain
 NtFreezeRegistry ENDP
 
 NtFreezeTransactions PROC
-    push 00F4A05DDh
+    push 0079B2B0Dh
     call WhisperMain
 NtFreezeTransactions ENDP
 
 NtGetCachedSigningLevel PROC
-    push 0969A1DA4h
+    push 0735B09B6h
     call WhisperMain
 NtGetCachedSigningLevel ENDP
 
 NtGetCompleteWnfStateSubscription PROC
-    push 04C922453h
+    push 00C4A00D7h
     call WhisperMain
 NtGetCompleteWnfStateSubscription ENDP
 
 NtGetContextThread PROC
-    push 054D01671h
+    push 01430D111h
     call WhisperMain
 NtGetContextThread ENDP
 
 NtGetCurrentProcessorNumber PROC
-    push 09A3B8A99h
+    push 01A87101Ah
     call WhisperMain
 NtGetCurrentProcessorNumber ENDP
 
 NtGetCurrentProcessorNumberEx PROC
-    push 086A2C25Eh
+    push 08A9D2AA6h
     call WhisperMain
 NtGetCurrentProcessorNumberEx ENDP
 
 NtGetDevicePowerState PROC
-    push 036893E26h
+    push 0768F782Eh
     call WhisperMain
 NtGetDevicePowerState ENDP
 
 NtGetMUIRegistryInfo PROC
-    push 0FC74C8F1h
+    push 05E3E52A3h
     call WhisperMain
 NtGetMUIRegistryInfo ENDP
 
 NtGetNextProcess PROC
-    push 0863B9757h
+    push 0D79D29F1h
     call WhisperMain
 NtGetNextProcess ENDP
 
 NtGetNextThread PROC
-    push 08A895136h
+    push 0B290EE20h
     call WhisperMain
 NtGetNextThread ENDP
 
 NtGetNlsSectionPtr PROC
-    push 02292AB8Dh
+    push 0E757EDCFh
     call WhisperMain
 NtGetNlsSectionPtr ENDP
 
 NtGetNotificationResourceManager PROC
-    push 00F3F1194h
+    push 0B207D8FBh
     call WhisperMain
 NtGetNotificationResourceManager ENDP
 
 NtGetWriteWatch PROC
-    push 0B779F9CFh
+    push 032FF1662h
     call WhisperMain
 NtGetWriteWatch ENDP
 
 NtImpersonateAnonymousToken PROC
-    push 00794898Ch
+    push 005919C9Ah
     call WhisperMain
 NtImpersonateAnonymousToken ENDP
 
 NtImpersonateThread PROC
-    push 081A8C174h
+    push 072AA3003h
     call WhisperMain
 NtImpersonateThread ENDP
 
 NtInitializeEnclave PROC
-    push 0883AB77Eh
+    push 0C25592FEh
     call WhisperMain
 NtInitializeEnclave ENDP
 
 NtInitializeNlsFiles PROC
-    push 0FEDEC97Ah
+    push 060D65368h
     call WhisperMain
 NtInitializeNlsFiles ENDP
 
 NtInitializeRegistry PROC
-    push 0198AF1DAh
+    push 0028E0601h
     call WhisperMain
 NtInitializeRegistry ENDP
 
 NtInitiatePowerAction PROC
-    push 008922A07h
+    push 0DB4C38DDh
     call WhisperMain
 NtInitiatePowerAction ENDP
 
 NtIsSystemResumeAutomatic PROC
-    push 022BA5568h
+    push 00A80C7D2h
     call WhisperMain
 NtIsSystemResumeAutomatic ENDP
 
 NtIsUILanguageComitted PROC
-    push 07BA27317h
+    push 01F8C5523h
     call WhisperMain
 NtIsUILanguageComitted ENDP
 
 NtListenPort PROC
-    push 020B3CF28h
+    push 0DA32C7BCh
     call WhisperMain
 NtListenPort ENDP
 
 NtLoadDriver PROC
-    push 0945DFE86h
+    push 04C9F2584h
     call WhisperMain
 NtLoadDriver ENDP
 
 NtLoadEnclaveData PROC
-    push 06342B777h
+    push 083421171h
     call WhisperMain
 NtLoadEnclaveData ENDP
 
 NtLoadHotPatch PROC
-    push 090AEA036h
+    push 0E0FEEF59h
     call WhisperMain
 NtLoadHotPatch ENDP
 
 NtLoadKey PROC
-    push 069209848h
+    push 0192E3B77h
     call WhisperMain
 NtLoadKey ENDP
 
 NtLoadKey2 PROC
-    push 02149CB54h
+    push 06E3743E8h
     call WhisperMain
 NtLoadKey2 ENDP
 
 NtLoadKeyEx PROC
-    push 063681596h
+    push 0DA59E0E4h
     call WhisperMain
 NtLoadKeyEx ENDP
 
 NtLockFile PROC
-    push 02D74AB69h
+    push 0B9742B43h
     call WhisperMain
 NtLockFile ENDP
 
 NtLockProductActivationKeys PROC
-    push 022C03565h
+    push 0F389F61Fh
     call WhisperMain
 NtLockProductActivationKeys ENDP
 
 NtLockRegistryKey PROC
-    push 07621558Eh
+    push 0D461C7FAh
     call WhisperMain
 NtLockRegistryKey ENDP
 
 NtLockVirtualMemory PROC
-    push 019916919h
+    push 00D91191Dh
     call WhisperMain
 NtLockVirtualMemory ENDP
 
 NtMakePermanentObject PROC
-    push 022BC2C21h
+    push 0CA949839h
     call WhisperMain
 NtMakePermanentObject ENDP
 
 NtMakeTemporaryObject PROC
-    push 006984055h
+    push 08AD579BAh
     call WhisperMain
 NtMakeTemporaryObject ENDP
 
 NtManagePartition PROC
-    push 019743BA5h
+    push 040AA2075h
     call WhisperMain
 NtManagePartition ENDP
 
 NtMapCMFModule PROC
-    push 03EF510A6h
+    push 0C28E0839h
     call WhisperMain
 NtMapCMFModule ENDP
 
 NtMapUserPhysicalPages PROC
-    push 02F9E5E62h
+    push 0459D1E56h
     call WhisperMain
 NtMapUserPhysicalPages ENDP
 
 NtMapViewOfSectionEx PROC
-    push 002917268h
+    push 00564C018h
     call WhisperMain
 NtMapViewOfSectionEx ENDP
 
 NtModifyBootEntry PROC
-    push 0B9F575A0h
+    push 00DBB0738h
     call WhisperMain
 NtModifyBootEntry ENDP
 
 NtModifyDriverEntry PROC
-    push 019820116h
+    push 00B963CD8h
     call WhisperMain
 NtModifyDriverEntry ENDP
 
 NtNotifyChangeDirectoryFile PROC
-    push 0EED4AFF2h
+    push 03E197EBEh
     call WhisperMain
 NtNotifyChangeDirectoryFile ENDP
 
 NtNotifyChangeDirectoryFileEx PROC
-    push 0C92793F2h
+    push 044A78CD8h
     call WhisperMain
 NtNotifyChangeDirectoryFileEx ENDP
 
 NtNotifyChangeKey PROC
-    push 028142F8Bh
+    push 00E9AC8C5h
     call WhisperMain
 NtNotifyChangeKey ENDP
 
 NtNotifyChangeMultipleKeys PROC
-    push 023B92826h
+    push 022064DDAh
     call WhisperMain
 NtNotifyChangeMultipleKeys ENDP
 
 NtNotifyChangeSession PROC
-    push 0018EEF92h
+    push 00D9F2D10h
     call WhisperMain
 NtNotifyChangeSession ENDP
 
 NtOpenEnlistment PROC
-    push 089D34C85h
+    push 017B82813h
     call WhisperMain
 NtOpenEnlistment ENDP
 
 NtOpenEventPair PROC
-    push 010B3DCEDh
+    push 0103038A5h
     call WhisperMain
 NtOpenEventPair ENDP
 
 NtOpenIoCompletion PROC
-    push 036A9163Bh
+    push 0548E7459h
     call WhisperMain
 NtOpenIoCompletion ENDP
 
 NtOpenJobObject PROC
-    push 008B4D919h
+    push 001980702h
     call WhisperMain
 NtOpenJobObject ENDP
 
 NtOpenKeyEx PROC
-    push 04D5A9906h
+    push 07B95AFCAh
     call WhisperMain
 NtOpenKeyEx ENDP
 
 NtOpenKeyTransacted PROC
-    push 0B55EF5E3h
+    push 0A8FB60D7h
     call WhisperMain
 NtOpenKeyTransacted ENDP
 
 NtOpenKeyTransactedEx PROC
-    push 026BD7460h
+    push 0C42D0677h
     call WhisperMain
 NtOpenKeyTransactedEx ENDP
 
 NtOpenKeyedEvent PROC
-    push 046CC615Eh
+    push 02E8E3124h
     call WhisperMain
 NtOpenKeyedEvent ENDP
 
 NtOpenMutant PROC
-    push 0E8B7F13Ah
+    push 0288A4F18h
     call WhisperMain
 NtOpenMutant ENDP
 
 NtOpenObjectAuditAlarm PROC
-    push 0DB5ADFCDh
+    push 008AE0E3Eh
     call WhisperMain
 NtOpenObjectAuditAlarm ENDP
 
 NtOpenPartition PROC
-    push 0CE912CC5h
+    push 072A21669h
     call WhisperMain
 NtOpenPartition ENDP
 
 NtOpenPrivateNamespace PROC
-    push 0AA8EB728h
+    push 028825B6Dh
     call WhisperMain
 NtOpenPrivateNamespace ENDP
 
 NtOpenProcessToken PROC
-    push 0B3ED8D40h
+    push 087365F9Ch
     call WhisperMain
 NtOpenProcessToken ENDP
 
 NtOpenRegistryTransaction PROC
-    push 01572C81Dh
+    push 04E800855h
     call WhisperMain
 NtOpenRegistryTransaction ENDP
 
 NtOpenResourceManager PROC
-    push 0C71FEFA6h
+    push 03399071Ch
     call WhisperMain
 NtOpenResourceManager ENDP
 
 NtOpenSemaphore PROC
-    push 0709E5A5Eh
+    push 0469013A0h
     call WhisperMain
 NtOpenSemaphore ENDP
 
 NtOpenSession PROC
-    push 0DA909A42h
+    push 0D44DF2DDh
     call WhisperMain
 NtOpenSession ENDP
 
 NtOpenSymbolicLinkObject PROC
-    push 00C91040Dh
+    push 084B0BC14h
     call WhisperMain
 NtOpenSymbolicLinkObject ENDP
 
 NtOpenThread PROC
-    push 0EECCF26Fh
+    push 0F4A8F800h
     call WhisperMain
 NtOpenThread ENDP
 
 NtOpenTimer PROC
-    push 08D249BC0h
+    push 057942716h
     call WhisperMain
 NtOpenTimer ENDP
 
 NtOpenTransaction PROC
-    push 0CEC5EA57h
+    push 01E45F059h
     call WhisperMain
 NtOpenTransaction ENDP
 
 NtOpenTransactionManager PROC
-    push 0C415D4B7h
+    push 005339316h
     call WhisperMain
 NtOpenTransactionManager ENDP
 
 NtPlugPlayControl PROC
-    push 08E108A88h
+    push 0907C94D4h
     call WhisperMain
 NtPlugPlayControl ENDP
 
 NtPrePrepareComplete PROC
-    push 0054071ACh
+    push 02CB80836h
     call WhisperMain
 NtPrePrepareComplete ENDP
 
 NtPrePrepareEnlistment PROC
-    push 0CB55CEC3h
+    push 0D6B9FF23h
     call WhisperMain
 NtPrePrepareEnlistment ENDP
 
 NtPrepareComplete PROC
-    push 038B6D025h
+    push 0B42E80A4h
     call WhisperMain
 NtPrepareComplete ENDP
 
 NtPrepareEnlistment PROC
-    push 030274DD5h
+    push 077D95E03h
     call WhisperMain
 NtPrepareEnlistment ENDP
 
 NtPrivilegeCheck PROC
-    push 0C25DF1C1h
+    push 006B9190Bh
     call WhisperMain
 NtPrivilegeCheck ENDP
 
 NtPrivilegeObjectAuditAlarm PROC
-    push 09334726Bh
+    push 04A85BACAh
     call WhisperMain
 NtPrivilegeObjectAuditAlarm ENDP
 
 NtPrivilegedServiceAuditAlarm PROC
-    push 01AA5F2FAh
+    push 0D03ED4A8h
     call WhisperMain
 NtPrivilegedServiceAuditAlarm ENDP
 
 NtPropagationComplete PROC
-    push 015343DF4h
+    push 02EBBB080h
     call WhisperMain
 NtPropagationComplete ENDP
 
 NtPropagationFailed PROC
-    push 019B69D96h
+    push 016974428h
     call WhisperMain
 NtPropagationFailed ENDP
 
 NtPulseEvent PROC
-    push 030AC153Ch
+    push 08002F9ECh
     call WhisperMain
 NtPulseEvent ENDP
 
 NtQueryAuxiliaryCounterFrequency PROC
-    push 078CC82CDh
+    push 0122575CAh
     call WhisperMain
 NtQueryAuxiliaryCounterFrequency ENDP
 
 NtQueryBootEntryOrder PROC
-    push 06C3178D0h
+    push 0F3F1E155h
     call WhisperMain
 NtQueryBootEntryOrder ENDP
 
 NtQueryBootOptions PROC
-    push 04C1B6285h
+    push 0DB8918DEh
     call WhisperMain
 NtQueryBootOptions ENDP
 
 NtQueryDebugFilterState PROC
-    push 076CF1C40h
+    push 01291E890h
     call WhisperMain
 NtQueryDebugFilterState ENDP
 
 NtQueryDirectoryFileEx PROC
-    push 00A1946ADh
+    push 07657248Ah
     call WhisperMain
 NtQueryDirectoryFileEx ENDP
 
 NtQueryDirectoryObject PROC
-    push 0EC48C0F3h
+    push 019A1EFDBh
     call WhisperMain
 NtQueryDirectoryObject ENDP
 
 NtQueryDriverEntryOrder PROC
-    push 00B2E75C3h
+    push 0A3818135h
     call WhisperMain
 NtQueryDriverEntryOrder ENDP
 
 NtQueryEaFile PROC
-    push 038987C42h
+    push 0ACFC53A8h
     call WhisperMain
 NtQueryEaFile ENDP
 
 NtQueryFullAttributesFile PROC
-    push 0B0BA5EB2h
+    push 094D79573h
     call WhisperMain
 NtQueryFullAttributesFile ENDP
 
 NtQueryInformationAtom PROC
-    push 051C3B257h
+    push 0B322BAB9h
     call WhisperMain
 NtQueryInformationAtom ENDP
 
 NtQueryInformationByName PROC
-    push 0FADDD389h
+    push 0FBD1B4FBh
     call WhisperMain
 NtQueryInformationByName ENDP
 
 NtQueryInformationEnlistment PROC
-    push 00395320Fh
+    push 069D30C25h
     call WhisperMain
 NtQueryInformationEnlistment ENDP
 
 NtQueryInformationJobObject PROC
-    push 004B82DE5h
+    push 00CB7F8E8h
     call WhisperMain
 NtQueryInformationJobObject ENDP
 
 NtQueryInformationPort PROC
-    push 09932B2ADh
+    push 09F33BA9Bh
     call WhisperMain
 NtQueryInformationPort ENDP
 
 NtQueryInformationResourceManager PROC
-    push 0EBD3B9F3h
+    push 0AD33B19Ah
     call WhisperMain
 NtQueryInformationResourceManager ENDP
 
 NtQueryInformationTransaction PROC
-    push 01ED41C79h
+    push 01B48C70Ah
     call WhisperMain
 NtQueryInformationTransaction ENDP
 
 NtQueryInformationTransactionManager PROC
-    push 035B76176h
+    push 019A1436Ah
     call WhisperMain
 NtQueryInformationTransactionManager ENDP
 
 NtQueryInformationWorkerFactory PROC
-    push 0254E0FECh
+    push 018970400h
     call WhisperMain
 NtQueryInformationWorkerFactory ENDP
 
 NtQueryInstallUILanguage PROC
-    push 0CF5CF80Ch
+    push 065B76014h
     call WhisperMain
 NtQueryInstallUILanguage ENDP
 
 NtQueryIntervalProfile PROC
-    push 0A061F6DCh
+    push 02CBEC52Ch
     call WhisperMain
 NtQueryIntervalProfile ENDP
 
 NtQueryIoCompletion PROC
-    push 01BB51EDEh
+    push 08C9BEC09h
     call WhisperMain
 NtQueryIoCompletion ENDP
 
 NtQueryLicenseValue PROC
-    push 03A3F29B4h
+    push 04EDE4376h
     call WhisperMain
 NtQueryLicenseValue ENDP
 
 NtQueryMultipleValueKey PROC
-    push 0ED24D096h
+    push 03D9CD0FEh
     call WhisperMain
 NtQueryMultipleValueKey ENDP
 
 NtQueryMutant PROC
-    push 07E965F42h
+    push 0E4BDE72Ah
     call WhisperMain
 NtQueryMutant ENDP
 
 NtQueryOpenSubKeys PROC
-    push 08294ED4Eh
+    push 0AF28BAA8h
     call WhisperMain
 NtQueryOpenSubKeys ENDP
 
 NtQueryOpenSubKeysEx PROC
-    push 077DBA48Fh
+    push 009874730h
     call WhisperMain
 NtQueryOpenSubKeysEx ENDP
 
 NtQueryPortInformationProcess PROC
-    push 019B4241Ch
+    push 0C15E3A30h
     call WhisperMain
 NtQueryPortInformationProcess ENDP
 
 NtQueryQuotaInformationFile PROC
-    push 0BCBBB61Fh
+    push 0EEBF946Fh
     call WhisperMain
 NtQueryQuotaInformationFile ENDP
 
 NtQuerySecurityAttributesToken PROC
-    push 0FC66E4CDh
+    push 027923314h
     call WhisperMain
 NtQuerySecurityAttributesToken ENDP
 
 NtQuerySecurityObject PROC
-    push 0EFBD8563h
+    push 09EB5A618h
     call WhisperMain
 NtQuerySecurityObject ENDP
 
 NtQuerySecurityPolicy PROC
-    push 0045FF92Bh
+    push 0ACBFB522h
     call WhisperMain
 NtQuerySecurityPolicy ENDP
 
 NtQuerySemaphore PROC
-    push 0CD5F32C5h
+    push 05EC86050h
     call WhisperMain
 NtQuerySemaphore ENDP
 
 NtQuerySymbolicLinkObject PROC
-    push 0132B3377h
+    push 0183B6CFBh
     call WhisperMain
 NtQuerySymbolicLinkObject ENDP
 
 NtQuerySystemEnvironmentValue PROC
-    push 04CBB7764h
+    push 0B3B0DA22h
     call WhisperMain
 NtQuerySystemEnvironmentValue ENDP
 
 NtQuerySystemEnvironmentValueEx PROC
-    push 023DEEF9Ah
+    push 05195B0EDh
     call WhisperMain
 NtQuerySystemEnvironmentValueEx ENDP
 
 NtQuerySystemInformationEx PROC
-    push 0697D29B5h
+    push 02CDA5628h
     call WhisperMain
 NtQuerySystemInformationEx ENDP
 
 NtQueryTimerResolution PROC
-    push 01E816402h
+    push 01CF6E2B7h
     call WhisperMain
 NtQueryTimerResolution ENDP
 
 NtQueryWnfStateData PROC
-    push 0AC0E8282h
+    push 018BFFAFCh
     call WhisperMain
 NtQueryWnfStateData ENDP
 
 NtQueryWnfStateNameInformation PROC
-    push 09A4BFC9Fh
+    push 0CC86EE52h
     call WhisperMain
 NtQueryWnfStateNameInformation ENDP
 
 NtQueueApcThreadEx PROC
-    push 098B9269Eh
+    push 08498D246h
     call WhisperMain
 NtQueueApcThreadEx ENDP
 
 NtRaiseException PROC
-    push 001A8217Ah
+    push 008922C47h
     call WhisperMain
 NtRaiseException ENDP
 
 NtRaiseHardError PROC
-    push 009978393h
+    push 0F9AEFB3Fh
     call WhisperMain
 NtRaiseHardError ENDP
 
 NtReadOnlyEnlistment PROC
-    push 0EEA1CF33h
+    push 0FA9DD94Ah
     call WhisperMain
 NtReadOnlyEnlistment ENDP
 
 NtRecoverEnlistment PROC
-    push 011933405h
+    push 076B810A2h
     call WhisperMain
 NtRecoverEnlistment ENDP
 
 NtRecoverResourceManager PROC
-    push 04D905F0Ch
+    push 01B2303A2h
     call WhisperMain
 NtRecoverResourceManager ENDP
 
 NtRecoverTransactionManager PROC
-    push 082B5B60Fh
+    push 00DAE7326h
     call WhisperMain
 NtRecoverTransactionManager ENDP
 
 NtRegisterProtocolAddressInformation PROC
-    push 0D54EF51Ch
+    push 09687B413h
     call WhisperMain
 NtRegisterProtocolAddressInformation ENDP
 
 NtRegisterThreadTerminatePort PROC
-    push 066F67F62h
+    push 060B00560h
     call WhisperMain
 NtRegisterThreadTerminatePort ENDP
 
 NtReleaseKeyedEvent PROC
-    push 008890F12h
+    push 0305F23D8h
     call WhisperMain
 NtReleaseKeyedEvent ENDP
 
 NtReleaseWorkerFactoryWorker PROC
-    push 0BC8D8A29h
+    push 0308C0C3Fh
     call WhisperMain
 NtReleaseWorkerFactoryWorker ENDP
 
 NtRemoveIoCompletionEx PROC
-    push 0B49732A8h
+    push 07A91BDEEh
     call WhisperMain
 NtRemoveIoCompletionEx ENDP
 
 NtRemoveProcessDebug PROC
-    push 01050FE46h
+    push 020DDCE8Ah
     call WhisperMain
 NtRemoveProcessDebug ENDP
 
 NtRenameKey PROC
-    push 01B0C46D8h
+    push 017AD0430h
     call WhisperMain
 NtRenameKey ENDP
 
 NtRenameTransactionManager PROC
-    push 02FA9E7F0h
+    push 02D96E6CCh
     call WhisperMain
 NtRenameTransactionManager ENDP
 
 NtReplaceKey PROC
-    push 066CE7554h
+    push 0992CFAF0h
     call WhisperMain
 NtReplaceKey ENDP
 
 NtReplacePartitionUnit PROC
-    push 022BE3E1Eh
+    push 038BB0038h
     call WhisperMain
 NtReplacePartitionUnit ENDP
 
 NtReplyWaitReplyPort PROC
-    push 024B42B2Eh
+    push 022B41AF8h
     call WhisperMain
 NtReplyWaitReplyPort ENDP
 
 NtRequestPort PROC
-    push 0A0374F24h
+    push 02235399Ah
     call WhisperMain
 NtRequestPort ENDP
 
 NtResetEvent PROC
-    push 044CE8F88h
+    push 0F89BE31Ch
     call WhisperMain
 NtResetEvent ENDP
 
 NtResetWriteWatch PROC
-    push 0FCE9375Ah
+    push 064AB683Eh
     call WhisperMain
 NtResetWriteWatch ENDP
 
 NtRestoreKey PROC
-    push 0FB3EE7A5h
+    push 06B4F0D50h
     call WhisperMain
 NtRestoreKey ENDP
 
 NtResumeProcess PROC
-    push 011A90C20h
+    push 04DDB4E44h
     call WhisperMain
 NtResumeProcess ENDP
 
 NtRevertContainerImpersonation PROC
-    push 0C629C4C5h
+    push 0178C371Eh
     call WhisperMain
 NtRevertContainerImpersonation ENDP
 
 NtRollbackComplete PROC
-    push 059204DCCh
+    push 07AA6239Ah
     call WhisperMain
 NtRollbackComplete ENDP
 
 NtRollbackEnlistment PROC
-    push 031872C15h
+    push 016B0312Ah
     call WhisperMain
 NtRollbackEnlistment ENDP
 
 NtRollbackRegistryTransaction PROC
-    push 0CA51CAC3h
+    push 014B67E73h
     call WhisperMain
 NtRollbackRegistryTransaction ENDP
 
 NtRollbackTransaction PROC
-    push 09CBDDA69h
+    push 0FE67DEF5h
     call WhisperMain
 NtRollbackTransaction ENDP
 
 NtRollforwardTransactionManager PROC
-    push 003AF9F82h
+    push 09E3DBE8Fh
     call WhisperMain
 NtRollforwardTransactionManager ENDP
 
 NtSaveKey PROC
-    push 03BAF2A30h
+    push 022FD1347h
     call WhisperMain
 NtSaveKey ENDP
 
 NtSaveKeyEx PROC
-    push 09798D324h
+    push 031BB6764h
     call WhisperMain
 NtSaveKeyEx ENDP
 
 NtSaveMergedKeys PROC
-    push 067827A6Ch
+    push 0E27CCBDFh
     call WhisperMain
 NtSaveMergedKeys ENDP
 
 NtSecureConnectPort PROC
-    push 0983281BCh
+    push 02CA10D7Ch
     call WhisperMain
 NtSecureConnectPort ENDP
 
 NtSerializeBoot PROC
-    push 0CBD8D946h
+    push 0292179E4h
     call WhisperMain
 NtSerializeBoot ENDP
 
 NtSetBootEntryOrder PROC
-    push 0960E8E84h
+    push 00F128301h
     call WhisperMain
 NtSetBootEntryOrder ENDP
 
 NtSetBootOptions PROC
-    push 0779C2F4Bh
+    push 014841A1Ah
     call WhisperMain
 NtSetBootOptions ENDP
 
 NtSetCachedSigningLevel PROC
-    push 0AABA3194h
+    push 0AE21AEBCh
     call WhisperMain
 NtSetCachedSigningLevel ENDP
 
 NtSetCachedSigningLevel2 PROC
-    push 03E10D901h
+    push 0128F511Eh
     call WhisperMain
 NtSetCachedSigningLevel2 ENDP
 
 NtSetContextThread PROC
-    push 0AB9BA70Bh
+    push 0923D5C97h
     call WhisperMain
 NtSetContextThread ENDP
 
 NtSetDebugFilterState PROC
-    push 0B3316903h
+    push 034CF46D6h
     call WhisperMain
 NtSetDebugFilterState ENDP
 
 NtSetDefaultHardErrorPort PROC
-    push 0A734A0BFh
+    push 024B02D2Eh
     call WhisperMain
 NtSetDefaultHardErrorPort ENDP
 
 NtSetDefaultLocale PROC
-    push 0452D7FEBh
+    push 0022B18AFh
     call WhisperMain
 NtSetDefaultLocale ENDP
 
 NtSetDefaultUILanguage PROC
-    push 0299B6E3Ah
+    push 0BD933DAFh
     call WhisperMain
 NtSetDefaultUILanguage ENDP
 
 NtSetDriverEntryOrder PROC
-    push 013A51131h
+    push 060495CC3h
     call WhisperMain
 NtSetDriverEntryOrder ENDP
 
 NtSetEaFile PROC
-    push 0C0FA48C8h
+    push 063B93B0Dh
     call WhisperMain
 NtSetEaFile ENDP
 
 NtSetHighEventPair PROC
-    push 0D753F5CCh
+    push 017B62116h
     call WhisperMain
 NtSetHighEventPair ENDP
 
 NtSetHighWaitLowEventPair PROC
-    push 03F6ECE0Dh
+    push 0A232A2ABh
     call WhisperMain
 NtSetHighWaitLowEventPair ENDP
 
 NtSetIRTimer PROC
-    push 00850DB12h
+    push 005CB328Ah
     call WhisperMain
 NtSetIRTimer ENDP
 
 NtSetInformationDebugObject PROC
-    push 08837B8BBh
+    push 03A87AA8Bh
     call WhisperMain
 NtSetInformationDebugObject ENDP
 
 NtSetInformationEnlistment PROC
-    push 0479B3A4Dh
+    push 05FD57A7Fh
     call WhisperMain
 NtSetInformationEnlistment ENDP
 
 NtSetInformationJobObject PROC
-    push 08ED07ACFh
+    push 004BC3E31h
     call WhisperMain
 NtSetInformationJobObject ENDP
 
 NtSetInformationKey PROC
-    push 0C2785060h
+    push 02CF55107h
     call WhisperMain
 NtSetInformationKey ENDP
 
 NtSetInformationResourceManager PROC
-    push 0C41FD0BDh
+    push 0A3602878h
     call WhisperMain
 NtSetInformationResourceManager ENDP
 
 NtSetInformationSymbolicLink PROC
-    push 0A8A67607h
+    push 06AFD601Ch
     call WhisperMain
 NtSetInformationSymbolicLink ENDP
 
 NtSetInformationToken PROC
-    push 063D6755Eh
+    push 03005ED36h
     call WhisperMain
 NtSetInformationToken ENDP
 
 NtSetInformationTransaction PROC
-    push 01681381Dh
+    push 076A37037h
     call WhisperMain
 NtSetInformationTransaction ENDP
 
 NtSetInformationTransactionManager PROC
-    push 005349715h
+    push 002A39083h
     call WhisperMain
 NtSetInformationTransactionManager ENDP
 
 NtSetInformationVirtualMemory PROC
-    push 09B028F9Fh
+    push 0C553EFC1h
     call WhisperMain
 NtSetInformationVirtualMemory ENDP
 
 NtSetInformationWorkerFactory PROC
-    push 0786D108Fh
+    push 0E4AEE222h
     call WhisperMain
 NtSetInformationWorkerFactory ENDP
 
 NtSetIntervalProfile PROC
-    push 076A1B0F8h
+    push 00C578470h
     call WhisperMain
 NtSetIntervalProfile ENDP
 
 NtSetIoCompletion PROC
-    push 002D843F7h
+    push 09649CAE3h
     call WhisperMain
 NtSetIoCompletion ENDP
 
 NtSetIoCompletionEx PROC
-    push 0C92F0C73h
+    push 040AA8FFDh
     call WhisperMain
 NtSetIoCompletionEx ENDP
 
 NtSetLdtEntries PROC
-    push 05B6A2499h
+    push 0B793C473h
     call WhisperMain
 NtSetLdtEntries ENDP
 
 NtSetLowEventPair PROC
-    push 040D27C5Bh
+    push 05D12BA4Bh
     call WhisperMain
 NtSetLowEventPair ENDP
 
 NtSetLowWaitHighEventPair PROC
-    push 0A43DA4A3h
+    push 050D47049h
     call WhisperMain
 NtSetLowWaitHighEventPair ENDP
 
 NtSetQuotaInformationFile PROC
-    push 0A23B5420h
+    push 02AA61E30h
     call WhisperMain
 NtSetQuotaInformationFile ENDP
 
 NtSetSecurityObject PROC
-    push 0FAD676B9h
+    push 012027EF2h
     call WhisperMain
 NtSetSecurityObject ENDP
 
 NtSetSystemEnvironmentValue PROC
-    push 01C9F0B0Ch
+    push 04ABAA932h
     call WhisperMain
 NtSetSystemEnvironmentValue ENDP
 
 NtSetSystemEnvironmentValueEx PROC
-    push 00F935D4Eh
+    push 073893534h
     call WhisperMain
 NtSetSystemEnvironmentValueEx ENDP
 
 NtSetSystemInformation PROC
-    push 0072F4385h
+    push 01A4A3CDFh
     call WhisperMain
 NtSetSystemInformation ENDP
 
 NtSetSystemPowerState PROC
-    push 010892602h
+    push 036B9FC16h
     call WhisperMain
 NtSetSystemPowerState ENDP
 
 NtSetSystemTime PROC
-    push 03EAD353Dh
+    push 020EE2F45h
     call WhisperMain
 NtSetSystemTime ENDP
 
 NtSetThreadExecutionState PROC
-    push 012B3ECA8h
+    push 016B40038h
     call WhisperMain
 NtSetThreadExecutionState ENDP
 
 NtSetTimer2 PROC
-    push 0CF356FABh
+    push 019429A8Fh
     call WhisperMain
 NtSetTimer2 ENDP
 
 NtSetTimerEx PROC
-    push 01CFA2E40h
+    push 0765BD266h
     call WhisperMain
 NtSetTimerEx ENDP
 
 NtSetTimerResolution PROC
-    push 054CE745Dh
+    push 0228DCCD1h
     call WhisperMain
 NtSetTimerResolution ENDP
 
 NtSetUuidSeed PROC
-    push 01DCF5F12h
+    push 09DA85118h
     call WhisperMain
 NtSetUuidSeed ENDP
 
 NtSetVolumeInformationFile PROC
-    push 03402BB21h
+    push 0583D32FAh
     call WhisperMain
 NtSetVolumeInformationFile ENDP
 
 NtSetWnfProcessNotificationEvent PROC
-    push 016CB77DEh
+    push 00EAC032Ch
     call WhisperMain
 NtSetWnfProcessNotificationEvent ENDP
 
 NtShutdownSystem PROC
-    push 0C0ECECB7h
+    push 0005FD37Fh
     call WhisperMain
 NtShutdownSystem ENDP
 
 NtShutdownWorkerFactory PROC
-    push 0189320D4h
+    push 038AF263Ah
     call WhisperMain
 NtShutdownWorkerFactory ENDP
 
 NtSignalAndWaitForSingleObject PROC
-    push 029111FA8h
+    push 03A99AA95h
     call WhisperMain
 NtSignalAndWaitForSingleObject ENDP
 
 NtSinglePhaseReject PROC
-    push 0249E3611h
+    push 0B51E4D73h
     call WhisperMain
 NtSinglePhaseReject ENDP
 
 NtStartProfile PROC
-    push 060356B93h
+    push 08119473Bh
     call WhisperMain
 NtStartProfile ENDP
 
 NtStopProfile PROC
-    push 0E5B21DE6h
+    push 0E8BDE11Bh
     call WhisperMain
 NtStopProfile ENDP
 
 NtSubscribeWnfStateChange PROC
-    push 006A77F3Ah
+    push 076E4A158h
     call WhisperMain
 NtSubscribeWnfStateChange ENDP
 
 NtSuspendProcess PROC
-    push 077AB5232h
+    push 0A33DA0A2h
     call WhisperMain
 NtSuspendProcess ENDP
 
 NtSuspendThread PROC
-    push 01CBD5E1Bh
+    push 0B885663Fh
     call WhisperMain
 NtSuspendThread ENDP
 
 NtSystemDebugControl PROC
-    push 0BDAC5CBAh
+    push 07FAA0B7Dh
     call WhisperMain
 NtSystemDebugControl ENDP
 
 NtTerminateEnclave PROC
-    push 0613E59E2h
+    push 0E129EFC3h
     call WhisperMain
 NtTerminateEnclave ENDP
 
 NtTerminateJobObject PROC
-    push 01EA037FDh
+    push 064DC5E51h
     call WhisperMain
 NtTerminateJobObject ENDP
 
 NtTestAlert PROC
-    push 08CAFE33Ch
+    push 08C979512h
     call WhisperMain
 NtTestAlert ENDP
 
 NtThawRegistry PROC
-    push 03EAC3439h
+    push 0F05EF4D3h
     call WhisperMain
 NtThawRegistry ENDP
 
 NtThawTransactions PROC
-    push 0900AF0DEh
+    push 03BAB0319h
     call WhisperMain
 NtThawTransactions ENDP
 
 NtTraceControl PROC
-    push 0B865DEF4h
+    push 04D164FFFh
     call WhisperMain
 NtTraceControl ENDP
 
 NtTranslateFilePath PROC
-    push 0F2B2CFE7h
+    push 0302EDD2Ah
     call WhisperMain
 NtTranslateFilePath ENDP
 
 NtUmsThreadYield PROC
-    push 009B78290h
+    push 0F4AACEFCh
     call WhisperMain
 NtUmsThreadYield ENDP
 
 NtUnloadDriver PROC
-    push 09CD7A65Bh
+    push 0109B0810h
     call WhisperMain
 NtUnloadDriver ENDP
 
 NtUnloadKey PROC
-    push 05B2C58B5h
+    push 0685111A1h
     call WhisperMain
 NtUnloadKey ENDP
 
 NtUnloadKey2 PROC
-    push 0EE7706E9h
+    push 0C9399254h
     call WhisperMain
 NtUnloadKey2 ENDP
 
 NtUnloadKeyEx PROC
-    push 03F99C3E2h
+    push 05BF01D0Eh
     call WhisperMain
 NtUnloadKeyEx ENDP
 
 NtUnlockFile PROC
-    push 0E1781BFFh
+    push 034B33E13h
     call WhisperMain
 NtUnlockFile ENDP
 
 NtUnlockVirtualMemory PROC
-    push 00F98213Fh
+    push 0C3952B06h
     call WhisperMain
 NtUnlockVirtualMemory ENDP
 
 NtUnmapViewOfSectionEx PROC
-    push 040DA1604h
+    push 08695DA30h
     call WhisperMain
 NtUnmapViewOfSectionEx ENDP
 
 NtUnsubscribeWnfStateChange PROC
-    push 0209C6524h
+    push 03EEF276Ah
     call WhisperMain
 NtUnsubscribeWnfStateChange ENDP
 
 NtUpdateWnfStateData PROC
-    push 00C851638h
+    push 0E6B8328Eh
     call WhisperMain
 NtUpdateWnfStateData ENDP
 
 NtVdmControl PROC
-    push 01BC3E185h
+    push 0099A2D09h
     call WhisperMain
 NtVdmControl ENDP
 
 NtWaitForAlertByThreadId PROC
-    push 06CABA912h
+    push 04DB6692Fh
     call WhisperMain
 NtWaitForAlertByThreadId ENDP
 
 NtWaitForDebugEvent PROC
-    push 0968A759Ch
+    push 0F2ADF320h
     call WhisperMain
 NtWaitForDebugEvent ENDP
 
 NtWaitForKeyedEvent PROC
-    push 0F918FC89h
+    push 05B3044A2h
     call WhisperMain
 NtWaitForKeyedEvent ENDP
 
 NtWaitForWorkViaWorkerFactory PROC
-    push 0489E7A52h
+    push 00E924644h
     call WhisperMain
 NtWaitForWorkViaWorkerFactory ENDP
 
 NtWaitHighEventPair PROC
-    push 023332BA4h
+    push 0A411AC8Fh
     call WhisperMain
 NtWaitHighEventPair ENDP
 
 NtWaitLowEventPair PROC
-    push 072DF924Dh
+    push 04D104387h
     call WhisperMain
 NtWaitLowEventPair ENDP
 
 NtAcquireCMFViewOwnership PROC
-    push 00B4D01D4h
+    push 01C84C6CEh
     call WhisperMain
 NtAcquireCMFViewOwnership ENDP
 
 NtCancelDeviceWakeupRequest PROC
-    push 0D421DCA5h
+    push 003AEEBB2h
     call WhisperMain
 NtCancelDeviceWakeupRequest ENDP
 
 NtClearAllSavepointsTransaction PROC
-    push 09E05BE8Bh
+    push 0052D237Dh
     call WhisperMain
 NtClearAllSavepointsTransaction ENDP
 
 NtClearSavepointTransaction PROC
-    push 0FD69C1A2h
+    push 0CE93C407h
     call WhisperMain
 NtClearSavepointTransaction ENDP
 
 NtRollbackSavepointTransaction PROC
-    push 01C47DE17h
+    push 05EC15855h
     call WhisperMain
 NtRollbackSavepointTransaction ENDP
 
 NtSavepointTransaction PROC
-    push 01C844249h
+    push 00E0530A9h
     call WhisperMain
 NtSavepointTransaction ENDP
 
 NtSavepointComplete PROC
-    push 01A90361Ah
+    push 056D6B694h
     call WhisperMain
 NtSavepointComplete ENDP
 
 NtCreateSectionEx PROC
-    push 0984DC69Bh
+    push 0FEAD01DBh
     call WhisperMain
 NtCreateSectionEx ENDP
 
 NtCreateCrossVmEvent PROC
-    push 0C951D0DFh
+    push 038650DDCh
     call WhisperMain
 NtCreateCrossVmEvent ENDP
 
 NtGetPlugPlayEvent PROC
-    push 0E0452617h
+    push 0508E3B58h
     call WhisperMain
 NtGetPlugPlayEvent ENDP
 
 NtListTransactions PROC
-    push 0ECB6E62Ch
+    push 03BA93B03h
     call WhisperMain
 NtListTransactions ENDP
 
 NtMarshallTransaction PROC
-    push 07ADD647Dh
+    push 0F236FAADh
     call WhisperMain
 NtMarshallTransaction ENDP
 
 NtPullTransaction PROC
-    push 07D557FF9h
+    push 01C17FD04h
     call WhisperMain
 NtPullTransaction ENDP
 
 NtReleaseCMFViewOwnership PROC
-    push 05A6F42F8h
+    push 03AA2D23Ah
     call WhisperMain
 NtReleaseCMFViewOwnership ENDP
 
 NtWaitForWnfNotifications PROC
-    push 00D992ACBh
+    push 00D962B4Dh
     call WhisperMain
 NtWaitForWnfNotifications ENDP
 
 NtStartTm PROC
-    push 0C38E50AFh
+    push 03D900EDEh
     call WhisperMain
 NtStartTm ENDP
 
 NtSetInformationProcess PROC
-    push 06DAF4A7Ch
+    push 0E2462417h
     call WhisperMain
 NtSetInformationProcess ENDP
 
 NtRequestDeviceWakeup PROC
-    push 05517B042h
+    push 015805550h
     call WhisperMain
 NtRequestDeviceWakeup ENDP
 
 NtRequestWakeupLatency PROC
-    push 0043EE142h
+    push 09A4FB3EEh
     call WhisperMain
 NtRequestWakeupLatency ENDP
 
 NtQuerySystemTime PROC
-    push 0EAAEF31Bh
+    push 074CF7D6Bh
     call WhisperMain
 NtQuerySystemTime ENDP
 
 NtManageHotPatch PROC
-    push 0F0D1E66Eh
+    push 07E4706A4h
     call WhisperMain
 NtManageHotPatch ENDP
 
 NtContinueEx PROC
-    push 02794F0CBh
+    push 013CF4512h
     call WhisperMain
 NtContinueEx ENDP
 
 RtlCreateUserThread PROC
-    push 016AE441Fh
+    push 07CE03635h
     call WhisperMain
 RtlCreateUserThread ENDP
 

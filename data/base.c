@@ -3,9 +3,7 @@
 // Code below is adapted from @modexpblog. Read linked article for more details.
 // https://www.mdsec.co.uk/2020/12/bypassing-user-mode-hooks-and-direct-invocation-of-system-calls-for-red-teams
 
-#ifndef _PICMODE
 SW2_SYSCALL_LIST SW2_SyscallList = { 0, 1 };
-#endif
 
 DWORD SW2_HashSyscall(PCSTR FunctionName)
 {
@@ -21,11 +19,7 @@ DWORD SW2_HashSyscall(PCSTR FunctionName)
     return Hash;
 }
 
-#ifdef _PICMODE
-BOOL SW2_PopulateSyscallList(PSW2_SYSCALL_LIST SW2_SyscallList)
-#else
 BOOL SW2_PopulateSyscallList(void)
-#endif
 {
     // Return early if the list is already populated.
     if (SW2_SyscallList.Count) return TRUE;
@@ -113,11 +107,7 @@ BOOL SW2_PopulateSyscallList(void)
     return TRUE;
 }
 
-#ifdef _PICMODE
-EXTERN_C DWORD SW2_GetSyscallNumber(PSW2_SYSCALL_LIST SW2_SyscallList, DWORD FunctionHash)
-#else
 EXTERN_C DWORD SW2_GetSyscallNumber(DWORD FunctionHash)
-#endif
 {
     // Ensure SW2_SyscallList is populated.
     if (!SW2_PopulateSyscallList()) return -1;

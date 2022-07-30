@@ -8,7 +8,7 @@
 
 #include <windows.h>
 
-#define SW2_SEED 0x104FF7A6
+#define SW2_SEED 0xDF22BC43
 #define SW2_ROL8(v) (v << 8 | v >> 24)
 #define SW2_ROR8(v) (v >> 8 | v << 24)
 #define SW2_ROX8(v) ((SW2_SEED % 2) ? SW2_ROL8(v) : SW2_ROR8(v))
@@ -51,17 +51,8 @@ typedef struct _SW2_PEB {
 } SW2_PEB, *PSW2_PEB;
 
 DWORD SW2_HashSyscall(PCSTR FunctionName);
-#ifdef _PICMODE
-BOOL SW2_PopulateSyscallList(PSW2_SYSCALL_LIST SW2_SyscallList);
-#else
 BOOL SW2_PopulateSyscallList(void);
-#endif
-#ifdef _PICMODE
-EXTERN_C DWORD SW2_GetSyscallNumber(PSW2_SYSCALL_LIST SW2_SyscallList, DWORD FunctionHash);
-#else
 EXTERN_C DWORD SW2_GetSyscallNumber(DWORD FunctionHash);
-#endif
-
 
 typedef struct _UNICODE_STRING
 {
@@ -97,18 +88,6 @@ typedef struct _WNF_TYPE_ID
 	GUID TypeId;
 } WNF_TYPE_ID, *PWNF_TYPE_ID;
 
-typedef enum _PS_CREATE_STATE
-{
-	PsCreateInitialState,
-	PsCreateFailOnFileOpen,
-	PsCreateFailOnSectionCreate,
-	PsCreateFailExeFormat,
-	PsCreateFailMachineMismatch,
-	PsCreateFailExeName,
-	PsCreateSuccess,
-	PsCreateMaximumStates
-} PS_CREATE_STATE, *PPS_CREATE_STATE;
-
 typedef enum _KCONTINUE_TYPE
 {
 	KCONTINUE_UNWIND,
@@ -128,17 +107,29 @@ typedef struct _IO_STATUS_BLOCK
 	ULONG_PTR Information;
 } IO_STATUS_BLOCK, *PIO_STATUS_BLOCK;
 
-typedef struct _CLIENT_ID
+typedef enum _PS_CREATE_STATE
 {
-	HANDLE UniqueProcess;
-	HANDLE UniqueThread;
-} CLIENT_ID, *PCLIENT_ID;
+	PsCreateInitialState,
+	PsCreateFailOnFileOpen,
+	PsCreateFailOnSectionCreate,
+	PsCreateFailExeFormat,
+	PsCreateFailMachineMismatch,
+	PsCreateFailExeName,
+	PsCreateSuccess,
+	PsCreateMaximumStates
+} PS_CREATE_STATE, *PPS_CREATE_STATE;
 
 typedef struct _SYSTEM_HANDLE_INFORMATION
 {
 	ULONG HandleCount;
 	SYSTEM_HANDLE Handles[1];
 } SYSTEM_HANDLE_INFORMATION, *PSYSTEM_HANDLE_INFORMATION;
+
+typedef struct _CLIENT_ID
+{
+	HANDLE UniqueProcess;
+	HANDLE UniqueThread;
+} CLIENT_ID, *PCLIENT_ID;
 
 typedef enum _PLUGPLAY_EVENT_CATEGORY
 {
@@ -206,11 +197,6 @@ typedef struct _PS_ATTRIBUTE
 	PSIZE_T ReturnLength;
 } PS_ATTRIBUTE, *PPS_ATTRIBUTE;
 
-typedef struct _WNF_STATE_NAME
-{
-	ULONG Data[2];
-} WNF_STATE_NAME, *PWNF_STATE_NAME;
-
 #ifndef InitializeObjectAttributes
 #define InitializeObjectAttributes( p, n, a, r, s ) { \
 	(p)->Length = sizeof( OBJECT_ATTRIBUTES );        \
@@ -221,6 +207,11 @@ typedef struct _WNF_STATE_NAME
 	(p)->SecurityQualityOfService = NULL;             \
 }
 #endif
+
+typedef struct _WNF_STATE_NAME
+{
+	ULONG Data[2];
+} WNF_STATE_NAME, *PWNF_STATE_NAME;
 
 typedef struct _KEY_VALUE_ENTRY
 {
