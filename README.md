@@ -196,7 +196,7 @@ The following examples demonstrate how to compile the above example programs as 
 
 ```
 i686-w64-mingw32-gcc -c main.c syscalls.c -Wall -shared
-nasm -f win32 -o syscallsstubs.std.x86.o syscallsstubs.x86.nasm
+nasm -f win32 -o syscallsstubs.std.x86.o syscallsstubs.std.x86.nasm
 i686-w64-mingw32-gcc *.o -o temp.exe
 i686-w64-mingw32-strip -s temp.exe -o example.exe
 rm -rf *.o temp.exe
@@ -206,7 +206,7 @@ rm -rf *.o temp.exe
 
 ```
 i686-w64-mingw32-gcc -c dllmain.c syscalls.c -Wall -shared
-nasm -f win32 -o syscallsstubs.std.x86.o syscallsstubs.x86.nasm
+nasm -f win32 -o syscallsstubs.std.x86.o syscallsstubs.std.x86.nasm
 i686-w64-mingw32-dllwrap --def dllmain.def *.o -o temp.dll
 i686-w64-mingw32-strip -s temp.dll -o example.dll
 rm -rf *.o temp.dll
@@ -216,7 +216,7 @@ rm -rf *.o temp.dll
 
 ```
 x86_64-w64-mingw32-gcc -m64 -c main.c syscalls.c -Wall -shared
-nasm -f win64 -o syscallsstubs.std.x64.o syscallsstubs.x64.nasm
+nasm -f win64 -o syscallsstubs.std.x64.o syscallsstubs.std.x64.nasm
 x86_64-w64-mingw32-gcc *.o -o temp.exe
 x86_64-w64-mingw32-strip -s temp.exe -o example.exe
 rm -rf *.o temp.exe
@@ -226,7 +226,7 @@ rm -rf *.o temp.exe
 
 ```
 x86_64-w64-mingw32-gcc -m64 -c dllmain.c syscalls.c -Wall -shared
-nasm -f win64 -o syscallsstubs.std.x64.o syscallsstubs.x64.nasm
+nasm -f win64 -o syscallsstubs.std.x64.o syscallsstubs.std.x64.nasm
 x86_64-w64-mingw32-gcc-dllwrap --def dllmain.def *.o -o temp.dll
 x86_64-w64-mingw32-strip -s temp.dll -o example.dll
 rm -rf *.o temp.dll
