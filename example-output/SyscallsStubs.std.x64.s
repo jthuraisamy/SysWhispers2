@@ -497,7 +497,7 @@ WhisperMain:
     mov [rsp+24], r8
     mov [rsp+32], r9
     sub rsp, 0x28
-    mov ecx, dword ptr [currentHash]
+    mov ecx, dword ptr [currentHash + RIP]
     call SW2_GetSyscallNumber
     add rsp, 0x28
     mov rcx, [rsp+ 8]              # Restore registers.
@@ -509,2417 +509,2417 @@ WhisperMain:
     ret
 
 NtAccessCheck:
-    mov dword ptr [currentHash], 0x006A6516B   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0A9019EDB   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtWorkerFactoryWorkerReady:
-    mov dword ptr [currentHash], 0x087BBED55   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0279B1D25   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAcceptConnectPort:
-    mov dword ptr [currentHash], 0x060EF5F4C   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0A63D2532   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtMapUserPhysicalPagesScatter:
-    mov dword ptr [currentHash], 0x0FFEE60E6   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x01BA32709   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtWaitForSingleObject:
-    mov dword ptr [currentHash], 0x09A47BA1B   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x09AA0BAFC   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCallbackReturn:
-    mov dword ptr [currentHash], 0x00A992D4C   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0068C251C   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtReadFile:
-    mov dword ptr [currentHash], 0x065238A66   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x04098542E   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtDeviceIoControlFile:
-    mov dword ptr [currentHash], 0x022A4B696   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x064F2B7C6   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtWriteFile:
-    mov dword ptr [currentHash], 0x0CC9A9AA9   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0F1DBDB5D   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtRemoveIoCompletion:
-    mov dword ptr [currentHash], 0x08854EAC5   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x04EA84E3F   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtReleaseSemaphore:
-    mov dword ptr [currentHash], 0x000920877   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x076E47870   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtReplyWaitReceivePort:
-    mov dword ptr [currentHash], 0x02EB30928   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x06AF2899C   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtReplyPort:
-    mov dword ptr [currentHash], 0x06EF04328   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x020B11F12   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetInformationThread:
-    mov dword ptr [currentHash], 0x02505ED21   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0F65ABCF3   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetEvent:
-    mov dword ptr [currentHash], 0x00A900D0A   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x00E910704   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtClose:
-    mov dword ptr [currentHash], 0x008904F4B   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0DC482529   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryObject:
-    mov dword ptr [currentHash], 0x0CA991A35   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0043FDD12   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryInformationFile:
-    mov dword ptr [currentHash], 0x0BB104907   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x03EDFC498   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtOpenKey:
-    mov dword ptr [currentHash], 0x001146E81   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0249C4949   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtEnumerateValueKey:
-    mov dword ptr [currentHash], 0x0219E447C   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0271BC085   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtFindAtom:
-    mov dword ptr [currentHash], 0x0CD41322B   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0DF41D0DB   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryDefaultLocale:
-    mov dword ptr [currentHash], 0x033AB4571   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0D138E3EF   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryKey:
-    mov dword ptr [currentHash], 0x0859CB626   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x00B173288   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryValueKey:
-    mov dword ptr [currentHash], 0x0C21CF5A7   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0221CD262   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAllocateVirtualMemory:
-    mov dword ptr [currentHash], 0x07DDF6933   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x00F8D111B   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryInformationProcess:
-    mov dword ptr [currentHash], 0x08210927D   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0802C8FB1   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtWaitForMultipleObjects32:
-    mov dword ptr [currentHash], 0x0848A0545   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0408E5C41   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtWriteFileGather:
-    mov dword ptr [currentHash], 0x073D33167   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0BB3FEDFB   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateKey:
-    mov dword ptr [currentHash], 0x03DFC5C06   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x08D1F6008   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtFreeVirtualMemory:
-    mov dword ptr [currentHash], 0x08510978B   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x003997D1F   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtImpersonateClientOfPort:
-    mov dword ptr [currentHash], 0x03CEC0962   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0E570FAFB   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtReleaseMutant:
-    mov dword ptr [currentHash], 0x03CBE796E   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x020A46D7C   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryInformationToken:
-    mov dword ptr [currentHash], 0x0AF9E77B4   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x08792109A   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtRequestWaitReplyPort:
-    mov dword ptr [currentHash], 0x02CB73522   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0D37FD6F7   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryVirtualMemory:
-    mov dword ptr [currentHash], 0x0CF52C3D7   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x043916F45   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtOpenThreadToken:
-    mov dword ptr [currentHash], 0x03FEA3572   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0015B9873   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryInformationThread:
-    mov dword ptr [currentHash], 0x07A402283   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0705F2C9E   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtOpenProcess:
-    mov dword ptr [currentHash], 0x0EDBFCA2F   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0D554CCD8   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetInformationFile:
-    mov dword ptr [currentHash], 0x02968D802   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x09C38540E   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtMapViewOfSection:
-    mov dword ptr [currentHash], 0x0FCDC0BB8   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x00E962FC5   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAccessCheckAndAuditAlarm:
-    mov dword ptr [currentHash], 0x0D9BFE5FE   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x076B1B6EE   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtUnmapViewOfSection:
-    mov dword ptr [currentHash], 0x088918E05   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x012813051   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtReplyWaitReceivePortEx:
-    mov dword ptr [currentHash], 0x0B99AE54E   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x06D6F33BA   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtTerminateProcess:
-    mov dword ptr [currentHash], 0x05B9F378E   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0EFAF0A3F   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetEventBoostPriority:
-    mov dword ptr [currentHash], 0x0D747C3CA   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x018A10E0E   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtReadFileScatter:
-    mov dword ptr [currentHash], 0x029881721   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x05BD20D17   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtOpenThreadTokenEx:
-    mov dword ptr [currentHash], 0x07CE73624   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x01B285B10   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtOpenProcessTokenEx:
-    mov dword ptr [currentHash], 0x05AAA87EF   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0B0A9F414   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryPerformanceCounter:
-    mov dword ptr [currentHash], 0x0338E10D3   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x051F84F55   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtEnumerateKey:
-    mov dword ptr [currentHash], 0x069FE4628   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x009AF4870   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtOpenFile:
-    mov dword ptr [currentHash], 0x0F919DDC5   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x02A846226   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtDelayExecution:
-    mov dword ptr [currentHash], 0x036AC767F   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x04EC24853   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryDirectoryFile:
-    mov dword ptr [currentHash], 0x0459DB5C9   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x03F9EFEB8   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQuerySystemInformation:
-    mov dword ptr [currentHash], 0x03B6317B9   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x00D930D01   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtOpenSection:
-    mov dword ptr [currentHash], 0x0970A9398   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x01853EA17   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryTimer:
-    mov dword ptr [currentHash], 0x075DE5F42   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0BD978D3A   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtFsControlFile:
-    mov dword ptr [currentHash], 0x068F9527E   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x064F5222E   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtWriteVirtualMemory:
-    mov dword ptr [currentHash], 0x006951810   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x00F9918F7   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCloseObjectAuditAlarm:
-    mov dword ptr [currentHash], 0x02A972E00   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x01A95928A   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtDuplicateObject:
-    mov dword ptr [currentHash], 0x01EDC7801   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0E45F2C03   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryAttributesFile:
-    mov dword ptr [currentHash], 0x0A87B324E   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0615895C9   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtClearEvent:
-    mov dword ptr [currentHash], 0x072AF92FA   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x06ECF6752   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtReadVirtualMemory:
-    mov dword ptr [currentHash], 0x047D37B57   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x009BD1F23   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtOpenEvent:
-    mov dword ptr [currentHash], 0x008810914   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x008821906   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAdjustPrivilegesToken:
-    mov dword ptr [currentHash], 0x00547F3C3   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x03DA3650A   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtDuplicateToken:
-    mov dword ptr [currentHash], 0x0251115B0   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x07B10817C   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtContinue:
-    mov dword ptr [currentHash], 0x0A029D3E6   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0DEB435C7   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryDefaultUILanguage:
-    mov dword ptr [currentHash], 0x093B1138D   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0F5D7FA65   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueueApcThread:
-    mov dword ptr [currentHash], 0x036AC3035   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x014CF7017   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtYieldExecution:
-    mov dword ptr [currentHash], 0x00C540AC5   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x00397CDCA   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAddAtom:
-    mov dword ptr [currentHash], 0x028BC2D2A   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x01DB03E29   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateEvent:
-    mov dword ptr [currentHash], 0x028A7051E   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x051034E68   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryVolumeInformationFile:
-    mov dword ptr [currentHash], 0x04EDF38CC   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0ED742BD5   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateSection:
-    mov dword ptr [currentHash], 0x008A00A0D   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0BC9BE029   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtFlushBuffersFile:
-    mov dword ptr [currentHash], 0x05CFABF7C   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x070FA7E52   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtApphelpCacheControl:
-    mov dword ptr [currentHash], 0x0FFB0192A   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x049A1B3E7   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateProcessEx:
-    mov dword ptr [currentHash], 0x0E18CD336   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x09210A0AA   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateThread:
-    mov dword ptr [currentHash], 0x00A90D729   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x026BC2015   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtIsProcessInJob:
-    mov dword ptr [currentHash], 0x06F9698C3   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0E5979949   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtProtectVirtualMemory:
-    mov dword ptr [currentHash], 0x0CB903DDF   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0BB18B18B   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQuerySection:
-    mov dword ptr [currentHash], 0x04A96004F   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x09C35BEA5   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtResumeThread:
-    mov dword ptr [currentHash], 0x020B86211   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x032927E31   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtTerminateThread:
-    mov dword ptr [currentHash], 0x0ECCEE86E   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x00C179F28   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtReadRequestData:
-    mov dword ptr [currentHash], 0x05D2B67B6   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0B805B2AE   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateFile:
-    mov dword ptr [currentHash], 0x078B82A0C   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x09E9CAC04   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryEvent:
-    mov dword ptr [currentHash], 0x0C88ACF00   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0F8EB1CFC   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtWriteRequestData:
-    mov dword ptr [currentHash], 0x00E80D2BE   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0CECA5FFB   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtOpenDirectoryObject:
-    mov dword ptr [currentHash], 0x08837E8EB   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x02B38D976   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAccessCheckByTypeAndAuditAlarm:
-    mov dword ptr [currentHash], 0x0D254D4C4   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x08F30935F   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtWaitForMultipleObjects:
-    mov dword ptr [currentHash], 0x0019B0111   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0119D2D13   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetInformationObject:
-    mov dword ptr [currentHash], 0x009353989   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x088151919   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCancelIoFile:
-    mov dword ptr [currentHash], 0x018DC005E   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0A4EAB262   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtTraceEvent:
-    mov dword ptr [currentHash], 0x00B4B4490   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x00EAC1F08   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtPowerInformation:
-    mov dword ptr [currentHash], 0x00A9B0877   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x066B04663   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetValueKey:
-    mov dword ptr [currentHash], 0x08703B4BA   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x08ACE4995   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCancelTimer:
-    mov dword ptr [currentHash], 0x039A23F32   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0B5A0C75D   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetTimer:
-    mov dword ptr [currentHash], 0x0C78529DE   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x00394393C   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAccessCheckByType:
-    mov dword ptr [currentHash], 0x0B0292511   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x052FFBBAA   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAccessCheckByTypeResultList:
-    mov dword ptr [currentHash], 0x006822A55   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x056F9586A   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAccessCheckByTypeResultListAndAuditAlarm:
-    mov dword ptr [currentHash], 0x034DA304C   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x03EA31E2E   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAccessCheckByTypeResultListAndAuditAlarmByHandle:
-    mov dword ptr [currentHash], 0x08BA71195   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x018340882   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAcquireProcessActivityReference:
-    mov dword ptr [currentHash], 0x038AC7100   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0EF5AE9E7   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAddAtomEx:
-    mov dword ptr [currentHash], 0x0BD97F163   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0A59AF542   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAddBootEntry:
-    mov dword ptr [currentHash], 0x01D8C071E   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0A174B5D8   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAddDriverEntry:
-    mov dword ptr [currentHash], 0x047927D50   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x01984096C   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAdjustGroupsToken:
-    mov dword ptr [currentHash], 0x00C996202   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0A041F6E5   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAdjustTokenClaimsAndDeviceGroups:
-    mov dword ptr [currentHash], 0x03BA57B73   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x039E51CB5   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAlertResumeThread:
-    mov dword ptr [currentHash], 0x008A8F586   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0CE9B043D   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAlertThread:
-    mov dword ptr [currentHash], 0x022826A21   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x07C47E779   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAlertThreadByThreadId:
-    mov dword ptr [currentHash], 0x07521B787   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0B32F1E2F   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAllocateLocallyUniqueId:
-    mov dword ptr [currentHash], 0x0A5BEB609   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x03DCE1F48   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAllocateReserveObject:
-    mov dword ptr [currentHash], 0x036AF3633   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x07A5A04B7   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAllocateUserPhysicalPages:
-    mov dword ptr [currentHash], 0x0A1A048DA   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x07BE31438   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAllocateUuids:
-    mov dword ptr [currentHash], 0x0EC573205   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x01A8B1A17   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAllocateVirtualMemoryEx:
-    mov dword ptr [currentHash], 0x00EEFD8B1   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0A089F253   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAlpcAcceptConnectPort:
-    mov dword ptr [currentHash], 0x064F25D58   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0E0B31EC1   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAlpcCancelMessage:
-    mov dword ptr [currentHash], 0x0D588D416   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0BA95AB2F   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAlpcConnectPort:
-    mov dword ptr [currentHash], 0x026F15D1E   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x062CE7F66   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAlpcConnectPortEx:
-    mov dword ptr [currentHash], 0x063EEBFBA   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0A7A86A9C   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAlpcCreatePort:
-    mov dword ptr [currentHash], 0x050305BAE   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x024BEC0D1   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAlpcCreatePortSection:
-    mov dword ptr [currentHash], 0x036D27407   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0B2AC56F7   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAlpcCreateResourceReserve:
-    mov dword ptr [currentHash], 0x00CA8E4FB   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x07AC96C79   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAlpcCreateSectionView:
-    mov dword ptr [currentHash], 0x032AB4151   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x08A0CB78B   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAlpcCreateSecurityContext:
-    mov dword ptr [currentHash], 0x0F78AE40D   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0B690DB09   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAlpcDeletePortSection:
-    mov dword ptr [currentHash], 0x0FAA01B33   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0F2E819B0   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAlpcDeleteResourceReserve:
-    mov dword ptr [currentHash], 0x0850687A8   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x02ADB045B   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAlpcDeleteSectionView:
-    mov dword ptr [currentHash], 0x034E4557F   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0F7D1CC5A   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAlpcDeleteSecurityContext:
-    mov dword ptr [currentHash], 0x036CE2D46   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x00EB20922   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAlpcDisconnectPort:
-    mov dword ptr [currentHash], 0x065B1E3AB   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0A832B99C   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAlpcImpersonateClientContainerOfPort:
-    mov dword ptr [currentHash], 0x020B21AFC   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0E47FFFF0   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAlpcImpersonateClientOfPort:
-    mov dword ptr [currentHash], 0x064F4617E   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x05CF17968   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAlpcOpenSenderProcess:
-    mov dword ptr [currentHash], 0x04DE3063C   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0D5B5DA29   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAlpcOpenSenderThread:
-    mov dword ptr [currentHash], 0x01E8A443F   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x08C205696   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAlpcQueryInformation:
-    mov dword ptr [currentHash], 0x04A5C2941   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0BAABDCBF   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAlpcQueryInformationMessage:
-    mov dword ptr [currentHash], 0x0118B1414   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x013CCD0F0   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAlpcRevokeSecurityContext:
-    mov dword ptr [currentHash], 0x0F68FDB2E   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x00E5405DC   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAlpcSendWaitReceivePort:
-    mov dword ptr [currentHash], 0x020B14762   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x06CF789E6   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAlpcSetInformation:
-    mov dword ptr [currentHash], 0x01197F084   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0008E2FD3   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAreMappedFilesTheSame:
-    mov dword ptr [currentHash], 0x027A82032   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0D74AEEEE   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAssignProcessToJobObject:
-    mov dword ptr [currentHash], 0x07CC0458D   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x00C31852C   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAssociateWaitCompletionPacket:
-    mov dword ptr [currentHash], 0x01B8F30D0   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x00833388E   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCallEnclave:
-    mov dword ptr [currentHash], 0x006BA3FE8   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x01A961A3C   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCancelIoFileEx:
-    mov dword ptr [currentHash], 0x01882283B   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x09089DC52   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCancelSynchronousIoFile:
-    mov dword ptr [currentHash], 0x06ABB720C   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0F6C68015   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCancelTimer2:
-    mov dword ptr [currentHash], 0x00B9BEF4D   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0E81515BA   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCancelWaitCompletionPacket:
-    mov dword ptr [currentHash], 0x029AC4170   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0881D8E8F   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCommitComplete:
-    mov dword ptr [currentHash], 0x0FEB58C6A   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x038AC002E   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCommitEnlistment:
-    mov dword ptr [currentHash], 0x04F157E93   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0C226DBA2   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCommitRegistryTransaction:
-    mov dword ptr [currentHash], 0x0CE48E0D5   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0BAB5B825   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCommitTransaction:
-    mov dword ptr [currentHash], 0x0D0FA53CE   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x008802FD5   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCompactKeys:
-    mov dword ptr [currentHash], 0x079C07442   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0218E320A   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCompareObjects:
-    mov dword ptr [currentHash], 0x0219C1131   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x043D94753   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCompareSigningLevels:
-    mov dword ptr [currentHash], 0x0E35C1219   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x040920046   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCompareTokens:
-    mov dword ptr [currentHash], 0x0C5A6D90D   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x055DD3B01   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCompleteConnectPort:
-    mov dword ptr [currentHash], 0x0EE71FDFE   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x02172C21D   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCompressKey:
-    mov dword ptr [currentHash], 0x0C80F266F   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x01494070F   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtConnectPort:
-    mov dword ptr [currentHash], 0x064F07D5E   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x03CB1253C   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtConvertBetweenAuxiliaryCounterAndPerformanceCounter:
-    mov dword ptr [currentHash], 0x009A0774D   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x00BAA2533   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateDebugObject:
-    mov dword ptr [currentHash], 0x0AC3FACA3   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x002BCEAC0   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateDirectoryObject:
-    mov dword ptr [currentHash], 0x00CA42619   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x01AA5E4D8   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateDirectoryObjectEx:
-    mov dword ptr [currentHash], 0x0ACBCEE06   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x07C7C820A   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateEnclave:
-    mov dword ptr [currentHash], 0x008C62584   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0C691F25A   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateEnlistment:
-    mov dword ptr [currentHash], 0x018811F0A   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x03FD91D8F   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateEventPair:
-    mov dword ptr [currentHash], 0x000BDF8CB   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x010B64E7F   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateIRTimer:
-    mov dword ptr [currentHash], 0x043EF6178   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x03D851B32   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateIoCompletion:
-    mov dword ptr [currentHash], 0x08A10AA8F   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0030C65D9   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateJobObject:
-    mov dword ptr [currentHash], 0x0F8C7D448   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x08CA1E65E   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateJobSet:
-    mov dword ptr [currentHash], 0x00EA21C3D   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x082031A2F   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateKeyTransacted:
-    mov dword ptr [currentHash], 0x0924E0272   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0168A9797   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateKeyedEvent:
-    mov dword ptr [currentHash], 0x0F06AD23C   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0FE40BF96   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateLowBoxToken:
-    mov dword ptr [currentHash], 0x0145112E2   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0C3A1CD3E   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateMailslotFile:
-    mov dword ptr [currentHash], 0x026B9F48E   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0A7B12F95   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateMutant:
-    mov dword ptr [currentHash], 0x0C2442229   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0D34E2848   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateNamedPipeFile:
-    mov dword ptr [currentHash], 0x022997A2E   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x068F88CA2   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreatePagingFile:
-    mov dword ptr [currentHash], 0x05EB82864   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0D17C3A7D   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreatePartition:
-    mov dword ptr [currentHash], 0x0FEA7DCF3   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x08D2CE5F6   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreatePort:
-    mov dword ptr [currentHash], 0x02EBD1DF2   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0A276A3FA   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreatePrivateNamespace:
-    mov dword ptr [currentHash], 0x026885D0F   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x08C2F4972   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateProcess:
-    mov dword ptr [currentHash], 0x0E23BFBB7   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x03F9D2DF2   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateProfile:
-    mov dword ptr [currentHash], 0x0369BFCCA   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x004847E04   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateProfileEx:
-    mov dword ptr [currentHash], 0x0CA50092A   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x07A804447   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateRegistryTransaction:
-    mov dword ptr [currentHash], 0x003B03F1A   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x084ABC67A   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateResourceManager:
-    mov dword ptr [currentHash], 0x015813F3A   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x078228069   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateSemaphore:
-    mov dword ptr [currentHash], 0x076985058   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x078A6B50E   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateSymbolicLinkObject:
-    mov dword ptr [currentHash], 0x00AB6200B   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x008199015   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateThreadEx:
-    mov dword ptr [currentHash], 0x057BB8BFF   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x014AB4C6A   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateTimer:
-    mov dword ptr [currentHash], 0x019DE6356   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x073D6416A   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateTimer2:
-    mov dword ptr [currentHash], 0x04FC7CB11   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x019A559AB   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateToken:
-    mov dword ptr [currentHash], 0x03D990530   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x067C0594C   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateTokenEx:
-    mov dword ptr [currentHash], 0x0B8AAF67C   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x086830DB1   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateTransaction:
-    mov dword ptr [currentHash], 0x00413C643   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0D099D60D   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateTransactionManager:
-    mov dword ptr [currentHash], 0x005B29396   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x005222F9E   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateUserProcess:
-    mov dword ptr [currentHash], 0x0772F97B2   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0953FAE90   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateWaitCompletionPacket:
-    mov dword ptr [currentHash], 0x03D181D4C   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0F7C28B29   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateWaitablePort:
-    mov dword ptr [currentHash], 0x01C77DE29   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x066B24F6E   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateWnfStateName:
-    mov dword ptr [currentHash], 0x0A514230E   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0F4B2FD20   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateWorkerFactory:
-    mov dword ptr [currentHash], 0x0C899F62C   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x004951C72   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtDebugActiveProcess:
-    mov dword ptr [currentHash], 0x001DF6230   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0E03DD9B1   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtDebugContinue:
-    mov dword ptr [currentHash], 0x0315E22B6   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0769689CE   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtDeleteAtom:
-    mov dword ptr [currentHash], 0x0F22FADE4   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0E27EE5EC   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtDeleteBootEntry:
-    mov dword ptr [currentHash], 0x0EBB616C1   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0018D35C0   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtDeleteDriverEntry:
-    mov dword ptr [currentHash], 0x0C98135F6   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x00F827B0E   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtDeleteFile:
-    mov dword ptr [currentHash], 0x09244C08C   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0E245E0DC   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtDeleteKey:
-    mov dword ptr [currentHash], 0x0EB5F0535   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x09F2B8EB0   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtDeleteObjectAuditAlarm:
-    mov dword ptr [currentHash], 0x036B73E2A   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x098DEA590   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtDeletePrivateNamespace:
-    mov dword ptr [currentHash], 0x014B0D41D   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x03E90470D   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtDeleteValueKey:
-    mov dword ptr [currentHash], 0x086BBF741   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x006FB3741   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtDeleteWnfStateData:
-    mov dword ptr [currentHash], 0x0D28DF8C6   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0C3793369   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtDeleteWnfStateName:
-    mov dword ptr [currentHash], 0x00CB7D3F7   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0ED431050   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtDisableLastKnownGood:
-    mov dword ptr [currentHash], 0x0584904F1   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0E9C0F37E   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtDisplayString:
-    mov dword ptr [currentHash], 0x0068E6E0A   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x07ECE6A5E   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtDrawText:
-    mov dword ptr [currentHash], 0x0FF03C0C9   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0E0BAEB2D   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtEnableLastKnownGood:
-    mov dword ptr [currentHash], 0x035A5C8FC   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0B029493F   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtEnumerateBootEntries:
-    mov dword ptr [currentHash], 0x0F0A400D8   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x02D911828   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtEnumerateDriverEntries:
-    mov dword ptr [currentHash], 0x0278FA994   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0E153F3CC   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtEnumerateSystemEnvironmentValuesEx:
-    mov dword ptr [currentHash], 0x0B14C0C69   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x043531F97   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtEnumerateTransactionObject:
-    mov dword ptr [currentHash], 0x016C72875   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0CEE626CD   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtExtendSection:
-    mov dword ptr [currentHash], 0x0F2EF9477   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x09F90DB3A   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtFilterBootOption:
-    mov dword ptr [currentHash], 0x00CA40831   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0048E3803   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtFilterToken:
-    mov dword ptr [currentHash], 0x09BA0F53C   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x007921D1A   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtFilterTokenEx:
-    mov dword ptr [currentHash], 0x0169A6C78   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x00C875654   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtFlushBuffersFileEx:
-    mov dword ptr [currentHash], 0x0698724B2   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x00AA9CC97   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtFlushInstallUILanguage:
-    mov dword ptr [currentHash], 0x003D5720E   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x01FBBD112   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtFlushInstructionCache:
-    mov dword ptr [currentHash], 0x0BF9B3985   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x01526D977   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtFlushKey:
-    mov dword ptr [currentHash], 0x0FB2180C1   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x02D9F0A32   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtFlushProcessWriteBuffers:
-    mov dword ptr [currentHash], 0x03EBC7A6C   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0E8B9EE28   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtFlushVirtualMemory:
-    mov dword ptr [currentHash], 0x081188797   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x009A2794B   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtFlushWriteBuffer:
-    mov dword ptr [currentHash], 0x0CD983AFC   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x06DB47D2B   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtFreeUserPhysicalPages:
-    mov dword ptr [currentHash], 0x009BE2C2E   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x012B3FAA8   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtFreezeRegistry:
-    mov dword ptr [currentHash], 0x03F5329FD   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0028F15E3   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtFreezeTransactions:
-    mov dword ptr [currentHash], 0x0079B2B0D   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0811EB399   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtGetCachedSigningLevel:
-    mov dword ptr [currentHash], 0x0735B09B6   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x064F8ABA4   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtGetCompleteWnfStateSubscription:
-    mov dword ptr [currentHash], 0x00C4A00D7   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x046CE265B   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtGetContextThread:
-    mov dword ptr [currentHash], 0x01430D111   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x01CF8EEE9   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtGetCurrentProcessorNumber:
-    mov dword ptr [currentHash], 0x01A87101A   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x00CA2F4E8   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtGetCurrentProcessorNumberEx:
-    mov dword ptr [currentHash], 0x08A9D2AA6   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0DC4B2131   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtGetDevicePowerState:
-    mov dword ptr [currentHash], 0x0768F782E   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x03090393C   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtGetMUIRegistryInfo:
-    mov dword ptr [currentHash], 0x05E3E52A3   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x01DA1010A   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtGetNextProcess:
-    mov dword ptr [currentHash], 0x0D79D29F1   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0C12FC2B0   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtGetNextThread:
-    mov dword ptr [currentHash], 0x0B290EE20   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0399EF43F   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtGetNlsSectionPtr:
-    mov dword ptr [currentHash], 0x0E757EDCF   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x07AD39C47   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtGetNotificationResourceManager:
-    mov dword ptr [currentHash], 0x0B207D8FB   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x01F884540   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtGetWriteWatch:
-    mov dword ptr [currentHash], 0x032FF1662   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x09059EACA   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtImpersonateAnonymousToken:
-    mov dword ptr [currentHash], 0x005919C9A   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x01F810F3C   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtImpersonateThread:
-    mov dword ptr [currentHash], 0x072AA3003   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x026872421   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtInitializeEnclave:
-    mov dword ptr [currentHash], 0x0C25592FE   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0D48B0A2E   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtInitializeNlsFiles:
-    mov dword ptr [currentHash], 0x060D65368   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x09C00BB9A   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtInitializeRegistry:
-    mov dword ptr [currentHash], 0x0028E0601   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0DCCD25BC   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtInitiatePowerAction:
-    mov dword ptr [currentHash], 0x0DB4C38DD   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0100CF11F   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtIsSystemResumeAutomatic:
-    mov dword ptr [currentHash], 0x00A80C7D2   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x082891F8A   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtIsUILanguageComitted:
-    mov dword ptr [currentHash], 0x01F8C5523   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0839EC332   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtListenPort:
-    mov dword ptr [currentHash], 0x0DA32C7BC   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x06171987F   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtLoadDriver:
-    mov dword ptr [currentHash], 0x04C9F2584   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0BEA4C9A5   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtLoadEnclaveData:
-    mov dword ptr [currentHash], 0x083421171   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x042999034   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtLoadHotPatch:
-    mov dword ptr [currentHash], 0x0E0FEEF59   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x090CD6BA9   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtLoadKey:
-    mov dword ptr [currentHash], 0x0192E3B77   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0407CC165   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtLoadKey2:
-    mov dword ptr [currentHash], 0x06E3743E8   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0253C6F20   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtLoadKeyEx:
-    mov dword ptr [currentHash], 0x0DA59E0E4   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x00B19CF44   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtLockFile:
-    mov dword ptr [currentHash], 0x0B9742B43   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x078F0547A   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtLockProductActivationKeys:
-    mov dword ptr [currentHash], 0x0F389F61F   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x032D62CB5   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtLockRegistryKey:
-    mov dword ptr [currentHash], 0x0D461C7FA   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x01F27FA45   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtLockVirtualMemory:
-    mov dword ptr [currentHash], 0x00D91191D   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0CD5FC9D3   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtMakePermanentObject:
-    mov dword ptr [currentHash], 0x0CA949839   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0A4BAAE24   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtMakeTemporaryObject:
-    mov dword ptr [currentHash], 0x08AD579BA   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0849C9E11   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtManagePartition:
-    mov dword ptr [currentHash], 0x040AA2075   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x03CB1DE21   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtMapCMFModule:
-    mov dword ptr [currentHash], 0x0C28E0839   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x04CEE1854   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtMapUserPhysicalPages:
-    mov dword ptr [currentHash], 0x0459D1E56   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x049CF5E48   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtMapViewOfSectionEx:
-    mov dword ptr [currentHash], 0x00564C018   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0B952E586   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtModifyBootEntry:
-    mov dword ptr [currentHash], 0x00DBB0738   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x03D9B1738   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtModifyDriverEntry:
-    mov dword ptr [currentHash], 0x00B963CD8   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x00B961D18   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtNotifyChangeDirectoryFile:
-    mov dword ptr [currentHash], 0x03E197EBE   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0CD7BBBE1   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtNotifyChangeDirectoryFileEx:
-    mov dword ptr [currentHash], 0x044A78CD8   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0689A244F   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtNotifyChangeKey:
-    mov dword ptr [currentHash], 0x00E9AC8C5   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x00AD3E8A8   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtNotifyChangeMultipleKeys:
-    mov dword ptr [currentHash], 0x022064DDA   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0DFCEA82C   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtNotifyChangeSession:
-    mov dword ptr [currentHash], 0x00D9F2D10   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x067CD4B4E   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtOpenEnlistment:
-    mov dword ptr [currentHash], 0x017B82813   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x009A70C3D   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtOpenEventPair:
-    mov dword ptr [currentHash], 0x0103038A5   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x05017B441   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtOpenIoCompletion:
-    mov dword ptr [currentHash], 0x0548E7459   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x021544259   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtOpenJobObject:
-    mov dword ptr [currentHash], 0x001980702   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0C29CEC21   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtOpenKeyEx:
-    mov dword ptr [currentHash], 0x07B95AFCA   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x073D4BF60   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtOpenKeyTransacted:
-    mov dword ptr [currentHash], 0x0A8FB60D7   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0130E9110   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtOpenKeyTransactedEx:
-    mov dword ptr [currentHash], 0x0C42D0677   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x01C1E50DA   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtOpenKeyedEvent:
-    mov dword ptr [currentHash], 0x02E8E3124   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x03AB15D6A   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtOpenMutant:
-    mov dword ptr [currentHash], 0x0288A4F18   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x03CB610E6   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtOpenObjectAuditAlarm:
-    mov dword ptr [currentHash], 0x008AE0E3E   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x06EAF6E02   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtOpenPartition:
-    mov dword ptr [currentHash], 0x072A21669   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x078E04669   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtOpenPrivateNamespace:
-    mov dword ptr [currentHash], 0x028825B6D   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0AE126BB0   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtOpenProcessToken:
-    mov dword ptr [currentHash], 0x087365F9C   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0390D01A4   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtOpenRegistryTransaction:
-    mov dword ptr [currentHash], 0x04E800855   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0CE85EA5F   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtOpenResourceManager:
-    mov dword ptr [currentHash], 0x03399071C   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x015BDE3BD   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtOpenSemaphore:
-    mov dword ptr [currentHash], 0x0469013A0   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x03EB437D8   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtOpenSession:
-    mov dword ptr [currentHash], 0x0D44DF2DD   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0F56EF5F8   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtOpenSymbolicLinkObject:
-    mov dword ptr [currentHash], 0x084B0BC14   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0A63B9E97   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtOpenThread:
-    mov dword ptr [currentHash], 0x0F4A8F800   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0EEC9E46F   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtOpenTimer:
-    mov dword ptr [currentHash], 0x057942716   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x00FCF7540   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtOpenTransaction:
-    mov dword ptr [currentHash], 0x01E45F059   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0CEC5EA57   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtOpenTransactionManager:
-    mov dword ptr [currentHash], 0x005339316   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0C415D4B7   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtPlugPlayControl:
-    mov dword ptr [currentHash], 0x0907C94D4   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0B16DD7FF   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtPrePrepareComplete:
-    mov dword ptr [currentHash], 0x02CB80836   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x038A1DEAA   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtPrePrepareEnlistment:
-    mov dword ptr [currentHash], 0x0D6B9FF23   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x00BA4CCFF   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtPrepareComplete:
-    mov dword ptr [currentHash], 0x0B42E80A4   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x01884040A   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtPrepareEnlistment:
-    mov dword ptr [currentHash], 0x077D95E03   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0086715F5   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtPrivilegeCheck:
-    mov dword ptr [currentHash], 0x006B9190B   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x03497252B   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtPrivilegeObjectAuditAlarm:
-    mov dword ptr [currentHash], 0x04A85BACA   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x01E5000FC   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtPrivilegedServiceAuditAlarm:
-    mov dword ptr [currentHash], 0x0D03ED4A8   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x01F91F00D   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtPropagationComplete:
-    mov dword ptr [currentHash], 0x02EBBB080   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x02F57C91A   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtPropagationFailed:
-    mov dword ptr [currentHash], 0x016974428   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x08C9AF84A   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtPulseEvent:
-    mov dword ptr [currentHash], 0x08002F9EC   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x082BF8928   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryAuxiliaryCounterFrequency:
-    mov dword ptr [currentHash], 0x0122575CA   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0A81B85BE   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryBootEntryOrder:
-    mov dword ptr [currentHash], 0x0F3F1E155   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0DD40F219   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryBootOptions:
-    mov dword ptr [currentHash], 0x0DB8918DE   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x07A15AA30   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryDebugFilterState:
-    mov dword ptr [currentHash], 0x01291E890   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x016B43DF8   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryDirectoryFileEx:
-    mov dword ptr [currentHash], 0x07657248A   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0C5597C59   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryDirectoryObject:
-    mov dword ptr [currentHash], 0x019A1EFDB   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0E73AEDA4   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryDriverEntryOrder:
-    mov dword ptr [currentHash], 0x0A3818135   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0AB9A9331   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryEaFile:
-    mov dword ptr [currentHash], 0x0ACFC53A8   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x01E3E991D   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryFullAttributesFile:
-    mov dword ptr [currentHash], 0x094D79573   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x09CC89062   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryInformationAtom:
-    mov dword ptr [currentHash], 0x0B322BAB9   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0FE692358   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryInformationByName:
-    mov dword ptr [currentHash], 0x0FBD1B4FB   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0A61EB9A5   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryInformationEnlistment:
-    mov dword ptr [currentHash], 0x069D30C25   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0861B979E   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryInformationJobObject:
-    mov dword ptr [currentHash], 0x00CB7F8E8   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x014BF0E31   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryInformationPort:
-    mov dword ptr [currentHash], 0x09F33BA9B   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x01AB53D1E   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryInformationResourceManager:
-    mov dword ptr [currentHash], 0x0AD33B19A   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x00B331392   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryInformationTransaction:
-    mov dword ptr [currentHash], 0x01B48C70A   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0E14D0A1B   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryInformationTransactionManager:
-    mov dword ptr [currentHash], 0x019A1436A   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x086259A8F   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryInformationWorkerFactory:
-    mov dword ptr [currentHash], 0x018970400   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0FE6EECE2   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryInstallUILanguage:
-    mov dword ptr [currentHash], 0x065B76014   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0EC0EED97   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryIntervalProfile:
-    mov dword ptr [currentHash], 0x02CBEC52C   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0EE59C6CA   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryIoCompletion:
-    mov dword ptr [currentHash], 0x08C9BEC09   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x09E07A285   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryLicenseValue:
-    mov dword ptr [currentHash], 0x04EDE4376   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x03CA4E8EA   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryMultipleValueKey:
-    mov dword ptr [currentHash], 0x03D9CD0FE   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x031982403   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryMutant:
-    mov dword ptr [currentHash], 0x0E4BDE72A   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0004F01C5   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryOpenSubKeys:
-    mov dword ptr [currentHash], 0x0AF28BAA8   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x045DD4A42   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryOpenSubKeysEx:
-    mov dword ptr [currentHash], 0x009874730   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0399CF9E4   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryPortInformationProcess:
-    mov dword ptr [currentHash], 0x0C15E3A30   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x01C025DDE   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryQuotaInformationFile:
-    mov dword ptr [currentHash], 0x0EEBF946F   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x06D3D3189   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQuerySecurityAttributesToken:
-    mov dword ptr [currentHash], 0x027923314   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0E2462E1D   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQuerySecurityObject:
-    mov dword ptr [currentHash], 0x09EB5A618   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x02A3454A9   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQuerySecurityPolicy:
-    mov dword ptr [currentHash], 0x0ACBFB522   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0ECDAD36D   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQuerySemaphore:
-    mov dword ptr [currentHash], 0x05EC86050   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0F4181594   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQuerySymbolicLinkObject:
-    mov dword ptr [currentHash], 0x0183B6CFB   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0869E8C00   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQuerySystemEnvironmentValue:
-    mov dword ptr [currentHash], 0x0B3B0DA22   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x014A2E2B2   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQuerySystemEnvironmentValueEx:
-    mov dword ptr [currentHash], 0x05195B0ED   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0F811056B   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQuerySystemInformationEx:
-    mov dword ptr [currentHash], 0x02CDA5628   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0F69123CF   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryTimerResolution:
-    mov dword ptr [currentHash], 0x01CF6E2B7   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x00C9A0C0D   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryWnfStateData:
-    mov dword ptr [currentHash], 0x018BFFAFC   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0A707AC6D   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueryWnfStateNameInformation:
-    mov dword ptr [currentHash], 0x0CC86EE52   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x00E907213   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQueueApcThreadEx:
-    mov dword ptr [currentHash], 0x08498D246   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0C4D91783   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtRaiseException:
-    mov dword ptr [currentHash], 0x008922C47   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x03AEE15B3   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtRaiseHardError:
-    mov dword ptr [currentHash], 0x0F9AEFB3F   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0C24EE0DE   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtReadOnlyEnlistment:
-    mov dword ptr [currentHash], 0x0FA9DD94A   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x04C562F41   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtRecoverEnlistment:
-    mov dword ptr [currentHash], 0x076B810A2   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0AF92DC15   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtRecoverResourceManager:
-    mov dword ptr [currentHash], 0x01B2303A2   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0B267D89B   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtRecoverTransactionManager:
-    mov dword ptr [currentHash], 0x00DAE7326   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0098E6716   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtRegisterProtocolAddressInformation:
-    mov dword ptr [currentHash], 0x09687B413   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x013851510   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtRegisterThreadTerminatePort:
-    mov dword ptr [currentHash], 0x060B00560   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x036F4733A   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtReleaseKeyedEvent:
-    mov dword ptr [currentHash], 0x0305F23D8   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0C04AF9FE   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtReleaseWorkerFactoryWorker:
-    mov dword ptr [currentHash], 0x0308C0C3F   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x069404395   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtRemoveIoCompletionEx:
-    mov dword ptr [currentHash], 0x07A91BDEE   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0849743E9   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtRemoveProcessDebug:
-    mov dword ptr [currentHash], 0x020DDCE8A   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x058A1B6F6   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtRenameKey:
-    mov dword ptr [currentHash], 0x017AD0430   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x063FC9FF8   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtRenameTransactionManager:
-    mov dword ptr [currentHash], 0x02D96E6CC   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x02991E0CA   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtReplaceKey:
-    mov dword ptr [currentHash], 0x0992CFAF0   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0A9E78850   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtReplacePartitionUnit:
-    mov dword ptr [currentHash], 0x038BB0038   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0A834A2B2   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtReplyWaitReplyPort:
-    mov dword ptr [currentHash], 0x022B41AF8   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0BA38AFB8   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtRequestPort:
-    mov dword ptr [currentHash], 0x02235399A   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x010B22D1C   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtResetEvent:
-    mov dword ptr [currentHash], 0x0F89BE31C   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x068CB6B5C   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtResetWriteWatch:
-    mov dword ptr [currentHash], 0x064AB683E   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x00CE1FABE   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtRestoreKey:
-    mov dword ptr [currentHash], 0x06B4F0D50   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0CBF2AE6D   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtResumeProcess:
-    mov dword ptr [currentHash], 0x04DDB4E44   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x065DB6654   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtRevertContainerImpersonation:
-    mov dword ptr [currentHash], 0x0178C371E   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0C649C6DB   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtRollbackComplete:
-    mov dword ptr [currentHash], 0x07AA6239A   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x058B47036   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtRollbackEnlistment:
-    mov dword ptr [currentHash], 0x016B0312A   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x009A32A34   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtRollbackRegistryTransaction:
-    mov dword ptr [currentHash], 0x014B67E73   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x01853DAFF   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtRollbackTransaction:
-    mov dword ptr [currentHash], 0x0FE67DEF5   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0E6CDE257   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtRollforwardTransactionManager:
-    mov dword ptr [currentHash], 0x09E3DBE8F   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x00FB2579C   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSaveKey:
-    mov dword ptr [currentHash], 0x022FD1347   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x043957E22   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSaveKeyEx:
-    mov dword ptr [currentHash], 0x031BB6764   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x03BB0EFEC   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSaveMergedKeys:
-    mov dword ptr [currentHash], 0x0E27CCBDF   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x061DA644C   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSecureConnectPort:
-    mov dword ptr [currentHash], 0x02CA10D7C   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x064EE4140   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSerializeBoot:
-    mov dword ptr [currentHash], 0x0292179E4   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0ACF829E0   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetBootEntryOrder:
-    mov dword ptr [currentHash], 0x00F128301   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0714E07B7   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetBootOptions:
-    mov dword ptr [currentHash], 0x014841A1A   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0539F9DC3   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetCachedSigningLevel:
-    mov dword ptr [currentHash], 0x0AE21AEBC   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0309B7420   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetCachedSigningLevel2:
-    mov dword ptr [currentHash], 0x0128F511E   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x010ABA14C   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetContextThread:
-    mov dword ptr [currentHash], 0x0923D5C97   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0341FF936   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetDebugFilterState:
-    mov dword ptr [currentHash], 0x034CF46D6   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x00CB2781C   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetDefaultHardErrorPort:
-    mov dword ptr [currentHash], 0x024B02D2E   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x026B23B30   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetDefaultLocale:
-    mov dword ptr [currentHash], 0x0022B18AF   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0353ACB21   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetDefaultUILanguage:
-    mov dword ptr [currentHash], 0x0BD933DAF   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x015BA1616   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetDriverEntryOrder:
-    mov dword ptr [currentHash], 0x060495CC3   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0F248DAEE   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetEaFile:
-    mov dword ptr [currentHash], 0x063B93B0D   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x036812637   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetHighEventPair:
-    mov dword ptr [currentHash], 0x017B62116   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0C29395B2   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetHighWaitLowEventPair:
-    mov dword ptr [currentHash], 0x0A232A2AB   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x04C005881   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetIRTimer:
-    mov dword ptr [currentHash], 0x005CB328A   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0139F1504   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetInformationDebugObject:
-    mov dword ptr [currentHash], 0x03A87AA8B   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0795A51D9   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetInformationEnlistment:
-    mov dword ptr [currentHash], 0x05FD57A7F   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0CD50ECE5   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetInformationJobObject:
-    mov dword ptr [currentHash], 0x004BC3E31   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x024B82225   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetInformationKey:
-    mov dword ptr [currentHash], 0x02CF55107   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x09085B12D   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetInformationResourceManager:
-    mov dword ptr [currentHash], 0x0A3602878   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0DE47CAE5   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetInformationSymbolicLink:
-    mov dword ptr [currentHash], 0x06AFD601C   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x041D54261   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetInformationToken:
-    mov dword ptr [currentHash], 0x03005ED36   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x02B95753A   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetInformationTransaction:
-    mov dword ptr [currentHash], 0x076A37037   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x09813AA9F   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetInformationTransactionManager:
-    mov dword ptr [currentHash], 0x002A39083   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x07B2363A2   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetInformationVirtualMemory:
-    mov dword ptr [currentHash], 0x0C553EFC1   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x042535CB7   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetInformationWorkerFactory:
-    mov dword ptr [currentHash], 0x0E4AEE222   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x04890306E   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetIntervalProfile:
-    mov dword ptr [currentHash], 0x00C578470   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x082157840   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetIoCompletion:
-    mov dword ptr [currentHash], 0x09649CAE3   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x04AA27069   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetIoCompletionEx:
-    mov dword ptr [currentHash], 0x040AA8FFD   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x030CAC6B4   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetLdtEntries:
-    mov dword ptr [currentHash], 0x0B793C473   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x01E87311D   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetLowEventPair:
-    mov dword ptr [currentHash], 0x05D12BA4B   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x010B3CCFD   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetLowWaitHighEventPair:
-    mov dword ptr [currentHash], 0x050D47049   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x062AE067B   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetQuotaInformationFile:
-    mov dword ptr [currentHash], 0x02AA61E30   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x081155931   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetSecurityObject:
-    mov dword ptr [currentHash], 0x012027EF2   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0A698883A   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetSystemEnvironmentValue:
-    mov dword ptr [currentHash], 0x04ABAA932   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x035265E32   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetSystemEnvironmentValueEx:
-    mov dword ptr [currentHash], 0x073893534   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0EF14186B   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetSystemInformation:
-    mov dword ptr [currentHash], 0x01A4A3CDF   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x08C97D237   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetSystemPowerState:
-    mov dword ptr [currentHash], 0x036B9FC16   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0F5B40CE8   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetSystemTime:
-    mov dword ptr [currentHash], 0x020EE2F45   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x09A8EA717   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetThreadExecutionState:
-    mov dword ptr [currentHash], 0x016B40038   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x026DDDD82   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetTimer2:
-    mov dword ptr [currentHash], 0x019429A8F   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x03F979F01   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetTimerEx:
-    mov dword ptr [currentHash], 0x0765BD266   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x040AF6214   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetTimerResolution:
-    mov dword ptr [currentHash], 0x0228DCCD1   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0009A624F   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetUuidSeed:
-    mov dword ptr [currentHash], 0x09DA85118   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x002401EFF   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetVolumeInformationFile:
-    mov dword ptr [currentHash], 0x0583D32FA   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0D647E8D4   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetWnfProcessNotificationEvent:
-    mov dword ptr [currentHash], 0x00EAC032C   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0F06B1976   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtShutdownSystem:
-    mov dword ptr [currentHash], 0x0005FD37F   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x004AF2B3C   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtShutdownWorkerFactory:
-    mov dword ptr [currentHash], 0x038AF263A   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0C096F42B   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSignalAndWaitForSingleObject:
-    mov dword ptr [currentHash], 0x03A99AA95   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0C69CC001   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSinglePhaseReject:
-    mov dword ptr [currentHash], 0x0B51E4D73   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x088D6A466   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtStartProfile:
-    mov dword ptr [currentHash], 0x08119473B   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0FC240D70   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtStopProfile:
-    mov dword ptr [currentHash], 0x0E8BDE11B   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0049DC2C0   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSubscribeWnfStateChange:
-    mov dword ptr [currentHash], 0x076E4A158   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0FFBE08E3   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSuspendProcess:
-    mov dword ptr [currentHash], 0x0A33DA0A2   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0FC20DBBD   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSuspendThread:
-    mov dword ptr [currentHash], 0x0B885663F   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0301F3CB6   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSystemDebugControl:
-    mov dword ptr [currentHash], 0x07FAA0B7D   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0C09401C2   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtTerminateEnclave:
-    mov dword ptr [currentHash], 0x0E129EFC3   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0FB9B1A17   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtTerminateJobObject:
-    mov dword ptr [currentHash], 0x064DC5E51   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0F451E4CD   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtTestAlert:
-    mov dword ptr [currentHash], 0x08C979512   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x04CCE691E   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtThawRegistry:
-    mov dword ptr [currentHash], 0x0F05EF4D3   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x01A8E0C1F   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtThawTransactions:
-    mov dword ptr [currentHash], 0x03BAB0319   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0F6A4904F   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtTraceControl:
-    mov dword ptr [currentHash], 0x04D164FFF   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x073AC7F4F   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtTranslateFilePath:
-    mov dword ptr [currentHash], 0x0302EDD2A   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x09A144750   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtUmsThreadYield:
-    mov dword ptr [currentHash], 0x0F4AACEFC   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0A79B76AF   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtUnloadDriver:
-    mov dword ptr [currentHash], 0x0109B0810   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x036A713F4   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtUnloadKey:
-    mov dword ptr [currentHash], 0x0685111A1   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0AC00B581   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtUnloadKey2:
-    mov dword ptr [currentHash], 0x0C9399254   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x02DACC778   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtUnloadKeyEx:
-    mov dword ptr [currentHash], 0x05BF01D0E   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x093812F45   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtUnlockFile:
-    mov dword ptr [currentHash], 0x034B33E13   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0D960EF3B   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtUnlockVirtualMemory:
-    mov dword ptr [currentHash], 0x0C3952B06   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0001260FC   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtUnmapViewOfSectionEx:
-    mov dword ptr [currentHash], 0x08695DA30   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x052D09268   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtUnsubscribeWnfStateChange:
-    mov dword ptr [currentHash], 0x03EEF276A   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x08425F188   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtUpdateWnfStateData:
-    mov dword ptr [currentHash], 0x0E6B8328E   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0FC4209D8   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtVdmControl:
-    mov dword ptr [currentHash], 0x0099A2D09   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x00751C1FB   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtWaitForAlertByThreadId:
-    mov dword ptr [currentHash], 0x04DB6692F   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x060B6106A   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtWaitForDebugEvent:
-    mov dword ptr [currentHash], 0x0F2ADF320   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x00A801B24   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtWaitForKeyedEvent:
-    mov dword ptr [currentHash], 0x05B3044A2   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x080AAE94C   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtWaitForWorkViaWorkerFactory:
-    mov dword ptr [currentHash], 0x00E924644   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0871AAFB5   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtWaitHighEventPair:
-    mov dword ptr [currentHash], 0x0A411AC8F   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x001343783   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtWaitLowEventPair:
-    mov dword ptr [currentHash], 0x04D104387   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x01445ED32   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtAcquireCMFViewOwnership:
-    mov dword ptr [currentHash], 0x01C84C6CE   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x074AD6802   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCancelDeviceWakeupRequest:
-    mov dword ptr [currentHash], 0x003AEEBB2   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x09338D3F4   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtClearAllSavepointsTransaction:
-    mov dword ptr [currentHash], 0x0052D237D   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x04CB423A9   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtClearSavepointTransaction:
-    mov dword ptr [currentHash], 0x0CE93C407   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0173117A3   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtRollbackSavepointTransaction:
-    mov dword ptr [currentHash], 0x05EC15855   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0C881F62D   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSavepointTransaction:
-    mov dword ptr [currentHash], 0x00E0530A9   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0DA42DCD5   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSavepointComplete:
-    mov dword ptr [currentHash], 0x056D6B694   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0449813B2   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateSectionEx:
-    mov dword ptr [currentHash], 0x0FEAD01DB   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x050B393E9   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtCreateCrossVmEvent:
-    mov dword ptr [currentHash], 0x038650DDC   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0C888CD1E   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtGetPlugPlayEvent:
-    mov dword ptr [currentHash], 0x0508E3B58   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x098B99A2F   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtListTransactions:
-    mov dword ptr [currentHash], 0x03BA93B03   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x015B77575   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtMarshallTransaction:
-    mov dword ptr [currentHash], 0x0F236FAAD   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x000AA223B   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtPullTransaction:
-    mov dword ptr [currentHash], 0x01C17FD04   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0C02BE6BB   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtReleaseCMFViewOwnership:
-    mov dword ptr [currentHash], 0x03AA2D23A   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0308CDA16   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtWaitForWnfNotifications:
-    mov dword ptr [currentHash], 0x00D962B4D   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x00F952B4F   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtStartTm:
-    mov dword ptr [currentHash], 0x03D900EDE   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0E24E0535   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtSetInformationProcess:
-    mov dword ptr [currentHash], 0x0E2462417   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x03994140C   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtRequestDeviceWakeup:
-    mov dword ptr [currentHash], 0x015805550   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x005A52EFE   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtRequestWakeupLatency:
-    mov dword ptr [currentHash], 0x09A4FB3EE   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0962DFBC0   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtQuerySystemTime:
-    mov dword ptr [currentHash], 0x074CF7D6B   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0BA3EB39B   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtManageHotPatch:
-    mov dword ptr [currentHash], 0x07E4706A4   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0130F9C29   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 NtContinueEx:
-    mov dword ptr [currentHash], 0x013CF4512   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x073722FD6   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 
 RtlCreateUserThread:
-    mov dword ptr [currentHash], 0x07CE03635   # Load function hash into global variable.
+    mov dword ptr [currentHash + RIP], 0x0A808B6B1   # Load function hash into global variable.
     call WhisperMain                           # Resolve function hash into syscall number and make the call
 
 

@@ -1,9 +1,19 @@
-#include "<BASENAME>.h"
+#include "Syscalls.h"
+#include <time.h>
+#include <stdint.h>
 
 // Code below is adapted from @modexpblog. Read linked article for more details.
 // https://www.mdsec.co.uk/2020/12/bypassing-user-mode-hooks-and-direct-invocation-of-system-calls-for-red-teams
 
 SW2_SYSCALL_LIST SW2_SyscallList = { 0, 1 };
+
+#ifdef RANDSYSCALL
+#ifndef _WIN64
+uint32_t ntdllBase = 0;
+#else
+uint64_t ntdllBase = 0;
+#endif
+#endif
 
 DWORD SW2_HashSyscall(PCSTR FunctionName)
 {
@@ -55,6 +65,14 @@ BOOL SW2_PopulateSyscallList(void)
     }
 
     if (!ExportDirectory) return FALSE;
+    
+#ifdef RANDSYSCALL
+#ifdef _WIN64
+    ntdllBase = (uint64_t)DllBase;
+#else
+    ntdllBase = (uint64_t)DllBase;
+#endif
+#endif
 
     DWORD NumberOfNames = ExportDirectory->NumberOfNames;
     PDWORD Functions = SW2_RVA2VA(PDWORD, DllBase, ExportDirectory->AddressOfFunctions);
@@ -122,3 +140,39 @@ EXTERN_C DWORD SW2_GetSyscallNumber(DWORD FunctionHash)
 
     return -1;
 }
+
+#ifdef RANDSYSCALL
+#ifdef _WIN64
+EXTERN_C uint64_t SW2_GetRandomSyscallAddress(void)
+#else
+EXTERN_C DWORD SW2_GetRandomSyscallAddress(int callType)
+#endif
+{
+    int instructOffset = 0;
+    int instructValue = 0;
+#ifndef _WIN64
+    // Wow64
+    if (callType == 0)
+    {
+        instructOffset = 0x05;
+        instructValue = 0x0E8;
+    }
+    // x86
+    else if (callType == 1)
+    {
+        instructOffset = 0x05;
+        instructValue = 0x0BA;
+    }
+#else
+    instructOffset = 0x12;
+    instructValue = 0x0F;
+#endif
+    srand(time(0));
+    do
+    {
+        int randNum = (rand() % (SW2_SyscallList.Count + 1));
+        if (*(unsigned char*)(ntdllBase + SW2_SyscallList.Entries[randNum].Address + instructOffset) == instructValue)
+            return (ntdllBase + SW2_SyscallList.Entries[randNum].Address + instructOffset);
+    } while(1);
+}
+#endif

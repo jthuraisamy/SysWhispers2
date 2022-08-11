@@ -45,27 +45,39 @@ py .\syswhispers.py --functions NtProtectVirtualMemory,NtWriteVirtualMemory -o s
 
 ```
 PS C:\Projects\SysWhispers2> py .\syswhispers.py --preset common --out-file syscalls_common
-                                                 
-                  .                         ,--. 
-,-. . . ,-. . , , |-. o ,-. ,-. ,-. ,-. ,-.    / 
-`-. | | `-. |/|/  | | | `-. | | |-' |   `-. ,-'  
-`-' `-| `-' ' '   ' ' ' `-' |-' `-' '   `-' `--- 
-     /|                     |  @Jackson_T        
-    `-'                     '  @modexpblog, 2021 
+
+python syswhispers.py -p all -a all -l all -o example-output/Syscalls
+
+                  .                         ,--.
+,-. . . ,-. . , , |-. o ,-. ,-. ,-. ,-. ,-.    /
+`-. | | `-. |/|/  | | | `-. | | |-' |   `-. ,-'
+`-' `-| `-' ' '   ' ' ' `-' |-' `-' '   `-' `---
+     /|                     |  @Jackson_T
+    `-'                     '  @modexpblog, 2021
 
 SysWhispers2: Why call the kernel when you can whisper?
 
 All functions selected.
 
 Complete! Files written to:
-        Syscalls.h
-        Syscalls.c
-        SyscallsStubs.x86.asm
-        SyscallsStubs.x86.nasm
-        SyscallsStubs.x86.s
-        SyscallsStubs.x64.asm
-        SyscallsStubs.x64.nasm
-        SyscallsStubs.x64.s
+        example-output/Syscalls.h
+        example-output/Syscalls.c
+        example-output/SyscallsStubs.std.x86.asm
+        example-output/SyscallsStubs.rnd.x86.asm
+        example-output/SyscallsStubs.std.x86.nasm
+        example-output/SyscallsStubs.rnd.x86.nasm
+        example-output/SyscallsStubs.std.x86.s
+        example-output/SyscallsStubs.rnd.x86.s
+        example-output/SyscallsInline.std.x86.h
+        example-output/SyscallsInline.rnd.x86.h
+        example-output/SyscallsStubs.std.x64.asm
+        example-output/SyscallsStubs.rnd.x64.asm
+        example-output/SyscallsStubs.std.x64.nasm
+        example-output/SyscallsStubs.rnd.x64.nasm
+        example-output/SyscallsStubs.std.x64.s
+        example-output/SyscallsStubs.rnd.x64.s
+        example-output/SyscallsInline.std.x64.h
+        example-output/SyscallsInline.rnd.x64.h
 ```
 
 ### Before-and-After Example of Classic `CreateRemoteThread` DLL Injection
@@ -184,7 +196,7 @@ The following examples demonstrate how to compile the above example programs as 
 
 ```
 i686-w64-mingw32-gcc -c main.c syscalls.c -Wall -shared
-nasm -f win32 -o syscallsstubs.x86.o syscallsstubs.x86.nasm
+nasm -f win32 -o syscallsstubs.std.x86.o syscallsstubs.std.x86.nasm
 i686-w64-mingw32-gcc *.o -o temp.exe
 i686-w64-mingw32-strip -s temp.exe -o example.exe
 rm -rf *.o temp.exe
@@ -194,7 +206,7 @@ rm -rf *.o temp.exe
 
 ```
 i686-w64-mingw32-gcc -c dllmain.c syscalls.c -Wall -shared
-nasm -f win32 -o syscallsstubs.x86.o syscallsstubs.x86.nasm
+nasm -f win32 -o syscallsstubs.std.x86.o syscallsstubs.std.x86.nasm
 i686-w64-mingw32-dllwrap --def dllmain.def *.o -o temp.dll
 i686-w64-mingw32-strip -s temp.dll -o example.dll
 rm -rf *.o temp.dll
@@ -204,7 +216,7 @@ rm -rf *.o temp.dll
 
 ```
 x86_64-w64-mingw32-gcc -m64 -c main.c syscalls.c -Wall -shared
-nasm -f win64 -o syscallsstubs.x64.o syscallsstubs.x64.nasm
+nasm -f win64 -o syscallsstubs.std.x64.o syscallsstubs.std.x64.nasm
 x86_64-w64-mingw32-gcc *.o -o temp.exe
 x86_64-w64-mingw32-strip -s temp.exe -o example.exe
 rm -rf *.o temp.exe
@@ -214,7 +226,7 @@ rm -rf *.o temp.exe
 
 ```
 x86_64-w64-mingw32-gcc -m64 -c dllmain.c syscalls.c -Wall -shared
-nasm -f win64 -o syscallsstubs.x64.o syscallsstubs.x64.nasm
+nasm -f win64 -o syscallsstubs.std.x64.o syscallsstubs.std.x64.nasm
 x86_64-w64-mingw32-gcc-dllwrap --def dllmain.def *.o -o temp.dll
 x86_64-w64-mingw32-strip -s temp.dll -o example.dll
 rm -rf *.o temp.dll
@@ -225,14 +237,14 @@ rm -rf *.o temp.dll
 ### x86 Example EXE
 
 ```
-i686-w64-mingw32-gcc -m32 -Wall -c main.c syscalls.c syscallsstubs.x86.s -o temp.exe
+i686-w64-mingw32-gcc -m32 -Wall -c main.c syscalls.c syscallsstubs.std.x86.s -o temp.exe
 i686-w64-mingw32-strip -s temp.exe -o example.exe
 ```
 
 ### x86 Example DLL with Exports
 
 ```
-i686-w64-mingw32-gcc -m32 -Wall -c dllmain.c syscalls.c syscallsstubs.x86.s -o temp.dll
+i686-w64-mingw32-gcc -m32 -Wall -c dllmain.c syscalls.c syscallsstubs.std.x86.s -o temp.dll
 i686-w64-mingw32-dllwrap --def dllmain.def *.o -o temp.dll
 i686-w64-mingw32-strip -s temp.dll -o example.dll
 ```
@@ -240,14 +252,14 @@ i686-w64-mingw32-strip -s temp.dll -o example.dll
 ### x64 Example EXE
 
 ```
-x86_64-w64-mingw32-gcc -m64 -Wall -c main.c syscalls.c syscallsstubs.x64.s -o temp.exe
+x86_64-w64-mingw32-gcc -m64 -Wall -c main.c syscalls.c syscallsstubs.std.x64.s -o temp.exe
 x86_64-w64-mingw32-strip -s temp.exe -o example.exe
 ```
 
 ### x64 Example DLL with Exports
 
 ```
-x86_64-w64-mingw32-gcc -m64 -Wall -c dllmain.c syscalls.c syscallsstubs.x64.s -o temp.dll
+x86_64-w64-mingw32-gcc -m64 -Wall -c dllmain.c syscalls.c syscallsstubs.std.x64.s -o temp.dll
 x86_64-w64-mingw32-dllwrap --def dllmain.def *.o -o temp.dll
 x86_64-w64-mingw32-strip -s temp.dll -o example.dll
 ```
@@ -257,11 +269,29 @@ x86_64-w64-mingw32-strip -s temp.dll -o example.dll
 SysWhispers2 outputs a clang compatible `.s` file which contains the ASM stubs. This can be used with llvm to compile your code. For example, using the `CreateRemoteThread` DLL injection example above:
 
 ```
-clang -D nullptr=NULL main.c syscall.c syscallstubs.s -o test.exe
+clang -D nullptr=NULL main.c syscall.c syscallstubs.std.x64.s -o test.exe
 ```
 
 ## Inline Header Only
 The **inlinegas** output option will generate a header only version of Syswhispers2 that can be used with the compilation of BOFs. Simply include the header in your project.
+
+## Random Syscall Jumps
+
+By using the random syscall jump routine it is possible to avoid "mark of the syscall". The assembly stub calls a new function **SW__GetRandomSyscallAddress** which searches for and selects a clean syscall instruction in **ntdll.dll** to use. By doing this, it is possible to avoid triggering userland sycall instructions as well.
+
+To use random syscall jumps, you will need to define **RANDSYSCALL** when compiling your program and use the **rnd** version of SysWhispers2's output. The following examples demonstrate using the GNU Assembler stubs. 
+
+### x86 Example EXE - Using Random Syscall Jumps
+
+```
+i686-w64-mingw32-gcc main.c syscalls.c syscallsstubs.rnd.x86.s -DRANDSYSCALL -Wall -o example.exe
+```
+
+### x64 Example EXE - Using Random Syscall Jumps
+
+```
+x86_64-w64-mingw32-gcc main.c syscalls.c syscallsstubs.rnd.x64.s -DRANDSYSCALL -Wall -o example.exe
+```
 
 ## Caveats and Limitations
 
