@@ -45,27 +45,39 @@ py .\syswhispers.py --functions NtProtectVirtualMemory,NtWriteVirtualMemory -o s
 
 ```
 PS C:\Projects\SysWhispers2> py .\syswhispers.py --preset common --out-file syscalls_common
-                                                 
-                  .                         ,--. 
-,-. . . ,-. . , , |-. o ,-. ,-. ,-. ,-. ,-.    / 
-`-. | | `-. |/|/  | | | `-. | | |-' |   `-. ,-'  
-`-' `-| `-' ' '   ' ' ' `-' |-' `-' '   `-' `--- 
-     /|                     |  @Jackson_T        
-    `-'                     '  @modexpblog, 2021 
+
+python syswhispers.py -p all -a all -l all -o example-output/Syscalls
+
+                  .                         ,--.
+,-. . . ,-. . , , |-. o ,-. ,-. ,-. ,-. ,-.    /
+`-. | | `-. |/|/  | | | `-. | | |-' |   `-. ,-'
+`-' `-| `-' ' '   ' ' ' `-' |-' `-' '   `-' `---
+     /|                     |  @Jackson_T
+    `-'                     '  @modexpblog, 2021
 
 SysWhispers2: Why call the kernel when you can whisper?
 
 All functions selected.
 
 Complete! Files written to:
-        Syscalls.h
-        Syscalls.c
-        SyscallsStubs.x86.asm
-        SyscallsStubs.x86.nasm
-        SyscallsStubs.x86.s
-        SyscallsStubs.x64.asm
-        SyscallsStubs.x64.nasm
-        SyscallsStubs.x64.s
+        example-output/Syscalls.h
+        example-output/Syscalls.c
+        example-output/SyscallsStubs.std.x86.asm
+        example-output/SyscallsStubs.rnd.x86.asm
+        example-output/SyscallsStubs.std.x86.nasm
+        example-output/SyscallsStubs.rnd.x86.nasm
+        example-output/SyscallsStubs.std.x86.s
+        example-output/SyscallsStubs.rnd.x86.s
+        example-output/SyscallsInline.std.x86.h
+        example-output/SyscallsInline.rnd.x86.h
+        example-output/SyscallsStubs.std.x64.asm
+        example-output/SyscallsStubs.rnd.x64.asm
+        example-output/SyscallsStubs.std.x64.nasm
+        example-output/SyscallsStubs.rnd.x64.nasm
+        example-output/SyscallsStubs.std.x64.s
+        example-output/SyscallsStubs.rnd.x64.s
+        example-output/SyscallsInline.std.x64.h
+        example-output/SyscallsInline.rnd.x64.h
 ```
 
 ### Before-and-After Example of Classic `CreateRemoteThread` DLL Injection
@@ -262,6 +274,24 @@ clang -D nullptr=NULL main.c syscall.c syscallstubs.s -o test.exe
 
 ## Inline Header Only
 The **inlinegas** output option will generate a header only version of Syswhispers2 that can be used with the compilation of BOFs. Simply include the header in your project.
+
+## Random Syscall Jumps
+
+By using the random syscall jump routine it is possible to avoid "mark of the syscall". The assembly stub calls a new function **SW__GetRandomSyscallAddress** which searches for and selects a clean syscall instruction in **ntdll.dll** to use. By doing this, it is possible to avoid triggering userland sycall instructions as well.
+
+To use random syscall jumps, you will need to define **RANDSYSCALL** when compiling your program and use the **rnd** version of SysWhispers2's output. The following examples demonstrate using the GNU Assembler stubs. 
+
+### x86 Example EXE - Using Random Syscall Jumps
+
+```
+i686-w64-mingw32-gcc main.c syscalls.c syscallsstubs.rnd.x86.s -DRANDSYSCALL -Wall -o example.exe
+```
+
+### x64 Example EXE - Using Random Syscall Jumps
+
+```
+x86_64-w64-mingw32-gcc main.c syscalls.c syscallsstubs.rnd.x64.s -DRANDSYSCALL -Wall -o example.exe
+```
 
 ## Caveats and Limitations
 
