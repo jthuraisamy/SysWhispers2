@@ -196,7 +196,7 @@ The following examples demonstrate how to compile the above example programs as 
 
 ```
 i686-w64-mingw32-gcc -c main.c syscalls.c -Wall -shared
-nasm -f win32 -o syscallsstubs.x86.o syscallsstubs.x86.nasm
+nasm -f win32 -o syscallsstubs.std.x86.o syscallsstubs.x86.nasm
 i686-w64-mingw32-gcc *.o -o temp.exe
 i686-w64-mingw32-strip -s temp.exe -o example.exe
 rm -rf *.o temp.exe
@@ -206,7 +206,7 @@ rm -rf *.o temp.exe
 
 ```
 i686-w64-mingw32-gcc -c dllmain.c syscalls.c -Wall -shared
-nasm -f win32 -o syscallsstubs.x86.o syscallsstubs.x86.nasm
+nasm -f win32 -o syscallsstubs.std.x86.o syscallsstubs.x86.nasm
 i686-w64-mingw32-dllwrap --def dllmain.def *.o -o temp.dll
 i686-w64-mingw32-strip -s temp.dll -o example.dll
 rm -rf *.o temp.dll
@@ -216,7 +216,7 @@ rm -rf *.o temp.dll
 
 ```
 x86_64-w64-mingw32-gcc -m64 -c main.c syscalls.c -Wall -shared
-nasm -f win64 -o syscallsstubs.x64.o syscallsstubs.x64.nasm
+nasm -f win64 -o syscallsstubs.std.x64.o syscallsstubs.x64.nasm
 x86_64-w64-mingw32-gcc *.o -o temp.exe
 x86_64-w64-mingw32-strip -s temp.exe -o example.exe
 rm -rf *.o temp.exe
@@ -226,7 +226,7 @@ rm -rf *.o temp.exe
 
 ```
 x86_64-w64-mingw32-gcc -m64 -c dllmain.c syscalls.c -Wall -shared
-nasm -f win64 -o syscallsstubs.x64.o syscallsstubs.x64.nasm
+nasm -f win64 -o syscallsstubs.std.x64.o syscallsstubs.x64.nasm
 x86_64-w64-mingw32-gcc-dllwrap --def dllmain.def *.o -o temp.dll
 x86_64-w64-mingw32-strip -s temp.dll -o example.dll
 rm -rf *.o temp.dll
@@ -237,14 +237,14 @@ rm -rf *.o temp.dll
 ### x86 Example EXE
 
 ```
-i686-w64-mingw32-gcc -m32 -Wall -c main.c syscalls.c syscallsstubs.x86.s -o temp.exe
+i686-w64-mingw32-gcc -m32 -Wall -c main.c syscalls.c syscallsstubs.std.x86.s -o temp.exe
 i686-w64-mingw32-strip -s temp.exe -o example.exe
 ```
 
 ### x86 Example DLL with Exports
 
 ```
-i686-w64-mingw32-gcc -m32 -Wall -c dllmain.c syscalls.c syscallsstubs.x86.s -o temp.dll
+i686-w64-mingw32-gcc -m32 -Wall -c dllmain.c syscalls.c syscallsstubs.std.x86.s -o temp.dll
 i686-w64-mingw32-dllwrap --def dllmain.def *.o -o temp.dll
 i686-w64-mingw32-strip -s temp.dll -o example.dll
 ```
@@ -252,14 +252,14 @@ i686-w64-mingw32-strip -s temp.dll -o example.dll
 ### x64 Example EXE
 
 ```
-x86_64-w64-mingw32-gcc -m64 -Wall -c main.c syscalls.c syscallsstubs.x64.s -o temp.exe
+x86_64-w64-mingw32-gcc -m64 -Wall -c main.c syscalls.c syscallsstubs.std.x64.s -o temp.exe
 x86_64-w64-mingw32-strip -s temp.exe -o example.exe
 ```
 
 ### x64 Example DLL with Exports
 
 ```
-x86_64-w64-mingw32-gcc -m64 -Wall -c dllmain.c syscalls.c syscallsstubs.x64.s -o temp.dll
+x86_64-w64-mingw32-gcc -m64 -Wall -c dllmain.c syscalls.c syscallsstubs.std.x64.s -o temp.dll
 x86_64-w64-mingw32-dllwrap --def dllmain.def *.o -o temp.dll
 x86_64-w64-mingw32-strip -s temp.dll -o example.dll
 ```
@@ -269,7 +269,7 @@ x86_64-w64-mingw32-strip -s temp.dll -o example.dll
 SysWhispers2 outputs a clang compatible `.s` file which contains the ASM stubs. This can be used with llvm to compile your code. For example, using the `CreateRemoteThread` DLL injection example above:
 
 ```
-clang -D nullptr=NULL main.c syscall.c syscallstubs.s -o test.exe
+clang -D nullptr=NULL main.c syscall.c syscallstubs.std.x64.s -o test.exe
 ```
 
 ## Inline Header Only
