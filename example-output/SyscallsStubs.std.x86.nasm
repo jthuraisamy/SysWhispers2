@@ -490,6 +490,7 @@ extern _SW2_GetSyscallNumber
 [SECTION .text]
 
 BITS 32
+DEFAULT REL
 
 _WhisperMain:
     pop eax                        ; Remove return address from CALL instruction
@@ -508,1934 +509,1934 @@ _wow64:
     ret
 
 _NtAccessCheck:
-    push 0FA40F4F9h
+    push 0A9019EDBh
     call _WhisperMain
 
 _NtWorkerFactoryWorkerReady:
-    push 011A63B35h
+    push 0279B1D25h
     call _WhisperMain
 
 _NtAcceptConnectPort:
-    push 064F17B62h
+    push 0A63D2532h
     call _WhisperMain
 
 _NtMapUserPhysicalPagesScatter:
-    push 0238A0D17h
+    push 01BA32709h
     call _WhisperMain
 
 _NtWaitForSingleObject:
-    push 0009E3E33h
+    push 09AA0BAFCh
     call _WhisperMain
 
 _NtCallbackReturn:
-    push 0168C371Ah
+    push 0068C251Ch
     call _WhisperMain
 
 _NtReadFile:
-    push 0C544CDF1h
+    push 04098542Eh
     call _WhisperMain
 
 _NtDeviceIoControlFile:
-    push 022342AD2h
+    push 064F2B7C6h
     call _WhisperMain
 
 _NtWriteFile:
-    push 0E97AEB1Fh
+    push 0F1DBDB5Dh
     call _WhisperMain
 
 _NtRemoveIoCompletion:
-    push 0088E0821h
+    push 04EA84E3Fh
     call _WhisperMain
 
 _NtReleaseSemaphore:
-    push 034A10CFCh
+    push 076E47870h
     call _WhisperMain
 
 _NtReplyWaitReceivePort:
-    push 0ACFE8EA0h
+    push 06AF2899Ch
     call _WhisperMain
 
 _NtReplyPort:
-    push 062B0692Eh
+    push 020B11F12h
     call _WhisperMain
 
 _NtSetInformationThread:
-    push 00A2E4E86h
+    push 0F65ABCF3h
     call _WhisperMain
 
 _NtSetEvent:
-    push 058924AF4h
+    push 00E910704h
     call _WhisperMain
 
 _NtClose:
-    push 00352369Dh
+    push 0DC482529h
     call _WhisperMain
 
 _NtQueryObject:
-    push 08CA077CCh
+    push 0043FDD12h
     call _WhisperMain
 
 _NtQueryInformationFile:
-    push 0A635B086h
+    push 03EDFC498h
     call _WhisperMain
 
 _NtOpenKey:
-    push 00F1A54C7h
+    push 0249C4949h
     call _WhisperMain
 
 _NtEnumerateValueKey:
-    push 016AB2319h
+    push 0271BC085h
     call _WhisperMain
 
 _NtFindAtom:
-    push 03565D433h
+    push 0DF41D0DBh
     call _WhisperMain
 
 _NtQueryDefaultLocale:
-    push 0025D728Bh
+    push 0D138E3EFh
     call _WhisperMain
 
 _NtQueryKey:
-    push 008172BACh
+    push 00B173288h
     call _WhisperMain
 
 _NtQueryValueKey:
-    push 0E15C142Eh
+    push 0221CD262h
     call _WhisperMain
 
 _NtAllocateVirtualMemory:
-    push 01F88E9E7h
+    push 00F8D111Bh
     call _WhisperMain
 
 _NtQueryInformationProcess:
-    push 0D99B2213h
+    push 0802C8FB1h
     call _WhisperMain
 
 _NtWaitForMultipleObjects32:
-    push 08E9DAF4Ah
+    push 0408E5C41h
     call _WhisperMain
 
 _NtWriteFileGather:
-    push 02B907B53h
+    push 0BB3FEDFBh
     call _WhisperMain
 
 _NtCreateKey:
-    push 07EC9073Bh
+    push 08D1F6008h
     call _WhisperMain
 
 _NtFreeVirtualMemory:
-    push 0099E0519h
+    push 003997D1Fh
     call _WhisperMain
 
 _NtImpersonateClientOfPort:
-    push 060F36F68h
+    push 0E570FAFBh
     call _WhisperMain
 
 _NtReleaseMutant:
-    push 02D4A0AD0h
+    push 020A46D7Ch
     call _WhisperMain
 
 _NtQueryInformationToken:
-    push 035AA1F32h
+    push 08792109Ah
     call _WhisperMain
 
 _NtRequestWaitReplyPort:
-    push 0E273D9DCh
+    push 0D37FD6F7h
     call _WhisperMain
 
 _NtQueryVirtualMemory:
-    push 09514A39Bh
+    push 043916F45h
     call _WhisperMain
 
 _NtOpenThreadToken:
-    push 0F8512DEAh
+    push 0015B9873h
     call _WhisperMain
 
 _NtQueryInformationThread:
-    push 024881E11h
+    push 0705F2C9Eh
     call _WhisperMain
 
 _NtOpenProcess:
-    push 006AC0521h
+    push 0D554CCD8h
     call _WhisperMain
 
 _NtSetInformationFile:
-    push 0CA7AC2ECh
+    push 09C38540Eh
     call _WhisperMain
 
 _NtMapViewOfSection:
-    push 004960E0Bh
+    push 00E962FC5h
     call _WhisperMain
 
 _NtAccessCheckAndAuditAlarm:
-    push 00F2EC371h
+    push 076B1B6EEh
     call _WhisperMain
 
 _NtUnmapViewOfSection:
-    push 0568C3591h
+    push 012813051h
     call _WhisperMain
 
 _NtReplyWaitReceivePortEx:
-    push 0A25FEA98h
+    push 06D6F33BAh
     call _WhisperMain
 
 _NtTerminateProcess:
-    push 0FE26D5BBh
+    push 0EFAF0A3Fh
     call _WhisperMain
 
 _NtSetEventBoostPriority:
-    push 030863C0Ch
+    push 018A10E0Eh
     call _WhisperMain
 
 _NtReadFileScatter:
-    push 0159C1D07h
+    push 05BD20D17h
     call _WhisperMain
 
 _NtOpenThreadTokenEx:
-    push 02FBAF2EFh
+    push 01B285B10h
     call _WhisperMain
 
 _NtOpenProcessTokenEx:
-    push 0791FB957h
+    push 0B0A9F414h
     call _WhisperMain
 
 _NtQueryPerformanceCounter:
-    push 037D24B39h
+    push 051F84F55h
     call _WhisperMain
 
 _NtEnumerateKey:
-    push 0B6AE97F4h
+    push 009AF4870h
     call _WhisperMain
 
 _NtOpenFile:
-    push 0AD1C2B01h
+    push 02A846226h
     call _WhisperMain
 
 _NtDelayExecution:
-    push 0520D529Fh
+    push 04EC24853h
     call _WhisperMain
 
 _NtQueryDirectoryFile:
-    push 058BBAAE2h
+    push 03F9EFEB8h
     call _WhisperMain
 
 _NtQuerySystemInformation:
-    push 054CD765Dh
+    push 00D930D01h
     call _WhisperMain
 
 _NtOpenSection:
-    push 00A9E284Fh
+    push 01853EA17h
     call _WhisperMain
 
 _NtQueryTimer:
-    push 0179F7F46h
+    push 0BD978D3Ah
     call _WhisperMain
 
 _NtFsControlFile:
-    push 06AF45662h
+    push 064F5222Eh
     call _WhisperMain
 
 _NtWriteVirtualMemory:
-    push 005953B23h
+    push 00F9918F7h
     call _WhisperMain
 
 _NtCloseObjectAuditAlarm:
-    push 05CDA584Ch
+    push 01A95928Ah
     call _WhisperMain
 
 _NtDuplicateObject:
-    push 03EA1F6FDh
+    push 0E45F2C03h
     call _WhisperMain
 
 _NtQueryAttributesFile:
-    push 0DD5DD9FDh
+    push 0615895C9h
     call _WhisperMain
 
 _NtClearEvent:
-    push 0200B65DAh
+    push 06ECF6752h
     call _WhisperMain
 
 _NtReadVirtualMemory:
-    push 0071473E9h
+    push 009BD1F23h
     call _WhisperMain
 
 _NtOpenEvent:
-    push 030D52978h
+    push 008821906h
     call _WhisperMain
 
 _NtAdjustPrivilegesToken:
-    push 001940B2Dh
+    push 03DA3650Ah
     call _WhisperMain
 
 _NtDuplicateToken:
-    push 06DD92558h
+    push 07B10817Ch
     call _WhisperMain
 
 _NtContinue:
-    push 0009CD3D0h
+    push 0DEB435C7h
     call _WhisperMain
 
 _NtQueryDefaultUILanguage:
-    push 013C5D178h
+    push 0F5D7FA65h
     call _WhisperMain
 
 _NtQueueApcThread:
-    push 02E8A0C2Bh
+    push 014CF7017h
     call _WhisperMain
 
 _NtYieldExecution:
-    push 014B63E33h
+    push 00397CDCAh
     call _WhisperMain
 
 _NtAddAtom:
-    push 022BF272Eh
+    push 01DB03E29h
     call _WhisperMain
 
 _NtCreateEvent:
-    push 0B0B4AF3Fh
+    push 051034E68h
     call _WhisperMain
 
 _NtQueryVolumeInformationFile:
-    push 0E5B3BD76h
+    push 0ED742BD5h
     call _WhisperMain
 
 _NtCreateSection:
-    push 04EC54C51h
+    push 0BC9BE029h
     call _WhisperMain
 
 _NtFlushBuffersFile:
-    push 06CFB5E2Eh
+    push 070FA7E52h
     call _WhisperMain
 
 _NtApphelpCacheControl:
-    push 0FD6DDFBBh
+    push 049A1B3E7h
     call _WhisperMain
 
 _NtCreateProcessEx:
-    push 0B998FB42h
+    push 09210A0AAh
     call _WhisperMain
 
 _NtCreateThread:
-    push 0AF8CB334h
+    push 026BC2015h
     call _WhisperMain
 
 _NtIsProcessInJob:
-    push 05CE54854h
+    push 0E5979949h
     call _WhisperMain
 
 _NtProtectVirtualMemory:
-    push 00F940311h
+    push 0BB18B18Bh
     call _WhisperMain
 
 _NtQuerySection:
-    push 002EC25B9h
+    push 09C35BEA5h
     call _WhisperMain
 
 _NtResumeThread:
-    push 07D5445CFh
+    push 032927E31h
     call _WhisperMain
 
 _NtTerminateThread:
-    push 0228E3037h
+    push 00C179F28h
     call _WhisperMain
 
 _NtReadRequestData:
-    push 0A23EB14Ch
+    push 0B805B2AEh
     call _WhisperMain
 
 _NtCreateFile:
-    push 02A9AE32Eh
+    push 09E9CAC04h
     call _WhisperMain
 
 _NtQueryEvent:
-    push 02AB1F0E6h
+    push 0F8EB1CFCh
     call _WhisperMain
 
 _NtWriteRequestData:
-    push 09DC08975h
+    push 0CECA5FFBh
     call _WhisperMain
 
 _NtOpenDirectoryObject:
-    push 03C802E0Dh
+    push 02B38D976h
     call _WhisperMain
 
 _NtAccessCheckByTypeAndAuditAlarm:
-    push 0DD42B9D5h
+    push 08F30935Fh
     call _WhisperMain
 
 _NtWaitForMultipleObjects:
-    push 061AD6331h
+    push 0119D2D13h
     call _WhisperMain
 
 _NtSetInformationObject:
-    push 0271915A7h
+    push 088151919h
     call _WhisperMain
 
 _NtCancelIoFile:
-    push 0821B7543h
+    push 0A4EAB262h
     call _WhisperMain
 
 _NtTraceEvent:
-    push 0CAED7BD0h
+    push 00EAC1F08h
     call _WhisperMain
 
 _NtPowerInformation:
-    push 054C25A5Fh
+    push 066B04663h
     call _WhisperMain
 
 _NtSetValueKey:
-    push 01DC11E58h
+    push 08ACE4995h
     call _WhisperMain
 
 _NtCancelTimer:
-    push 001A23302h
+    push 0B5A0C75Dh
     call _WhisperMain
 
 _NtSetTimer:
-    push 005977F7Ch
+    push 00394393Ch
     call _WhisperMain
 
 _NtAccessCheckByType:
-    push 0D442E30Ah
+    push 052FFBBAAh
     call _WhisperMain
 
 _NtAccessCheckByTypeResultList:
-    push 07EA17221h
+    push 056F9586Ah
     call _WhisperMain
 
 _NtAccessCheckByTypeResultListAndAuditAlarm:
-    push 0552A6982h
+    push 03EA31E2Eh
     call _WhisperMain
 
 _NtAccessCheckByTypeResultListAndAuditAlarmByHandle:
-    push 099B41796h
+    push 018340882h
     call _WhisperMain
 
 _NtAcquireProcessActivityReference:
-    push 01A8958A0h
+    push 0EF5AE9E7h
     call _WhisperMain
 
 _NtAddAtomEx:
-    push 09390C74Ch
+    push 0A59AF542h
     call _WhisperMain
 
 _NtAddBootEntry:
-    push 005951912h
+    push 0A174B5D8h
     call _WhisperMain
 
 _NtAddDriverEntry:
-    push 03B67B174h
+    push 01984096Ch
     call _WhisperMain
 
 _NtAdjustGroupsToken:
-    push 025971314h
+    push 0A041F6E5h
     call _WhisperMain
 
 _NtAdjustTokenClaimsAndDeviceGroups:
-    push 007900309h
+    push 039E51CB5h
     call _WhisperMain
 
 _NtAlertResumeThread:
-    push 0A48BA81Ah
+    push 0CE9B043Dh
     call _WhisperMain
 
 _NtAlertThread:
-    push 01CA4540Bh
+    push 07C47E779h
     call _WhisperMain
 
 _NtAlertThreadByThreadId:
-    push 0B8A26896h
+    push 0B32F1E2Fh
     call _WhisperMain
 
 _NtAllocateLocallyUniqueId:
-    push 0FFE51B65h
+    push 03DCE1F48h
     call _WhisperMain
 
 _NtAllocateReserveObject:
-    push 018B4E6C9h
+    push 07A5A04B7h
     call _WhisperMain
 
 _NtAllocateUserPhysicalPages:
-    push 019BF3A24h
+    push 07BE31438h
     call _WhisperMain
 
 _NtAllocateUuids:
-    push 0338FFDD3h
+    push 01A8B1A17h
     call _WhisperMain
 
 _NtAllocateVirtualMemoryEx:
-    push 0C8503B3Ah
+    push 0A089F253h
     call _WhisperMain
 
 _NtAlpcAcceptConnectPort:
-    push 030B2213Ch
+    push 0E0B31EC1h
     call _WhisperMain
 
 _NtAlpcCancelMessage:
-    push 073D77E7Ch
+    push 0BA95AB2Fh
     call _WhisperMain
 
 _NtAlpcConnectPort:
-    push 03EB1DDDEh
+    push 062CE7F66h
     call _WhisperMain
 
 _NtAlpcConnectPortEx:
-    push 0636DBF29h
+    push 0A7A86A9Ch
     call _WhisperMain
 
 _NtAlpcCreatePort:
-    push 0194B9F58h
+    push 024BEC0D1h
     call _WhisperMain
 
 _NtAlpcCreatePortSection:
-    push 0C4F5DE41h
+    push 0B2AC56F7h
     call _WhisperMain
 
 _NtAlpcCreateResourceReserve:
-    push 0389F4A77h
+    push 07AC96C79h
     call _WhisperMain
 
 _NtAlpcCreateSectionView:
-    push 02CA81D13h
+    push 08A0CB78Bh
     call _WhisperMain
 
 _NtAlpcCreateSecurityContext:
-    push 0FA1DE794h
+    push 0B690DB09h
     call _WhisperMain
 
 _NtAlpcDeletePortSection:
-    push 00C982C0Bh
+    push 0F2E819B0h
     call _WhisperMain
 
 _NtAlpcDeleteResourceReserve:
-    push 01888F4C3h
+    push 02ADB045Bh
     call _WhisperMain
 
 _NtAlpcDeleteSectionView:
-    push 056EC6753h
+    push 0F7D1CC5Ah
     call _WhisperMain
 
 _NtAlpcDeleteSecurityContext:
-    push 008B3EDDAh
+    push 00EB20922h
     call _WhisperMain
 
 _NtAlpcDisconnectPort:
-    push 022B5D93Ah
+    push 0A832B99Ch
     call _WhisperMain
 
 _NtAlpcImpersonateClientContainerOfPort:
-    push 02233A722h
+    push 0E47FFFF0h
     call _WhisperMain
 
 _NtAlpcImpersonateClientOfPort:
-    push 0D836C9DAh
+    push 05CF17968h
     call _WhisperMain
 
 _NtAlpcOpenSenderProcess:
-    push 0C654C5C9h
+    push 0D5B5DA29h
     call _WhisperMain
 
 _NtAlpcOpenSenderThread:
-    push 0F85F36EDh
+    push 08C205696h
     call _WhisperMain
 
 _NtAlpcQueryInformation:
-    push 0024618CEh
+    push 0BAABDCBFh
     call _WhisperMain
 
 _NtAlpcQueryInformationMessage:
-    push 0A40091ADh
+    push 013CCD0F0h
     call _WhisperMain
 
 _NtAlpcRevokeSecurityContext:
-    push 040998DC8h
+    push 00E5405DCh
     call _WhisperMain
 
 _NtAlpcSendWaitReceivePort:
-    push 022B2A5B8h
+    push 06CF789E6h
     call _WhisperMain
 
 _NtAlpcSetInformation:
-    push 0C897E64Bh
+    push 0008E2FD3h
     call _WhisperMain
 
 _NtAreMappedFilesTheSame:
-    push 0D65AEDFDh
+    push 0D74AEEEEh
     call _WhisperMain
 
 _NtAssignProcessToJobObject:
-    push 0FF2A6100h
+    push 00C31852Ch
     call _WhisperMain
 
 _NtAssociateWaitCompletionPacket:
-    push 007B22910h
+    push 00833388Eh
     call _WhisperMain
 
 _NtCallEnclave:
-    push 08736BB65h
+    push 01A961A3Ch
     call _WhisperMain
 
 _NtCancelIoFileEx:
-    push 0F758392Dh
+    push 09089DC52h
     call _WhisperMain
 
 _NtCancelSynchronousIoFile:
-    push 0256033EAh
+    push 0F6C68015h
     call _WhisperMain
 
 _NtCancelTimer2:
-    push 003A35E2Dh
+    push 0E81515BAh
     call _WhisperMain
 
 _NtCancelWaitCompletionPacket:
-    push 0BC9C9AC6h
+    push 0881D8E8Fh
     call _WhisperMain
 
 _NtCommitComplete:
-    push 00C9007FEh
+    push 038AC002Eh
     call _WhisperMain
 
 _NtCommitEnlistment:
-    push 0164B0FC6h
+    push 0C226DBA2h
     call _WhisperMain
 
 _NtCommitRegistryTransaction:
-    push 004B43E31h
+    push 0BAB5B825h
     call _WhisperMain
 
 _NtCommitTransaction:
-    push 018813A51h
+    push 008802FD5h
     call _WhisperMain
 
 _NtCompactKeys:
-    push 057BA6A14h
+    push 0218E320Ah
     call _WhisperMain
 
 _NtCompareObjects:
-    push 084648AF6h
+    push 043D94753h
     call _WhisperMain
 
 _NtCompareSigningLevels:
-    push 0AEF09E73h
+    push 040920046h
     call _WhisperMain
 
 _NtCompareTokens:
-    push 0F494EC01h
+    push 055DD3B01h
     call _WhisperMain
 
 _NtCompleteConnectPort:
-    push 03A7637F8h
+    push 02172C21Dh
     call _WhisperMain
 
 _NtCompressKey:
-    push 0782E5F8Eh
+    push 01494070Fh
     call _WhisperMain
 
 _NtConnectPort:
-    push 0A23C9072h
+    push 03CB1253Ch
     call _WhisperMain
 
 _NtConvertBetweenAuxiliaryCounterAndPerformanceCounter:
-    push 079468945h
+    push 00BAA2533h
     call _WhisperMain
 
 _NtCreateDebugObject:
-    push 0009E21C3h
+    push 002BCEAC0h
     call _WhisperMain
 
 _NtCreateDirectoryObject:
-    push 0FAD436BBh
+    push 01AA5E4D8h
     call _WhisperMain
 
 _NtCreateDirectoryObjectEx:
-    push 0426E10B4h
+    push 07C7C820Ah
     call _WhisperMain
 
 _NtCreateEnclave:
-    push 0CA2FDE86h
+    push 0C691F25Ah
     call _WhisperMain
 
 _NtCreateEnlistment:
-    push 00F90ECC7h
+    push 03FD91D8Fh
     call _WhisperMain
 
 _NtCreateEventPair:
-    push 012B1CCFCh
+    push 010B64E7Fh
     call _WhisperMain
 
 _NtCreateIRTimer:
-    push 0178C3F36h
+    push 03D851B32h
     call _WhisperMain
 
 _NtCreateIoCompletion:
-    push 00E1750D7h
+    push 0030C65D9h
     call _WhisperMain
 
 _NtCreateJobObject:
-    push 0F65B6E57h
+    push 08CA1E65Eh
     call _WhisperMain
 
 _NtCreateJobSet:
-    push 08740AF1Ch
+    push 082031A2Fh
     call _WhisperMain
 
 _NtCreateKeyTransacted:
-    push 0A69A66C6h
+    push 0168A9797h
     call _WhisperMain
 
 _NtCreateKeyedEvent:
-    push 068CF755Eh
+    push 0FE40BF96h
     call _WhisperMain
 
 _NtCreateLowBoxToken:
-    push 017C73D1Ch
+    push 0C3A1CD3Eh
     call _WhisperMain
 
 _NtCreateMailslotFile:
-    push 0E47DC2FEh
+    push 0A7B12F95h
     call _WhisperMain
 
 _NtCreateMutant:
-    push 0FDDC08A5h
+    push 0D34E2848h
     call _WhisperMain
 
 _NtCreateNamedPipeFile:
-    push 0ED7AA75Bh
+    push 068F88CA2h
     call _WhisperMain
 
 _NtCreatePagingFile:
-    push 054C36C00h
+    push 0D17C3A7Dh
     call _WhisperMain
 
 _NtCreatePartition:
-    push 0444E255Dh
+    push 08D2CE5F6h
     call _WhisperMain
 
 _NtCreatePort:
-    push 02EB4CCDAh
+    push 0A276A3FAh
     call _WhisperMain
 
 _NtCreatePrivateNamespace:
-    push 009B1CFEBh
+    push 08C2F4972h
     call _WhisperMain
 
 _NtCreateProcess:
-    push 081288EB0h
+    push 03F9D2DF2h
     call _WhisperMain
 
 _NtCreateProfile:
-    push 06E3E6AA4h
+    push 004847E04h
     call _WhisperMain
 
 _NtCreateProfileEx:
-    push 0029AC0C1h
+    push 07A804447h
     call _WhisperMain
 
 _NtCreateRegistryTransaction:
-    push 0970FD3DEh
+    push 084ABC67Ah
     call _WhisperMain
 
 _NtCreateResourceManager:
-    push 06E52FA4Fh
+    push 078228069h
     call _WhisperMain
 
 _NtCreateSemaphore:
-    push 0FCB62D1Ah
+    push 078A6B50Eh
     call _WhisperMain
 
 _NtCreateSymbolicLinkObject:
-    push 083189384h
+    push 008199015h
     call _WhisperMain
 
 _NtCreateThreadEx:
-    push 096A7CC64h
+    push 014AB4C6Ah
     call _WhisperMain
 
 _NtCreateTimer:
-    push 0E58D8F55h
+    push 073D6416Ah
     call _WhisperMain
 
 _NtCreateTimer2:
-    push 0B0684CA6h
+    push 019A559ABh
     call _WhisperMain
 
 _NtCreateToken:
-    push 0099F9FBFh
+    push 067C0594Ch
     call _WhisperMain
 
 _NtCreateTokenEx:
-    push 06022A67Ch
+    push 086830DB1h
     call _WhisperMain
 
 _NtCreateTransaction:
-    push 03CEE2243h
+    push 0D099D60Dh
     call _WhisperMain
 
 _NtCreateTransactionManager:
-    push 01BA730FAh
+    push 005222F9Eh
     call _WhisperMain
 
 _NtCreateUserProcess:
-    push 0EC26CFBBh
+    push 0953FAE90h
     call _WhisperMain
 
 _NtCreateWaitCompletionPacket:
-    push 001813F0Ah
+    push 0F7C28B29h
     call _WhisperMain
 
 _NtCreateWaitablePort:
-    push 0A97288DFh
+    push 066B24F6Eh
     call _WhisperMain
 
 _NtCreateWnfStateName:
-    push 0CED0FB42h
+    push 0F4B2FD20h
     call _WhisperMain
 
 _NtCreateWorkerFactory:
-    push 0089C140Ah
+    push 004951C72h
     call _WhisperMain
 
 _NtDebugActiveProcess:
-    push 0923099ADh
+    push 0E03DD9B1h
     call _WhisperMain
 
 _NtDebugContinue:
-    push 05D24BC68h
+    push 0769689CEh
     call _WhisperMain
 
 _NtDeleteAtom:
-    push 0BED35C8Bh
+    push 0E27EE5ECh
     call _WhisperMain
 
 _NtDeleteBootEntry:
-    push 0336B3BE4h
+    push 0018D35C0h
     call _WhisperMain
 
 _NtDeleteDriverEntry:
-    push 033930B14h
+    push 00F827B0Eh
     call _WhisperMain
 
 _NtDeleteFile:
-    push 06EF46592h
+    push 0E245E0DCh
     call _WhisperMain
 
 _NtDeleteKey:
-    push 03AEE1D71h
+    push 09F2B8EB0h
     call _WhisperMain
 
 _NtDeleteObjectAuditAlarm:
-    push 016B57464h
+    push 098DEA590h
     call _WhisperMain
 
 _NtDeletePrivateNamespace:
-    push 02A88393Fh
+    push 03E90470Dh
     call _WhisperMain
 
 _NtDeleteValueKey:
-    push 036820931h
+    push 006FB3741h
     call _WhisperMain
 
 _NtDeleteWnfStateData:
-    push 032CE441Ah
+    push 0C3793369h
     call _WhisperMain
 
 _NtDeleteWnfStateName:
-    push 0A8B02387h
+    push 0ED431050h
     call _WhisperMain
 
 _NtDisableLastKnownGood:
-    push 0386B35C2h
+    push 0E9C0F37Eh
     call _WhisperMain
 
 _NtDisplayString:
-    push 076E83238h
+    push 07ECE6A5Eh
     call _WhisperMain
 
 _NtDrawText:
-    push 04918735Eh
+    push 0E0BAEB2Dh
     call _WhisperMain
 
 _NtEnableLastKnownGood:
-    push 02DBE03F4h
+    push 0B029493Fh
     call _WhisperMain
 
 _NtEnumerateBootEntries:
-    push 02C97BD9Bh
+    push 02D911828h
     call _WhisperMain
 
 _NtEnumerateDriverEntries:
-    push 07CDC2D7Fh
+    push 0E153F3CCh
     call _WhisperMain
 
 _NtEnumerateSystemEnvironmentValuesEx:
-    push 053AF8FFBh
+    push 043531F97h
     call _WhisperMain
 
 _NtEnumerateTransactionObject:
-    push 096B4A608h
+    push 0CEE626CDh
     call _WhisperMain
 
 _NtExtendSection:
-    push 00E8A340Fh
+    push 09F90DB3Ah
     call _WhisperMain
 
 _NtFilterBootOption:
-    push 008A20BCFh
+    push 0048E3803h
     call _WhisperMain
 
 _NtFilterToken:
-    push 07FD56972h
+    push 007921D1Ah
     call _WhisperMain
 
 _NtFilterTokenEx:
-    push 08E59B5DBh
+    push 00C875654h
     call _WhisperMain
 
 _NtFlushBuffersFileEx:
-    push 026D4E08Ah
+    push 00AA9CC97h
     call _WhisperMain
 
 _NtFlushInstallUILanguage:
-    push 0A5BAD1A1h
+    push 01FBBD112h
     call _WhisperMain
 
 _NtFlushInstructionCache:
-    push 00DAE4997h
+    push 01526D977h
     call _WhisperMain
 
 _NtFlushKey:
-    push 09ED4BF6Eh
+    push 02D9F0A32h
     call _WhisperMain
 
 _NtFlushProcessWriteBuffers:
-    push 0D83A3DA2h
+    push 0E8B9EE28h
     call _WhisperMain
 
 _NtFlushVirtualMemory:
-    push 08713938Fh
+    push 009A2794Bh
     call _WhisperMain
 
 _NtFlushWriteBuffer:
-    push 0A538B5A7h
+    push 06DB47D2Bh
     call _WhisperMain
 
 _NtFreeUserPhysicalPages:
-    push 0E5BEEE26h
+    push 012B3FAA8h
     call _WhisperMain
 
 _NtFreezeRegistry:
-    push 0069B203Bh
+    push 0028F15E3h
     call _WhisperMain
 
 _NtFreezeTransactions:
-    push 04FAA257Dh
+    push 0811EB399h
     call _WhisperMain
 
 _NtGetCachedSigningLevel:
-    push 076BCA01Eh
+    push 064F8ABA4h
     call _WhisperMain
 
 _NtGetCompleteWnfStateSubscription:
-    push 0148F1A13h
+    push 046CE265Bh
     call _WhisperMain
 
 _NtGetContextThread:
-    push 00C9C1E2Dh
+    push 01CF8EEE9h
     call _WhisperMain
 
 _NtGetCurrentProcessorNumber:
-    push 08E33C8E6h
+    push 00CA2F4E8h
     call _WhisperMain
 
 _NtGetCurrentProcessorNumberEx:
-    push 05AD599AEh
+    push 0DC4B2131h
     call _WhisperMain
 
 _NtGetDevicePowerState:
-    push 0A43BB4B4h
+    push 03090393Ch
     call _WhisperMain
 
 _NtGetMUIRegistryInfo:
-    push 07ACEA663h
+    push 01DA1010Ah
     call _WhisperMain
 
 _NtGetNextProcess:
-    push 00DA3362Ch
+    push 0C12FC2B0h
     call _WhisperMain
 
 _NtGetNextThread:
-    push 09A3DD48Fh
+    push 0399EF43Fh
     call _WhisperMain
 
 _NtGetNlsSectionPtr:
-    push 0FF5DD282h
+    push 07AD39C47h
     call _WhisperMain
 
 _NtGetNotificationResourceManager:
-    push 0EFB2719Eh
+    push 01F884540h
     call _WhisperMain
 
 _NtGetWriteWatch:
-    push 08AA31383h
+    push 09059EACAh
     call _WhisperMain
 
 _NtImpersonateAnonymousToken:
-    push 03F8F0F22h
+    push 01F810F3Ch
     call _WhisperMain
 
 _NtImpersonateThread:
-    push 0FA202799h
+    push 026872421h
     call _WhisperMain
 
 _NtInitializeEnclave:
-    push 02C9310D2h
+    push 0D48B0A2Eh
     call _WhisperMain
 
 _NtInitializeNlsFiles:
-    push 0744F05ACh
+    push 09C00BB9Ah
     call _WhisperMain
 
 _NtInitializeRegistry:
-    push 034901C3Fh
+    push 0DCCD25BCh
     call _WhisperMain
 
 _NtInitiatePowerAction:
-    push 0C690DF3Bh
+    push 0100CF11Fh
     call _WhisperMain
 
 _NtIsSystemResumeAutomatic:
-    push 0A4A02186h
+    push 082891F8Ah
     call _WhisperMain
 
 _NtIsUILanguageComitted:
-    push 0D5EB91C3h
+    push 0839EC332h
     call _WhisperMain
 
 _NtListenPort:
-    push 0DCB0DF3Fh
+    push 06171987Fh
     call _WhisperMain
 
 _NtLoadDriver:
-    push 01C9F4E5Ch
+    push 0BEA4C9A5h
     call _WhisperMain
 
 _NtLoadEnclaveData:
-    push 0074E907Ah
+    push 042999034h
     call _WhisperMain
 
 _NtLoadHotPatch:
-    push 09F721D4Fh
+    push 090CD6BA9h
     call _WhisperMain
 
 _NtLoadKey:
-    push 03F1844E5h
+    push 0407CC165h
     call _WhisperMain
 
 _NtLoadKey2:
-    push 0DA270AA1h
+    push 0253C6F20h
     call _WhisperMain
 
 _NtLoadKeyEx:
-    push 0BBFD8746h
+    push 00B19CF44h
     call _WhisperMain
 
 _NtLockFile:
-    push 0E17FCDAFh
+    push 078F0547Ah
     call _WhisperMain
 
 _NtLockProductActivationKeys:
-    push 067E66A7Ch
+    push 032D62CB5h
     call _WhisperMain
 
 _NtLockRegistryKey:
-    push 0130628B6h
+    push 01F27FA45h
     call _WhisperMain
 
 _NtLockVirtualMemory:
-    push 00B981D77h
+    push 0CD5FC9D3h
     call _WhisperMain
 
 _NtMakePermanentObject:
-    push 0243B2EA5h
+    push 0A4BAAE24h
     call _WhisperMain
 
 _NtMakeTemporaryObject:
-    push 0263B5ED7h
+    push 0849C9E11h
     call _WhisperMain
 
 _NtManagePartition:
-    push 008B1E6EDh
+    push 03CB1DE21h
     call _WhisperMain
 
 _NtMapCMFModule:
-    push 03917A320h
+    push 04CEE1854h
     call _WhisperMain
 
 _NtMapUserPhysicalPages:
-    push 01142E82Ch
+    push 049CF5E48h
     call _WhisperMain
 
 _NtMapViewOfSectionEx:
-    push 0BE9CE842h
+    push 0B952E586h
     call _WhisperMain
 
 _NtModifyBootEntry:
-    push 009941D38h
+    push 03D9B1738h
     call _WhisperMain
 
 _NtModifyDriverEntry:
-    push 071E16D64h
+    push 00B961D18h
     call _WhisperMain
 
 _NtNotifyChangeDirectoryFile:
-    push 01999E00Dh
+    push 0CD7BBBE1h
     call _WhisperMain
 
 _NtNotifyChangeDirectoryFileEx:
-    push 06B97BFCBh
+    push 0689A244Fh
     call _WhisperMain
 
 _NtNotifyChangeKey:
-    push 0CB12AAE8h
+    push 00AD3E8A8h
     call _WhisperMain
 
 _NtNotifyChangeMultipleKeys:
-    push 07F837404h
+    push 0DFCEA82Ch
     call _WhisperMain
 
 _NtNotifyChangeSession:
-    push 0E78FE71Dh
+    push 067CD4B4Eh
     call _WhisperMain
 
 _NtOpenEnlistment:
-    push 0BABADD51h
+    push 009A70C3Dh
     call _WhisperMain
 
 _NtOpenEventPair:
-    push 090B047E6h
+    push 05017B441h
     call _WhisperMain
 
 _NtOpenIoCompletion:
-    push 00C656AADh
+    push 021544259h
     call _WhisperMain
 
 _NtOpenJobObject:
-    push 0429C0E63h
+    push 0C29CEC21h
     call _WhisperMain
 
 _NtOpenKeyEx:
-    push 06BDD9BA6h
+    push 073D4BF60h
     call _WhisperMain
 
 _NtOpenKeyTransacted:
-    push 010CD1A62h
+    push 0130E9110h
     call _WhisperMain
 
 _NtOpenKeyTransactedEx:
-    push 086AEC878h
+    push 01C1E50DAh
     call _WhisperMain
 
 _NtOpenKeyedEvent:
-    push 050CB5D4Ah
+    push 03AB15D6Ah
     call _WhisperMain
 
 _NtOpenMutant:
-    push 01693FCC5h
+    push 03CB610E6h
     call _WhisperMain
 
 _NtOpenObjectAuditAlarm:
-    push 074B25FF4h
+    push 06EAF6E02h
     call _WhisperMain
 
 _NtOpenPartition:
-    push 00ABA2FF1h
+    push 078E04669h
     call _WhisperMain
 
 _NtOpenPrivateNamespace:
-    push 0B09231BFh
+    push 0AE126BB0h
     call _WhisperMain
 
 _NtOpenProcessToken:
-    push 0079A848Bh
+    push 0390D01A4h
     call _WhisperMain
 
 _NtOpenRegistryTransaction:
-    push 09A319AAFh
+    push 0CE85EA5Fh
     call _WhisperMain
 
 _NtOpenResourceManager:
-    push 0B66CDF77h
+    push 015BDE3BDh
     call _WhisperMain
 
 _NtOpenSemaphore:
-    push 0F6A700EFh
+    push 03EB437D8h
     call _WhisperMain
 
 _NtOpenSession:
-    push 00D814956h
+    push 0F56EF5F8h
     call _WhisperMain
 
 _NtOpenSymbolicLinkObject:
-    push 01904FB1Ah
+    push 0A63B9E97h
     call _WhisperMain
 
 _NtOpenThread:
-    push 01A394106h
+    push 0EEC9E46Fh
     call _WhisperMain
 
 _NtOpenTimer:
-    push 0EFDDD16Ch
+    push 00FCF7540h
     call _WhisperMain
 
 _NtOpenTransaction:
-    push 005512406h
+    push 0CEC5EA57h
     call _WhisperMain
 
 _NtOpenTransactionManager:
-    push 075CB4D46h
+    push 0C415D4B7h
     call _WhisperMain
 
 _NtPlugPlayControl:
-    push 03DAA0509h
+    push 0B16DD7FFh
     call _WhisperMain
 
 _NtPrePrepareComplete:
-    push 02CB80836h
+    push 038A1DEAAh
     call _WhisperMain
 
 _NtPrePrepareEnlistment:
-    push 0CBA5EC3Eh
+    push 00BA4CCFFh
     call _WhisperMain
 
 _NtPrepareComplete:
-    push 036B3A4BCh
+    push 01884040Ah
     call _WhisperMain
 
 _NtPrepareEnlistment:
-    push 009A70C2Dh
+    push 0086715F5h
     call _WhisperMain
 
 _NtPrivilegeCheck:
-    push 0369A4D17h
+    push 03497252Bh
     call _WhisperMain
 
 _NtPrivilegeObjectAuditAlarm:
-    push 0E121E24Fh
+    push 01E5000FCh
     call _WhisperMain
 
 _NtPrivilegedServiceAuditAlarm:
-    push 018BE3C28h
+    push 01F91F00Dh
     call _WhisperMain
 
 _NtPropagationComplete:
-    push 0EC50B8DEh
+    push 02F57C91Ah
     call _WhisperMain
 
 _NtPropagationFailed:
-    push 03B967B3Dh
+    push 08C9AF84Ah
     call _WhisperMain
 
 _NtPulseEvent:
-    push 0B83B91A6h
+    push 082BF8928h
     call _WhisperMain
 
 _NtQueryAuxiliaryCounterFrequency:
-    push 02A98F7CCh
+    push 0A81B85BEh
     call _WhisperMain
 
 _NtQueryBootEntryOrder:
-    push 01F8FFB1Dh
+    push 0DD40F219h
     call _WhisperMain
 
 _NtQueryBootOptions:
-    push 03FA93D3Dh
+    push 07A15AA30h
     call _WhisperMain
 
 _NtQueryDebugFilterState:
-    push 032B3381Ch
+    push 016B43DF8h
     call _WhisperMain
 
 _NtQueryDirectoryFileEx:
-    push 06A583A81h
+    push 0C5597C59h
     call _WhisperMain
 
 _NtQueryDirectoryObject:
-    push 01E2038BDh
+    push 0E73AEDA4h
     call _WhisperMain
 
 _NtQueryDriverEntryOrder:
-    push 0030611A3h
+    push 0AB9A9331h
     call _WhisperMain
 
 _NtQueryEaFile:
-    push 068B37000h
+    push 01E3E991Dh
     call _WhisperMain
 
 _NtQueryFullAttributesFile:
-    push 05AC5645Eh
+    push 09CC89062h
     call _WhisperMain
 
 _NtQueryInformationAtom:
-    push 09602B592h
+    push 0FE692358h
     call _WhisperMain
 
 _NtQueryInformationByName:
-    push 0E70F1F6Ch
+    push 0A61EB9A5h
     call _WhisperMain
 
 _NtQueryInformationEnlistment:
-    push 0264639ECh
+    push 0861B979Eh
     call _WhisperMain
 
 _NtQueryInformationJobObject:
-    push 0C4592CC5h
+    push 014BF0E31h
     call _WhisperMain
 
 _NtQueryInformationPort:
-    push 0920FB59Ch
+    push 01AB53D1Eh
     call _WhisperMain
 
 _NtQueryInformationResourceManager:
-    push 00FB2919Eh
+    push 00B331392h
     call _WhisperMain
 
 _NtQueryInformationTransaction:
-    push 00C982C0Bh
+    push 0E14D0A1Bh
     call _WhisperMain
 
 _NtQueryInformationTransactionManager:
-    push 0C7A72CDFh
+    push 086259A8Fh
     call _WhisperMain
 
 _NtQueryInformationWorkerFactory:
-    push 002921C16h
+    push 0FE6EECE2h
     call _WhisperMain
 
 _NtQueryInstallUILanguage:
-    push 017B127EAh
+    push 0EC0EED97h
     call _WhisperMain
 
 _NtQueryIntervalProfile:
-    push 0AC3DA4AEh
+    push 0EE59C6CAh
     call _WhisperMain
 
 _NtQueryIoCompletion:
-    push 0D44FD6DBh
+    push 09E07A285h
     call _WhisperMain
 
 _NtQueryLicenseValue:
-    push 02C911B3Ah
+    push 03CA4E8EAh
     call _WhisperMain
 
 _NtQueryMultipleValueKey:
-    push 0AD19D0EAh
+    push 031982403h
     call _WhisperMain
 
 _NtQueryMutant:
-    push 096B0913Bh
+    push 0004F01C5h
     call _WhisperMain
 
 _NtQueryOpenSubKeys:
-    push 04BB626A8h
+    push 045DD4A42h
     call _WhisperMain
 
 _NtQueryOpenSubKeysEx:
-    push 0E319B7C5h
+    push 0399CF9E4h
     call _WhisperMain
 
 _NtQueryPortInformationProcess:
-    push 05F927806h
+    push 01C025DDEh
     call _WhisperMain
 
 _NtQueryQuotaInformationFile:
-    push 077C5FEE7h
+    push 06D3D3189h
     call _WhisperMain
 
 _NtQuerySecurityAttributesToken:
-    push 07BDE4D76h
+    push 0E2462E1Dh
     call _WhisperMain
 
 _NtQuerySecurityObject:
-    push 090BFA0F3h
+    push 02A3454A9h
     call _WhisperMain
 
 _NtQuerySecurityPolicy:
-    push 0924491DFh
+    push 0ECDAD36Dh
     call _WhisperMain
 
 _NtQuerySemaphore:
-    push 0FD6197B7h
+    push 0F4181594h
     call _WhisperMain
 
 _NtQuerySymbolicLinkObject:
-    push 095B8ABF2h
+    push 0869E8C00h
     call _WhisperMain
 
 _NtQuerySystemEnvironmentValue:
-    push 0EEBB8F76h
+    push 014A2E2B2h
     call _WhisperMain
 
 _NtQuerySystemEnvironmentValueEx:
-    push 0F7CCB537h
+    push 0F811056Bh
     call _WhisperMain
 
 _NtQuerySystemInformationEx:
-    push 0AC916FCBh
+    push 0F69123CFh
     call _WhisperMain
 
 _NtQueryTimerResolution:
-    push 00E952C59h
+    push 00C9A0C0Dh
     call _WhisperMain
 
 _NtQueryWnfStateData:
-    push 0BE05928Ah
+    push 0A707AC6Dh
     call _WhisperMain
 
 _NtQueryWnfStateNameInformation:
-    push 084D362C7h
+    push 00E907213h
     call _WhisperMain
 
 _NtQueueApcThreadEx:
-    push 0A0A0EE66h
+    push 0C4D91783h
     call _WhisperMain
 
 _NtRaiseException:
-    push 006D2298Fh
+    push 03AEE15B3h
     call _WhisperMain
 
 _NtRaiseHardError:
-    push 003911D39h
+    push 0C24EE0DEh
     call _WhisperMain
 
 _NtReadOnlyEnlistment:
-    push 049C28E91h
+    push 04C562F41h
     call _WhisperMain
 
 _NtRecoverEnlistment:
-    push 09B359EA3h
+    push 0AF92DC15h
     call _WhisperMain
 
 _NtRecoverResourceManager:
-    push 06E35F61Fh
+    push 0B267D89Bh
     call _WhisperMain
 
 _NtRecoverTransactionManager:
-    push 0042EDC04h
+    push 0098E6716h
     call _WhisperMain
 
 _NtRegisterProtocolAddressInformation:
-    push 0163F1CABh
+    push 013851510h
     call _WhisperMain
 
 _NtRegisterThreadTerminatePort:
-    push 0A23783AAh
+    push 036F4733Ah
     call _WhisperMain
 
 _NtReleaseKeyedEvent:
-    push 070C34B44h
+    push 0C04AF9FEh
     call _WhisperMain
 
 _NtReleaseWorkerFactoryWorker:
-    push 0A4902D8Ah
+    push 069404395h
     call _WhisperMain
 
 _NtRemoveIoCompletionEx:
-    push 09CAECE74h
+    push 0849743E9h
     call _WhisperMain
 
 _NtRemoveProcessDebug:
-    push 022BCCF36h
+    push 058A1B6F6h
     call _WhisperMain
 
 _NtRenameKey:
-    push 0299D0C3Eh
+    push 063FC9FF8h
     call _WhisperMain
 
 _NtRenameTransactionManager:
-    push 08E319293h
+    push 02991E0CAh
     call _WhisperMain
 
 _NtReplaceKey:
-    push 0491C78A6h
+    push 0A9E78850h
     call _WhisperMain
 
 _NtReplacePartitionUnit:
-    push 060B16C32h
+    push 0A834A2B2h
     call _WhisperMain
 
 _NtReplyWaitReplyPort:
-    push 020B10F6Ah
+    push 0BA38AFB8h
     call _WhisperMain
 
 _NtRequestPort:
-    push 05AB65B38h
+    push 010B22D1Ch
     call _WhisperMain
 
 _NtResetEvent:
-    push 0EB51ECC2h
+    push 068CB6B5Ch
     call _WhisperMain
 
 _NtResetWriteWatch:
-    push 098D39446h
+    push 00CE1FABEh
     call _WhisperMain
 
 _NtRestoreKey:
-    push 01BC3F6A9h
+    push 0CBF2AE6Dh
     call _WhisperMain
 
 _NtResumeProcess:
-    push 0419F7230h
+    push 065DB6654h
     call _WhisperMain
 
 _NtRevertContainerImpersonation:
-    push 034A21431h
+    push 0C649C6DBh
     call _WhisperMain
 
 _NtRollbackComplete:
-    push 068B8741Ah
+    push 058B47036h
     call _WhisperMain
 
 _NtRollbackEnlistment:
-    push 09136B2A1h
+    push 009A32A34h
     call _WhisperMain
 
 _NtRollbackRegistryTransaction:
-    push 070BB5E67h
+    push 01853DAFFh
     call _WhisperMain
 
 _NtRollbackTransaction:
-    push 01CF8004Bh
+    push 0E6CDE257h
     call _WhisperMain
 
 _NtRollforwardTransactionManager:
-    push 011C3410Eh
+    push 00FB2579Ch
     call _WhisperMain
 
 _NtSaveKey:
-    push 080016B6Ah
+    push 043957E22h
     call _WhisperMain
 
 _NtSaveKeyEx:
-    push 0EB6BDED6h
+    push 03BB0EFECh
     call _WhisperMain
 
 _NtSaveMergedKeys:
-    push 0D3B4D6C4h
+    push 061DA644Ch
     call _WhisperMain
 
 _NtSecureConnectPort:
-    push 072ED4142h
+    push 064EE4140h
     call _WhisperMain
 
 _NtSerializeBoot:
-    push 0B0207C61h
+    push 0ACF829E0h
     call _WhisperMain
 
 _NtSetBootEntryOrder:
-    push 0CDEFFD41h
+    push 0714E07B7h
     call _WhisperMain
 
 _NtSetBootOptions:
-    push 09F099D9Dh
+    push 0539F9DC3h
     call _WhisperMain
 
 _NtSetCachedSigningLevel:
-    push 0CF7DE7A1h
+    push 0309B7420h
     call _WhisperMain
 
 _NtSetCachedSigningLevel2:
-    push 06EB2EC62h
+    push 010ABA14Ch
     call _WhisperMain
 
 _NtSetContextThread:
-    push 04CFC0A5Dh
+    push 0341FF936h
     call _WhisperMain
 
 _NtSetDebugFilterState:
-    push 0348E382Ch
+    push 00CB2781Ch
     call _WhisperMain
 
 _NtSetDefaultHardErrorPort:
-    push 0B8AAB528h
+    push 026B23B30h
     call _WhisperMain
 
 _NtSetDefaultLocale:
-    push 085A95D9Dh
+    push 0353ACB21h
     call _WhisperMain
 
 _NtSetDefaultUILanguage:
-    push 0AD325030h
+    push 015BA1616h
     call _WhisperMain
 
 _NtSetDriverEntryOrder:
-    push 00F9C1D01h
+    push 0F248DAEEh
     call _WhisperMain
 
 _NtSetEaFile:
-    push 0533D3DE8h
+    push 036812637h
     call _WhisperMain
 
 _NtSetHighEventPair:
-    push 0A6AF463Dh
+    push 0C29395B2h
     call _WhisperMain
 
 _NtSetHighWaitLowEventPair:
-    push 0A6B5AA27h
+    push 04C005881h
     call _WhisperMain
 
 _NtSetIRTimer:
-    push 0CD9D38FDh
+    push 0139F1504h
     call _WhisperMain
 
 _NtSetInformationDebugObject:
-    push 018382487h
+    push 0795A51D9h
     call _WhisperMain
 
 _NtSetInformationEnlistment:
-    push 00B6410F3h
+    push 0CD50ECE5h
     call _WhisperMain
 
 _NtSetInformationJobObject:
-    push 01A25FA79h
+    push 024B82225h
     call _WhisperMain
 
 _NtSetInformationKey:
-    push 0F2C103B9h
+    push 09085B12Dh
     call _WhisperMain
 
 _NtSetInformationResourceManager:
-    push 031965B0Ah
+    push 0DE47CAE5h
     call _WhisperMain
 
 _NtSetInformationSymbolicLink:
-    push 0FAA72212h
+    push 041D54261h
     call _WhisperMain
 
 _NtSetInformationToken:
-    push 00386750Eh
+    push 02B95753Ah
     call _WhisperMain
 
 _NtSetInformationTransaction:
-    push 028823A2Fh
+    push 09813AA9Fh
     call _WhisperMain
 
 _NtSetInformationTransactionManager:
-    push 0AB96218Bh
+    push 07B2363A2h
     call _WhisperMain
 
 _NtSetInformationVirtualMemory:
-    push 01B911D1Fh
+    push 042535CB7h
     call _WhisperMain
 
 _NtSetInformationWorkerFactory:
-    push 08A2290B6h
+    push 04890306Eh
     call _WhisperMain
 
 _NtSetIntervalProfile:
-    push 02581DD85h
+    push 082157840h
     call _WhisperMain
 
 _NtSetIoCompletion:
-    push 002980237h
+    push 04AA27069h
     call _WhisperMain
 
 _NtSetIoCompletionEx:
-    push 08CAEC268h
+    push 030CAC6B4h
     call _WhisperMain
 
 _NtSetLdtEntries:
-    push 0FB53ECFBh
+    push 01E87311Dh
     call _WhisperMain
 
 _NtSetLowEventPair:
-    push 016B1CAE3h
+    push 010B3CCFDh
     call _WhisperMain
 
 _NtSetLowWaitHighEventPair:
-    push 0F2D21640h
+    push 062AE067Bh
     call _WhisperMain
 
 _NtSetQuotaInformationFile:
-    push 09706A793h
+    push 081155931h
     call _WhisperMain
 
 _NtSetSecurityObject:
-    push 016B85055h
+    push 0A698883Ah
     call _WhisperMain
 
 _NtSetSystemEnvironmentValue:
-    push 0C457E39Ch
+    push 035265E32h
     call _WhisperMain
 
 _NtSetSystemEnvironmentValueEx:
-    push 037CBF2B6h
+    push 0EF14186Bh
     call _WhisperMain
 
 _NtSetSystemInformation:
-    push 0036F07FDh
+    push 08C97D237h
     call _WhisperMain
 
 _NtSetSystemPowerState:
-    push 06C8F86C2h
+    push 0F5B40CE8h
     call _WhisperMain
 
 _NtSetSystemTime:
-    push 08725CE82h
+    push 09A8EA717h
     call _WhisperMain
 
 _NtSetThreadExecutionState:
-    push 0923D7C34h
+    push 026DDDD82h
     call _WhisperMain
 
 _NtSetTimer2:
-    push 079929A43h
+    push 03F979F01h
     call _WhisperMain
 
 _NtSetTimerEx:
-    push 072E8ACBEh
+    push 040AF6214h
     call _WhisperMain
 
 _NtSetTimerResolution:
-    push 041146399h
+    push 0009A624Fh
     call _WhisperMain
 
 _NtSetUuidSeed:
-    push 0D14ED7D4h
+    push 002401EFFh
     call _WhisperMain
 
 _NtSetVolumeInformationFile:
-    push 024B1D2A2h
+    push 0D647E8D4h
     call _WhisperMain
 
 _NtSetWnfProcessNotificationEvent:
-    push 0999D8030h
+    push 0F06B1976h
     call _WhisperMain
 
 _NtShutdownSystem:
-    push 0D36EC9C1h
+    push 004AF2B3Ch
     call _WhisperMain
 
 _NtShutdownWorkerFactory:
-    push 0151D1594h
+    push 0C096F42Bh
     call _WhisperMain
 
 _NtSignalAndWaitForSingleObject:
-    push 00AB43429h
+    push 0C69CC001h
     call _WhisperMain
 
 _NtSinglePhaseReject:
-    push 0745E2285h
+    push 088D6A466h
     call _WhisperMain
 
 _NtStartProfile:
-    push 058942A5Ch
+    push 0FC240D70h
     call _WhisperMain
 
 _NtStopProfile:
-    push 08F1B7843h
+    push 0049DC2C0h
     call _WhisperMain
 
 _NtSubscribeWnfStateChange:
-    push 036A72F3Ah
+    push 0FFBE08E3h
     call _WhisperMain
 
 _NtSuspendProcess:
-    push 082C1834Fh
+    push 0FC20DBBDh
     call _WhisperMain
 
 _NtSuspendThread:
-    push 07CDF2E69h
+    push 0301F3CB6h
     call _WhisperMain
 
 _NtSystemDebugControl:
-    push 0D78BF51Dh
+    push 0C09401C2h
     call _WhisperMain
 
 _NtTerminateEnclave:
-    push 04A8B16B2h
+    push 0FB9B1A17h
     call _WhisperMain
 
 _NtTerminateJobObject:
-    push 0188433DBh
+    push 0F451E4CDh
     call _WhisperMain
 
 _NtTestAlert:
-    push 066379875h
+    push 04CCE691Eh
     call _WhisperMain
 
 _NtThawRegistry:
-    push 032A03229h
+    push 01A8E0C1Fh
     call _WhisperMain
 
 _NtThawTransactions:
-    push 0F144D313h
+    push 0F6A4904Fh
     call _WhisperMain
 
 _NtTraceControl:
-    push 00552E3C0h
+    push 073AC7F4Fh
     call _WhisperMain
 
 _NtTranslateFilePath:
-    push 0873F6C6Bh
+    push 09A144750h
     call _WhisperMain
 
 _NtUmsThreadYield:
-    push 03FA60EF3h
+    push 0A79B76AFh
     call _WhisperMain
 
 _NtUnloadDriver:
-    push 016B73BE8h
+    push 036A713F4h
     call _WhisperMain
 
 _NtUnloadKey:
-    push 01A2F63DDh
+    push 0AC00B581h
     call _WhisperMain
 
 _NtUnloadKey2:
-    push 0C7350282h
+    push 02DACC778h
     call _WhisperMain
 
 _NtUnloadKeyEx:
-    push 099F2AF4Fh
+    push 093812F45h
     call _WhisperMain
 
 _NtUnlockFile:
-    push 03298E3D2h
+    push 0D960EF3Bh
     call _WhisperMain
 
 _NtUnlockVirtualMemory:
-    push 005966B01h
+    push 0001260FCh
     call _WhisperMain
 
 _NtUnmapViewOfSectionEx:
-    push 09B1D5659h
+    push 052D09268h
     call _WhisperMain
 
 _NtUnsubscribeWnfStateChange:
-    push 082400D68h
+    push 08425F188h
     call _WhisperMain
 
 _NtUpdateWnfStateData:
-    push 062B9740Eh
+    push 0FC4209D8h
     call _WhisperMain
 
 _NtVdmControl:
-    push 05DB24511h
+    push 00751C1FBh
     call _WhisperMain
 
 _NtWaitForAlertByThreadId:
-    push 09AAE3A6Ah
+    push 060B6106Ah
     call _WhisperMain
 
 _NtWaitForDebugEvent:
-    push 03E9BC0E9h
+    push 00A801B24h
     call _WhisperMain
 
 _NtWaitForKeyedEvent:
-    push 0EB0AEA9Fh
+    push 080AAE94Ch
     call _WhisperMain
 
 _NtWaitForWorkViaWorkerFactory:
-    push 0C091CA00h
+    push 0871AAFB5h
     call _WhisperMain
 
 _NtWaitHighEventPair:
-    push 0219FDE96h
+    push 001343783h
     call _WhisperMain
 
 _NtWaitLowEventPair:
-    push 0203804A9h
+    push 01445ED32h
     call _WhisperMain
 
 _NtAcquireCMFViewOwnership:
-    push 0DA4C1D1Ah
+    push 074AD6802h
     call _WhisperMain
 
 _NtCancelDeviceWakeupRequest:
-    push 073816522h
+    push 09338D3F4h
     call _WhisperMain
 
 _NtClearAllSavepointsTransaction:
-    push 01A0E44C7h
+    push 04CB423A9h
     call _WhisperMain
 
 _NtClearSavepointTransaction:
-    push 0DCB3D223h
+    push 0173117A3h
     call _WhisperMain
 
 _NtRollbackSavepointTransaction:
-    push 0144F351Ch
+    push 0C881F62Dh
     call _WhisperMain
 
 _NtSavepointTransaction:
-    push 04CD76C19h
+    push 0DA42DCD5h
     call _WhisperMain
 
 _NtSavepointComplete:
-    push 0009AF898h
+    push 0449813B2h
     call _WhisperMain
 
 _NtCreateSectionEx:
-    push 080953FB3h
+    push 050B393E9h
     call _WhisperMain
 
 _NtCreateCrossVmEvent:
-    push 01B2074B2h
+    push 0C888CD1Eh
     call _WhisperMain
 
 _NtGetPlugPlayEvent:
-    push 00E088D1Eh
+    push 098B99A2Fh
     call _WhisperMain
 
 _NtListTransactions:
-    push 0B8299EB8h
+    push 015B77575h
     call _WhisperMain
 
 _NtMarshallTransaction:
-    push 032A62A0Dh
+    push 000AA223Bh
     call _WhisperMain
 
 _NtPullTransaction:
-    push 0040B2499h
+    push 0C02BE6BBh
     call _WhisperMain
 
 _NtReleaseCMFViewOwnership:
-    push 034AD2036h
+    push 0308CDA16h
     call _WhisperMain
 
 _NtWaitForWnfNotifications:
-    push 05B896703h
+    push 00F952B4Fh
     call _WhisperMain
 
 _NtStartTm:
-    push 0D19DFE2Dh
+    push 0E24E0535h
     call _WhisperMain
 
 _NtSetInformationProcess:
-    push 096288E47h
+    push 03994140Ch
     call _WhisperMain
 
 _NtRequestDeviceWakeup:
-    push 02EA1223Ch
+    push 005A52EFEh
     call _WhisperMain
 
 _NtRequestWakeupLatency:
-    push 0904BB1E6h
+    push 0962DFBC0h
     call _WhisperMain
 
 _NtQuerySystemTime:
-    push 0B6AEC6BBh
+    push 0BA3EB39Bh
     call _WhisperMain
 
 _NtManageHotPatch:
-    push 068A5287Eh
+    push 0130F9C29h
     call _WhisperMain
 
 _NtContinueEx:
-    push 0D34D0411h
+    push 073722FD6h
     call _WhisperMain
 
 _RtlCreateUserThread:
-    push 0B4AF2B95h
+    push 0A808B6B1h
     call _WhisperMain
 
