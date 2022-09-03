@@ -145,11 +145,7 @@ syscallAddress: dd  0
 BITS 32
 DEFAULT REL
 
-global _NtAllocateVirtualMemory
-global _NtWriteVirtualMemory
-global _NtProtectVirtualMemory
-global _NtCreateThreadEx
-
+{globalFunctions}
 global _WhisperMain
 extern _SW2_GetSyscallNumber
 extern _SW2_GetRandomSyscallAddress
@@ -225,11 +221,7 @@ syscallNumber:  .long 0
 syscallAddress: .long 0
 
 .text
-.global _NtAllocateVirtualMemory
-.global _NtWriteVirtualMemory
-.global _NtProtectVirtualMemory
-.global _NtCreateThreadEx
-
+{globalFunctions}
 .global _WhisperMain
 
 _WhisperMain:
@@ -464,11 +456,7 @@ syscallAddress: dq  0
 BITS 64
 DEFAULT REL
 
-global NtAllocateVirtualMemory
-global NtWriteVirtualMemory
-global NtProtectVirtualMemory
-global NtCreateThreadEx
-
+{globalFunctions}
 global WhisperMain
 extern SW2_GetSyscallNumber
 extern SW2_GetRandomSyscallAddress
@@ -542,11 +530,7 @@ syscallNumber:  .long   0
 syscallAddress: .quad   0
 
 .text
-.global NtAllocateVirtualMemory
-.global NtWriteVirtualMemory
-.global NtProtectVirtualMemory
-.global NtCreateThreadEx
-
+{globalFunctions}
 .global WhisperMain
 .extern SW2_GetSyscallNumber
 .extern SW2_GetRandomSyscallAddress

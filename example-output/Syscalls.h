@@ -8,7 +8,7 @@
 
 #include <windows.h>
 
-#define SW2_SEED 0xD2FBBECE
+#define SW2_SEED 0x285E0FAD
 #define SW2_ROL8(v) (v << 8 | v >> 24)
 #define SW2_ROR8(v) (v >> 8 | v << 24)
 #define SW2_ROX8(v) ((SW2_SEED % 2) ? SW2_ROL8(v) : SW2_ROR8(v))
@@ -4045,17 +4045,5 @@ EXTERN_C NTSTATUS NtManageHotPatch(
 EXTERN_C NTSTATUS NtContinueEx(
 	IN PCONTEXT ContextRecord,
 	IN PKCONTINUE_ARGUMENT ContinueArgument);
-
-EXTERN_C NTSTATUS RtlCreateUserThread(
-	IN HANDLE ProcessHandle,
-	IN PSECURITY_DESCRIPTOR SecurityDescriptor OPTIONAL,
-	IN BOOLEAN CreateSuspended,
-	IN ULONG StackZeroBits,
-	IN OUT PULONG StackReserved,
-	IN OUT PULONG StackCommit,
-	IN PVOID StartAddress,
-	IN PVOID StartParameter OPTIONAL,
-	OUT PHANDLE ThreadHandle,
-	OUT PCLIENT_ID ClientID);
 
 #endif
