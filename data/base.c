@@ -1,4 +1,4 @@
-#include "Syscalls.h"
+#include "<BASENAME>.h"
 #include <time.h>
 #include <stdint.h>
 
